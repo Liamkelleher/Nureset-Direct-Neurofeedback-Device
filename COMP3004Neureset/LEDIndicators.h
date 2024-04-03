@@ -1,0 +1,4 @@
+#ifndef LEDINDICATORS_H
+#define LEDINDICATORS_H
+
+#endif // LEDINDICATORS_H
