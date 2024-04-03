@@ -44,6 +44,8 @@ private:
     Ui::MainWindow *ui;
     QListWidgetItem *sesNew, *sesLog, *tnd;
     QList<QListWidgetItem *> menuList = {sesNew, sesLog, tnd};
+    //populated from session log class
+    QList<QListWidgetItem *> sessionLogList = {};
     QElapsedTimer sesTimer;
     bool hidden, sesActive, deviceOn;
 

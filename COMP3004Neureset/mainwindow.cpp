@@ -62,8 +62,9 @@ void MainWindow::on_startButton_clicked()
     if (ui->display->currentItem() == menuList[1])
     {
         ui->display->clear();
-
         //Show session logs
+
+        //Uploading to PC device
     }
 
     if (ui->display->currentItem() == menuList[2])
