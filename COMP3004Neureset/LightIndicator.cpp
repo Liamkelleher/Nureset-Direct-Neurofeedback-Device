@@ -39,13 +39,12 @@ void LightIndicator::updateColour(LightIndicatorState state)
         QString styleTemplate = R"(
             QPushButton {
                 border-radius: 10px;
-                border: 1px solid #555;
                 background: qradialgradient(
                     cx: 0.5, cy: 0.5,
                     radius: 1,
                     fx: 0.5, fy: 0.5,
-                    stop: 0.3 %2,
-                    stop: 0.7 %1);
+                    stop: 0.2 %2,
+                    stop: 0.8 %1);
                 }
             )";
 
