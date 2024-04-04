@@ -7,6 +7,8 @@
 #include <QList>
 #include <QtDebug>
 
+#include "LightIndicator.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -48,6 +50,11 @@ private:
     QList<QListWidgetItem *> sessionLogList = {};
     QElapsedTimer sesTimer;
     bool hidden, sesActive, deviceOn;
+
+    // Declare LightIndicator instances
+    LightIndicator *contactLightIndicator;
+    LightIndicator *treatmentLightIndicator;
+    LightIndicator *contactLostLightIndicator;
 
 };
 #endif // MAINWINDOW_H

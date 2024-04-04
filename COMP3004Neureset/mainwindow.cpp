@@ -11,6 +11,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->timeElapsed->hide();
     hidden = true;
     sesActive = false;
+
+    // Create LightIndicator instances for each light indicator button
+    contactLightIndicator = new LightIndicator(ui->contactLight);
+    treatmentLightIndicator = new LightIndicator(ui->treatmentLight);
+    contactLostLightIndicator = new LightIndicator(ui->contactLostLight);
 }
 
 MainWindow::~MainWindow()
@@ -20,6 +25,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_upArrowButton_clicked()
 {
+
     if (ui->display->count() != 0)
     {
         int curr = menuList.indexOf(ui->display->currentItem());
@@ -29,6 +35,7 @@ void MainWindow::on_upArrowButton_clicked()
             ui->display->setCurrentItem(menuList[curr - 1]);
         }
     }
+
 }
 
 
