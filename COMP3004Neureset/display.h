@@ -13,9 +13,9 @@ class Display: public QObject
     Q_OBJECT
 
 public:
-    Display();
+    Display(QListWidget* disLabel, QProgressBar* progLabel, QLabel* timerLabel, QDateTimeEdit* dteLabel);
 
-    void setupDisplay(QListWidget *disLabel, QProgressBar *progLabel, QLabel *timerLabel, QDateTimeEdit *dteLabel);
+    int getCurrentMenuSelect();
 
 public slots:
     void upArrowButton();
