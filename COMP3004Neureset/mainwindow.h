@@ -2,10 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QListWidget>
-#include <QElapsedTimer>
-#include <QList>
 #include <QtDebug>
+#include "neurodevicecontroller.h"
 
 #include "LightIndicator.h"
 
@@ -23,33 +21,27 @@ public:
 
 private slots:
     void on_upArrowButton_clicked();
-
     void on_downArrowButton_clicked();
-
     void on_startButton_clicked();
-
     void on_stopButton_clicked();
-
     void on_powerButton_clicked();
-
     void on_menuButton_clicked();
-
     void on_batteryUseButton_clicked();
-
     void on_batteryFullButton_clicked();
-
     void on_batteryEmptyButton_clicked();
 
-private:
-    void createMenuList();
+signals:
+    void upArrowButtonPressed();
+    void downArrowButtonPressed();
+    void startButtonPressed();
+    void stopButtonPressed();
+    void powerButtonPressed();
+    void menuButtonPressed();
 
+private:
     Ui::MainWindow *ui;
-    QListWidgetItem *sesNew, *sesLog, *tnd;
-    QList<QListWidgetItem *> menuList = {sesNew, sesLog, tnd};
-    //populated from session log class
-    QList<QListWidgetItem *> sessionLogList = {};
-    QElapsedTimer sesTimer;
-    bool hidden, sesActive, deviceOn;
+    NeuroDeviceController nDC;
+    QThread _NDCthread;
 
     // Declare LightIndicator instances
     LightIndicator *contactLightIndicator;
