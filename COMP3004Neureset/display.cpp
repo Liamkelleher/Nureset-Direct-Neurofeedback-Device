@@ -40,7 +40,7 @@ void Display::downArrowButton()
     {
         int curr = dis->currentRow();
 
-        if (curr < (menuList.length() - 1))
+        if (curr < (ui->display->count() - 1))
         {
             dis->setCurrentRow(curr + 1);
         }
