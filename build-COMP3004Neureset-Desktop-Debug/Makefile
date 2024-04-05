@@ -52,11 +52,19 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../COMP3004Neureset/main.cpp \
-		../COMP3004Neureset/mainwindow.cpp moc_mainwindow.cpp
-OBJECTS       = main.o \
+SOURCES       = ../COMP3004Neureset/display.cpp \
+		../COMP3004Neureset/main.cpp \
+		../COMP3004Neureset/mainwindow.cpp \
+		../COMP3004Neureset/neurodevicecontroller.cpp moc_display.cpp \
+		moc_mainwindow.cpp \
+		moc_neurodevicecontroller.cpp
+OBJECTS       = display.o \
+		main.o \
 		mainwindow.o \
-		moc_mainwindow.o
+		neurodevicecontroller.o \
+		moc_display.o \
+		moc_mainwindow.o \
+		moc_neurodevicecontroller.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -114,6 +122,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		../COMP3004Neureset/.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -134,8 +143,12 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../COMP3004Neureset/COMP3004Neureset.pro ../COMP3004Neureset/mainwindow.h ../COMP3004Neureset/main.cpp \
-		../COMP3004Neureset/mainwindow.cpp
+		../COMP3004Neureset/COMP3004Neureset.pro ../COMP3004Neureset/display.h \
+		../COMP3004Neureset/mainwindow.h \
+		../COMP3004Neureset/neurodevicecontroller.h ../COMP3004Neureset/display.cpp \
+		../COMP3004Neureset/main.cpp \
+		../COMP3004Neureset/mainwindow.cpp \
+		../COMP3004Neureset/neurodevicecontroller.cpp
 QMAKE_TARGET  = COMP3004Neureset
 DESTDIR       = 
 TARGET        = COMP3004Neureset
@@ -204,6 +217,7 @@ Makefile: ../COMP3004Neureset/COMP3004Neureset.pro /usr/lib/x86_64-linux-gnu/qt5
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -283,6 +297,7 @@ Makefile: ../COMP3004Neureset/COMP3004Neureset.pro /usr/lib/x86_64-linux-gnu/qt5
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -319,8 +334,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../COMP3004Neureset/mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../COMP3004Neureset/main.cpp ../COMP3004Neureset/mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../COMP3004Neureset/display.h ../COMP3004Neureset/mainwindow.h ../COMP3004Neureset/neurodevicecontroller.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../COMP3004Neureset/display.cpp ../COMP3004Neureset/main.cpp ../COMP3004Neureset/mainwindow.cpp ../COMP3004Neureset/neurodevicecontroller.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../COMP3004Neureset/mainwindow.ui $(DISTDIR)/
 
 
@@ -353,13 +368,26 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all: moc_display.cpp moc_mainwindow.cpp moc_neurodevicecontroller.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
+	-$(DEL_FILE) moc_display.cpp moc_mainwindow.cpp moc_neurodevicecontroller.cpp
+moc_display.cpp: ../COMP3004Neureset/display.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/display.h -o moc_display.cpp
+
 moc_mainwindow.cpp: ../COMP3004Neureset/mainwindow.h \
+		../COMP3004Neureset/neurodevicecontroller.h \
+		../COMP3004Neureset/display.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/mainwindow.h -o moc_mainwindow.cpp
+
+moc_neurodevicecontroller.cpp: ../COMP3004Neureset/neurodevicecontroller.h \
+		../COMP3004Neureset/display.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/neurodevicecontroller.h -o moc_neurodevicecontroller.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -382,15 +410,32 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 ####### Compile
 
-main.o: ../COMP3004Neureset/main.cpp ../COMP3004Neureset/mainwindow.h
+display.o: ../COMP3004Neureset/display.cpp ../COMP3004Neureset/display.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o display.o ../COMP3004Neureset/display.cpp
+
+main.o: ../COMP3004Neureset/main.cpp ../COMP3004Neureset/mainwindow.h \
+		../COMP3004Neureset/neurodevicecontroller.h \
+		../COMP3004Neureset/display.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../COMP3004Neureset/main.cpp
 
 mainwindow.o: ../COMP3004Neureset/mainwindow.cpp ../COMP3004Neureset/mainwindow.h \
+		../COMP3004Neureset/neurodevicecontroller.h \
+		../COMP3004Neureset/display.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../COMP3004Neureset/mainwindow.cpp
 
+neurodevicecontroller.o: ../COMP3004Neureset/neurodevicecontroller.cpp ../COMP3004Neureset/neurodevicecontroller.h \
+		../COMP3004Neureset/display.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o neurodevicecontroller.o ../COMP3004Neureset/neurodevicecontroller.cpp
+
+moc_display.o: moc_display.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_display.o moc_display.cpp
+
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_neurodevicecontroller.o: moc_neurodevicecontroller.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_neurodevicecontroller.o moc_neurodevicecontroller.cpp
 
 ####### Install
 
