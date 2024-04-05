@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include "display.h"
+#include "LightIndicator.h"
 
 
 class NeuroDeviceController: public QObject
@@ -10,10 +11,8 @@ class NeuroDeviceController: public QObject
     Q_OBJECT
 
 public:
-    NeuroDeviceController();
+    NeuroDeviceController(QListWidget* disLabel, QProgressBar* progLabel, QLabel* timerLabel, QDateTimeEdit* dteLabel, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd);
     ~NeuroDeviceController();
-
-    void setupNDC(QListWidget *disLabel, QProgressBar *progLabel, QLabel *timerLabel, QDateTimeEdit *dteLabel);
 
 public slots:
     void upArrowButtonPressed();
@@ -32,9 +31,14 @@ signals:
     void menuButton(bool deviceOn);
 
 private:
-    Display display;
+    Display *display;
     QThread _DISthread;
     bool deviceOn;
+
+    // Declare LightIndicator instances
+    LightIndicator *contactLightIndicator;
+    LightIndicator *treatmentLightIndicator;
+    LightIndicator *contactLostLightIndicator;
 };
 
 #endif // NEURODEVICECONTROLLER_H

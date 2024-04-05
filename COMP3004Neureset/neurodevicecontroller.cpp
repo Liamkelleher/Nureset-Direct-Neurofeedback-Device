@@ -1,17 +1,23 @@
 #include "neurodevicecontroller.h"
 
-NeuroDeviceController::NeuroDeviceController()
+NeuroDeviceController::NeuroDeviceController(QListWidget* disLabel, QProgressBar* progLabel, QLabel* timerLabel, QDateTimeEdit* dteLabel, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd)
 {
     deviceOn = false;
 
-    connect(this, &NeuroDeviceController::upArrowButton, &display, &Display::upArrowButton);
-    connect(this, &NeuroDeviceController::downArrowButton, &display, &Display::downArrowButton);
-    connect(this, &NeuroDeviceController::startButton, &display, &Display::startButton);
-    connect(this, &NeuroDeviceController::stopButton, &display, &Display::stopButton);
-    connect(this, &NeuroDeviceController::menuButton, &display, &Display::menuButton);
-    connect(this, &NeuroDeviceController::powerButton, &display, &Display::powerButton);
+    contactLightIndicator = new LightIndicator(contactInd);
+    treatmentLightIndicator = new LightIndicator(treatmentInd);
+    contactLostLightIndicator = new LightIndicator(contactLostInd);
 
-    display.moveToThread(&_DISthread);
+    display = new Display(disLabel, progLabel, timerLabel, dteLabel);
+
+    connect(this, &NeuroDeviceController::upArrowButton, display, &Display::upArrowButton);
+    connect(this, &NeuroDeviceController::downArrowButton, display, &Display::downArrowButton);
+    connect(this, &NeuroDeviceController::startButton, display, &Display::startButton);
+    connect(this, &NeuroDeviceController::stopButton, display, &Display::stopButton);
+    connect(this, &NeuroDeviceController::menuButton, display, &Display::menuButton);
+    connect(this, &NeuroDeviceController::powerButton, display, &Display::powerButton);
+
+    display->moveToThread(&_DISthread);
 
     _DISthread.start();
 }
@@ -22,15 +28,23 @@ NeuroDeviceController::~NeuroDeviceController()
     _DISthread.wait();
 }
 
-void NeuroDeviceController::setupNDC(QListWidget *disLabel, QProgressBar *progLabel, QLabel *timerLabel, QDateTimeEdit *dteLabel)
-{
-    display.setupDisplay(disLabel, progLabel, timerLabel, dteLabel);
-}
-
 void NeuroDeviceController::upArrowButtonPressed() { emit upArrowButton(); }
 void NeuroDeviceController::downArrowButtonPressed() { emit downArrowButton(); }
-void NeuroDeviceController::startButtonPressed() { emit startButton(); }
-void NeuroDeviceController::stopButtonPressed() { emit stopButton(); }
+
+void NeuroDeviceController::startButtonPressed()
+{
+    if(display->getCurrentMenuSelect() == 0)
+    {
+        treatmentLightIndicator->updateState(LightIndicatorState::TreatmentInProgress);
+    }
+    emit startButton();
+}
+
+void NeuroDeviceController::stopButtonPressed()
+{
+    treatmentLightIndicator->updateState(LightIndicatorState::Off);
+    emit stopButton();
+}
 
 void NeuroDeviceController::powerButtonPressed()
 {
@@ -39,6 +53,8 @@ void NeuroDeviceController::powerButtonPressed()
     if(deviceOn)
     {
         //Shutdown Protocols
+        contactLightIndicator->updateState(LightIndicatorState::Off);
+        treatmentLightIndicator->updateState(LightIndicatorState::Off);
 
         deviceOn = false;
     }
@@ -46,6 +62,7 @@ void NeuroDeviceController::powerButtonPressed()
     else
     {
         //Bootup Protocols
+        contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
 
         deviceOn = true;
     }

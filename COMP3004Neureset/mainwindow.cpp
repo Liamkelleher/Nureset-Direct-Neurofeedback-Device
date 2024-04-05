@@ -7,21 +7,17 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    contactLightIndicator = new LightIndicator(ui->contactLight);
-    treatmentLightIndicator = new LightIndicator(ui->treatmentLight);
-    contactLostLightIndicator = new LightIndicator(ui->contactLostLight);
+    nDC = new NeuroDeviceController(ui->display, ui->sessionProgressBar, ui->timeElapsed, ui->dateTimeEdit, ui->contactLight, ui->treatmentLight, ui->contactLostLight);
 
-    nDC.setupNDC(ui->display, ui->sessionProgressBar, ui->timeElapsed, ui->dateTimeEdit);
-
-    connect(this, &MainWindow::upArrowButtonPressed, &nDC, &NeuroDeviceController::upArrowButtonPressed);
-    connect(this, &MainWindow::downArrowButtonPressed, &nDC, &NeuroDeviceController::downArrowButtonPressed);
-    connect(this, &MainWindow::startButtonPressed, &nDC, &NeuroDeviceController::startButtonPressed);
-    connect(this, &MainWindow::stopButtonPressed, &nDC, &NeuroDeviceController::stopButtonPressed);
-    connect(this, &MainWindow::menuButtonPressed, &nDC, &NeuroDeviceController::menuButtonPressed);
-    connect(this, &MainWindow::powerButtonPressed, &nDC, &NeuroDeviceController::powerButtonPressed);
+    connect(this, &MainWindow::upArrowButtonPressed, nDC, &NeuroDeviceController::upArrowButtonPressed);
+    connect(this, &MainWindow::downArrowButtonPressed, nDC, &NeuroDeviceController::downArrowButtonPressed);
+    connect(this, &MainWindow::startButtonPressed, nDC, &NeuroDeviceController::startButtonPressed);
+    connect(this, &MainWindow::stopButtonPressed, nDC, &NeuroDeviceController::stopButtonPressed);
+    connect(this, &MainWindow::menuButtonPressed, nDC, &NeuroDeviceController::menuButtonPressed);
+    connect(this, &MainWindow::powerButtonPressed, nDC, &NeuroDeviceController::powerButtonPressed);
 
     //moves the ndc to a new thread
-    nDC.moveToThread(&_NDCthread);
+    nDC->moveToThread(&_NDCthread);
 
     _NDCthread.start();
 }

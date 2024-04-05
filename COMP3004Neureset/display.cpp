@@ -1,17 +1,11 @@
 #include "display.h"
 
-Display::Display()
-{   
-
-}
-
-void Display::setupDisplay(QListWidget *disLabel, QProgressBar *progLabel, QLabel *timerLabel, QDateTimeEdit *dteLabel)
+Display::Display(QListWidget* disLabel, QProgressBar* progLabel, QLabel* timerLabel, QDateTimeEdit* dteLabel)
+    : dis(disLabel)
+    , progBar(progLabel)
+    , timerDis(timerLabel)
+    , dTE(dteLabel)
 {
-    dis = disLabel;
-    progBar = progLabel;
-    timerDis = timerLabel;
-    dTE = dteLabel;
-
     progBar->hide();
     timerDis->hide();
     dTE->hide();
@@ -19,6 +13,8 @@ void Display::setupDisplay(QListWidget *disLabel, QProgressBar *progLabel, QLabe
     hidden = true;
     sesActive = false;
 }
+
+int Display::getCurrentMenuSelect() { return dis->currentRow(); }
 
 void Display::upArrowButton()
 {
@@ -40,7 +36,7 @@ void Display::downArrowButton()
     {
         int curr = dis->currentRow();
 
-        if (curr < (dis->count() - 1))
+        if (curr < (menuList.length() - 1))
         {
             dis->setCurrentRow(curr + 1);
         }
