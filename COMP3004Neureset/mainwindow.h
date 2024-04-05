@@ -4,11 +4,8 @@
 #include <QMainWindow>
 #include <QtDebug>
 #include "neurodevicecontroller.h"
-<<<<<<< HEAD
 
 #include "LightIndicator.h"
-=======
->>>>>>> f901a30b42bfe466c146658843bb2d9f91ed55e0
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -45,14 +42,10 @@ private:
     Ui::MainWindow *ui;
     NeuroDeviceController nDC;
     QThread _NDCthread;
-<<<<<<< HEAD
 
     // Declare LightIndicator instances
     LightIndicator *contactLightIndicator;
     LightIndicator *treatmentLightIndicator;
     LightIndicator *contactLostLightIndicator;
-=======
->>>>>>> f901a30b42bfe466c146658843bb2d9f91ed55e0
-
 };
 #endif // MAINWINDOW_H
