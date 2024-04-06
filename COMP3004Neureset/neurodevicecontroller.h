@@ -4,6 +4,7 @@
 #include <QThread>
 #include "display.h"
 #include "LightIndicator.h"
+#include "Sessionloger.h"
 
 
 class NeuroDeviceController: public QObject
@@ -39,6 +40,9 @@ private:
     LightIndicator *contactLightIndicator;
     LightIndicator *treatmentLightIndicator;
     LightIndicator *contactLostLightIndicator;
+
+    // Declare SessionLoger
+    SessionLoger *sessionManager;
 };
 
 #endif // NEURODEVICECONTROLLER_H

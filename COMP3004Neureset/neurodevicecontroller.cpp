@@ -19,6 +19,8 @@ NeuroDeviceController::NeuroDeviceController(QListWidget* disLabel, QProgressBar
 
     display->moveToThread(&_DISthread);
 
+    sessionManager = new SessionLoger;
+
     _DISthread.start();
 }
 
