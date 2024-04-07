@@ -7,21 +7,19 @@
 #include <array>
 #include <QVector>
 #include <QElapsedTimer>
-
-#include "sessionmanager.h"
+#include <defs.h>
 
 class Session {
 private:
     QDateTime dateTime;
-    QTime timeElapsed;
-    qint64 cumulativeTimeElapsed; // for when pausing/resuming
+    QElapsedTimer elapsedTime;
+    qint64 accumulatedTime;
     QVector<float> beforeBaselines;
     QVector<float> afterBaselines;
     bool isPaused;
-    QElapsedTimer timer;
 
 public:
-    Session();
+    Session(QDateTime);
     ~Session();
     void startSession();
     void endSession();
@@ -29,6 +27,9 @@ public:
     void resumeSession();
     void updateBeforeBaseline(int node, float value);
     void updateAfterBaseline(int node, float value);
+    QVector<float> getBeforeBaselines();
+    QVector<float> getAfterBaselines();
+    QTime getTimeElapsed();
     bool getIsPaused() const;
     QString toString() const;
 };

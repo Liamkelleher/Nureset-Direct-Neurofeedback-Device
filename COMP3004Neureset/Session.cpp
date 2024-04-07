@@ -1,51 +1,40 @@
 #include "Session.h"
 
-Session::Session() : dateTime(QDateTime::currentDateTime())
+Session::Session(QDateTime dateTime) : dateTime(dateTime), accumulatedTime(0), isPaused(false)
 {
-    // Resize vectors to hold all 21 EEG nodes
-    beforeBaselines.resize(21);
-    afterBaselines.resize(21);
+    beforeBaselines.resize(NUM_NODES);
+    afterBaselines.resize(NUM_NODES);
 }
 
 Session::~Session() {}
 
 void Session::startSession()
 {
-    // start date and time
-    dateTime = QDateTime::currentDateTime();
-    // Start measuring elapsed time
-    timer.start();
-    isPaused = false;
+    elapsedTime.start();
 }
 
 void Session::pauseSession() {
-    if (!isPaused)
-    {
-        // Update the elapsed time so far and pause
-        cumulativeTimeElapsed += timer.elapsed();
-        isPaused = true;
+    if (!isPaused) {
+            accumulatedTime += elapsedTime.elapsed();
+            elapsedTime.invalidate();
+            isPaused = true;
     }
 }
 
 void Session::resumeSession()
 {
     if (isPaused) {
-            timer.start(); // Reset the timer
-            isPaused = false;
-        }
+           elapsedTime.start();
+           isPaused = false;
+    }
 }
 
 void Session::endSession()
 {
-    // calculate total elapsed time
-    if (!isPaused)
-    {
-        // if no pauses in session, cumulativeTimeElapsed will be set to regular timer
-        cumulativeTimeElapsed += timer.elapsed();
+    if (!isPaused) {
+        accumulatedTime += elapsedTime.elapsed();
     }
-
-    // convert to Qtime object
-    timeElapsed = QTime(0, 0).addMSecs(cumulativeTimeElapsed);
+    elapsedTime.invalidate();
 }
 
 void Session::updateBeforeBaseline(int node, float value)
@@ -64,12 +53,30 @@ void Session::updateAfterBaseline(int node, float value)
     }
 }
 
+QTime Session::getTimeElapsed()
+{
+    if (elapsedTime.isValid()) {
+        return QTime(0, 0).addMSecs(accumulatedTime + elapsedTime.elapsed());
+    }
+    return QTime(0, 0).addMSecs(accumulatedTime);
+}
+
 bool Session::getIsPaused() const
 {
     return isPaused;
 }
 
+QVector<float> Session::getBeforeBaselines()
+{
+    return beforeBaselines;
+}
+
+QVector<float> Session::getAfterBaselines()
+{
+    return afterBaselines;
+}
+
 QString Session::toString() const
 {
-    return dateTime.toString("dd.MM.yyyy hh:mm:ss") + " | Elapsed Time: " + timeElapsed.toString();
+    return "Date: " + dateTime.toString("dd.MM.yyyy hh:mm:ss");
 }
