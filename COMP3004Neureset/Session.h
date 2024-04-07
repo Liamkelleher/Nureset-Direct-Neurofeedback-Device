@@ -30,6 +30,7 @@ public:
     QVector<float> getBeforeBaselines();
     QVector<float> getAfterBaselines();
     QTime getTimeElapsed();
+    QDateTime getDateTime();
     bool getIsPaused() const;
     QString toString() const;
 };

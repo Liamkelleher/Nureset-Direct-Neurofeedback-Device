@@ -76,6 +76,11 @@ QVector<float> Session::getAfterBaselines()
     return afterBaselines;
 }
 
+QDateTime Session::getDateTime()
+{
+    return dateTime;
+}
+
 QString Session::toString() const
 {
     return "Date: " + dateTime.toString("dd.MM.yyyy hh:mm:ss");
