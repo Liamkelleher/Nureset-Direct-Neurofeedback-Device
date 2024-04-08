@@ -24,4 +24,6 @@ enum class LightIndicatorState {
     ContactLost, // Red light
 };
 
+#define NUM_NODES 7
+
 #endif // DEFS_H

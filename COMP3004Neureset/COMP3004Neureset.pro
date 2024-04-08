@@ -9,18 +9,24 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Session.cpp \
     display.cpp \
     LightIndicator.cpp \
     main.cpp \
     mainwindow.cpp \
-    neurodevicecontroller.cpp
+    neurodevicecontroller.cpp \
+    sessionlog.cpp \
+    sessionmanager.cpp
 
 HEADERS += \
     LightIndicator.h \
+    Session.h \
     defs.h \
     display.h \
     mainwindow.h \
-    neurodevicecontroller.h
+    neurodevicecontroller.h \
+    sessionlog.h \
+    sessionmanager.h
 
 FORMS += \
     mainwindow.ui
