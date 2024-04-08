@@ -16,7 +16,8 @@ SOURCES += \
     mainwindow.cpp \
     neurodevicecontroller.cpp \
     sessionlog.cpp \
-    sessionmanager.cpp
+    sessionmanager.cpp \
+    pcdevice.cpp
 
 HEADERS += \
     LightIndicator.h \
@@ -26,7 +27,8 @@ HEADERS += \
     mainwindow.h \
     neurodevicecontroller.h \
     sessionlog.h \
-    sessionmanager.h
+    sessionmanager.h \
+    pcdevice.h
 
 FORMS += \
     mainwindow.ui
