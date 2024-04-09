@@ -23,7 +23,6 @@ private:
     QWidget* m_parentWidget;
     QLabel* m_pcNoDataLabel;
     QLabel* m_pcDateValue;
-    QLabel* m_pcTimeValue;
     QLabel* m_pcElapsedValue;
     QTableWidget* m_pcEEGTable;
 

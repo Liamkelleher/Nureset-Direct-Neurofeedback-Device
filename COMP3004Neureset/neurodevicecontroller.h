@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QStackedWidget>
 #include "display.h"
+#include "sessionmanager.h"
 #include "LightIndicator.h"
 
 
@@ -22,6 +23,7 @@ public slots:
     void stopButtonPressed();
     void powerButtonPressed();
     void menuButtonPressed();
+    void uploadSession(int);
 
 signals:
     void upArrowButton(bool deviceOn);
@@ -30,6 +32,7 @@ signals:
     void stopButton(bool deviceOn);
     void powerButton(bool deviceOn);
     void menuButton(bool deviceOn);
+    void uploadToPC(Session *);
 
 private:
     Display *display;
@@ -40,6 +43,8 @@ private:
     LightIndicator *contactLightIndicator;
     LightIndicator *treatmentLightIndicator;
     LightIndicator *contactLostLightIndicator;
+
+    SessionManager *manager;
 };
 
 #endif // NEURODEVICECONTROLLER_H

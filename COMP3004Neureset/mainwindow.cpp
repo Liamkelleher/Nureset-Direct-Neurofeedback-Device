@@ -8,6 +8,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     nDC = new NeuroDeviceController(ui->stackedWidget, ui->contactLight, ui->treatmentLight, ui->contactLostLight);
+    pcdevice = new PCDevice(ui->pcDeviceWidget);
+
+    pcdevice->toggleComponents(false);
 
     connect(this, &MainWindow::upArrowButtonPressed, nDC, &NeuroDeviceController::upArrowButtonPressed);
     connect(this, &MainWindow::downArrowButtonPressed, nDC, &NeuroDeviceController::downArrowButtonPressed);
@@ -15,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::stopButtonPressed, nDC, &NeuroDeviceController::stopButtonPressed);
     connect(this, &MainWindow::menuButtonPressed, nDC, &NeuroDeviceController::menuButtonPressed);
     connect(this, &MainWindow::powerButtonPressed, nDC, &NeuroDeviceController::powerButtonPressed);
+    connect(nDC, &NeuroDeviceController::uploadToPC, this, &MainWindow::uploadSession);
 
     //moves the ndc to a new thread
     nDC->moveToThread(&_NDCthread);
@@ -50,4 +54,9 @@ void MainWindow::on_batteryFullButton_clicked()
 void MainWindow::on_batteryEmptyButton_clicked()
 {
     ui->batteryCharge->setValue(ui->batteryCharge->minimum());
+}
+
+void MainWindow::uploadSession(Session* session)
+{
+    pcdevice->uploadToPC(session);
 }

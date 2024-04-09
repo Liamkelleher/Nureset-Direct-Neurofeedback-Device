@@ -78,7 +78,7 @@ void Display::startButton(bool deviceOn)
             {
                 QListWidget* menuList = dynamic_cast<QListWidget*>(stackedWidget->widget(0)->findChild<QListWidget*>("menuList"));
 
-                int selected = menuList->row(menuList->currentItem());
+                int selected = menuList->currentRow();
 
                 switch (selected)
                 {
@@ -95,9 +95,16 @@ void Display::startButton(bool deviceOn)
                 break;
             }
             case 2: // Session Logs
-                // Logic to handle session log selection.
-                // Implement with PC Device??
+            {
+                QListWidget* sessionList = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
+                if (!sessionList) {
+                    qDebug() << "Error: Failed to find or cast to QListWidget for 'sessionList'";
+                    return;
+                }
+                // emit Device, Device emit signals, mainWindow calls pc upload with session
+                emit uploadSession(sessionList->currentRow());
                 break;
+            }
             case 3: // Time and Date
                 // After viewing or setting the time and date, go back to the main menu
                 // Will also be needed for session via session manager
@@ -169,4 +176,38 @@ int Display::getCurrentMenuSelect()
     }
     return -1;
 }
+
+void Display::populateSessionLogs(SessionLog *sessionLogs)
+{
+    if (!sessionLogs) {
+        qDebug() << "Error: sessionLogs pointer is null";
+        return;
+    }
+
+    // Attempt to retrieve the session list widget
+    QListWidget* sessionList = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
+    if (!sessionList) {
+        qDebug() << "Error: Failed to find or cast to QListWidget for 'sessionList'";
+        return;
+    }
+
+    // Check the count method and array access are safe
+    int logCount = sessionLogs->count();
+    if (logCount <= 0) {
+        qDebug() << "Warning: No logs to display";
+        return;
+    }
+
+    // Iterate through the session logs and add them to the list
+    for (int i = 0; i < logCount; i++) {
+        QString logEntry = (*sessionLogs)[i].toString();
+        if (logEntry.isEmpty()) {
+            qDebug() << "Warning: Empty log entry at index" << i;
+            continue;
+        }
+        QListWidgetItem* newItem = new QListWidgetItem(logEntry, sessionList);
+        sessionList->addItem(newItem);
+    }
+}
+
 
