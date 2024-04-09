@@ -12,9 +12,6 @@ SOURCES += \
     Session.cpp \
     display.cpp \
     LightIndicator.cpp \
-    eegheadset.cpp \
-    eegnode.cpp \
-    eegnodelist.cpp \
     main.cpp \
     mainwindow.cpp \
     neurodevicecontroller.cpp \
@@ -27,9 +24,6 @@ HEADERS += \
     Session.h \
     defs.h \
     display.h \
-    eegheadset.h \
-    eegnode.h \
-    eegnodelist.h \
     mainwindow.h \
     neurodevicecontroller.h \
     sessionlog.h \
