@@ -14,31 +14,12 @@ void SessionManager::createSession(QDateTime dateTime) {
     currentSession->startSession();
 }
 
-void SessionManager::endSession() {
+void SessionManager::endSession(QTime elapsed) {
     if(currentSession) {
-        currentSession->endSession();
+        currentSession->endSession(elapsed);
         saveSessionToLog();
         currentSession = nullptr;
     }
-}
-
-void SessionManager::pauseSession() {
-    if (currentSession) {
-        currentSession->pauseSession();
-    }
-}
-
-void SessionManager::resumeSession() {
-    if (currentSession) {
-        currentSession->resumeSession();
-    }
-}
-
-bool SessionManager::isSessionPaused() {
-    if (currentSession) {
-        return currentSession->getIsPaused();
-    }
-    return false;
 }
 
 QTime SessionManager::getCurrentSessionElapsedTime() const {

@@ -3,6 +3,9 @@
 
 #include <QThread>
 #include <QStackedWidget>
+#include <QTimer>
+#include <QElapsedTimer>
+#include <QMetaObject>
 #include "display.h"
 #include "sessionmanager.h"
 #include "LightIndicator.h"
@@ -15,6 +18,9 @@ class NeuroDeviceController: public QObject
 public:
     NeuroDeviceController(QStackedWidget* stackedWidget, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd);
     ~NeuroDeviceController();
+    void startSession();
+    void endSession();
+    void resumeSession();
 
 public slots:
     void upArrowButtonPressed();
@@ -24,6 +30,8 @@ public slots:
     void powerButtonPressed();
     void menuButtonPressed();
     void uploadSession(int);
+    void updateUiTimer();
+    void pauseSession();
 
 signals:
     void upArrowButton(bool deviceOn);
@@ -37,14 +45,18 @@ signals:
 private:
     Display *display;
     QThread _DISthread;
-    bool deviceOn;
-
-    // Declare LightIndicator instances
+    bool deviceOn, sesActive, sesPaused;
     LightIndicator *contactLightIndicator;
     LightIndicator *treatmentLightIndicator;
     LightIndicator *contactLostLightIndicator;
-
     SessionManager *manager;
+    QDateTime deviceTime;
+    QTimer* timer;
+    QElapsedTimer *elTimer;
+    qint64 savedTime;
+    qint64 pausedTime;
+
+    void resetTimer();
 };
 
 #endif // NEURODEVICECONTROLLER_H

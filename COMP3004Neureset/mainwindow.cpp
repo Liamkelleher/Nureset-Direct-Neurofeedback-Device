@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::stopButtonPressed, nDC, &NeuroDeviceController::stopButtonPressed);
     connect(this, &MainWindow::menuButtonPressed, nDC, &NeuroDeviceController::menuButtonPressed);
     connect(this, &MainWindow::powerButtonPressed, nDC, &NeuroDeviceController::powerButtonPressed);
+    connect(this, &MainWindow::pauseButtonPressed, nDC, &NeuroDeviceController::pauseSession);
     connect(nDC, &NeuroDeviceController::uploadToPC, this, &MainWindow::uploadSession);
 
     //moves the ndc to a new thread
@@ -38,7 +39,8 @@ void MainWindow::on_downArrowButton_clicked() { emit downArrowButtonPressed(); }
 void MainWindow::on_startButton_clicked() { emit startButtonPressed(); }
 void MainWindow::on_stopButton_clicked() { emit stopButtonPressed(); }
 void MainWindow::on_powerButton_clicked() { emit powerButtonPressed(); }
-void MainWindow::on_menuButton_clicked() { emit menuButtonPressed(); }
+void MainWindow::on_menuButton_clicked() { emit menuButtonPressed(); }\
+void MainWindow::on_pauseButton_pressed(){ emit pauseButtonPressed(); }
 
 
 void MainWindow::on_batteryUseButton_clicked()

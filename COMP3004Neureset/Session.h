@@ -12,26 +12,22 @@
 class Session {
 private:
     QDateTime dateTime;
-    QElapsedTimer elapsedTime;
-    qint64 accumulatedTime;
     QVector<float> beforeBaselines;
     QVector<float> afterBaselines;
-    bool isPaused;
+    QTime elapsedTime;
 
 public:
     Session(QDateTime);
     ~Session();
     void startSession();
-    void endSession();
-    void pauseSession();
-    void resumeSession();
+    void endSession(QTime);
     void updateBeforeBaseline(int node, float value);
     void updateAfterBaseline(int node, float value);
     QVector<float> getBeforeBaselines();
     QVector<float> getAfterBaselines();
     QTime getTimeElapsed();
+    void setTimeElapsed(QTime);
     QDateTime getDateTime();
-    bool getIsPaused() const;
     QString toString() const;
 };
 

@@ -15,10 +15,7 @@ public:
     SessionManager();
     ~SessionManager();
     void createSession(QDateTime);
-    void endSession();
-    void pauseSession();
-    void resumeSession();
-    bool isSessionPaused();
+    void endSession(QTime);
     QTime getCurrentSessionElapsedTime() const;
     void updateBeforeBaseline(int, float);
     void updateAfterBaseline(int, float);
