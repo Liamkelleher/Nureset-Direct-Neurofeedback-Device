@@ -2,6 +2,7 @@
 #define NEURODEVICECONTROLLER_H
 
 #include <QThread>
+#include <QStackedWidget>
 #include "display.h"
 #include "LightIndicator.h"
 
@@ -11,7 +12,7 @@ class NeuroDeviceController: public QObject
     Q_OBJECT
 
 public:
-    NeuroDeviceController(QListWidget* disLabel, QProgressBar* progLabel, QLabel* timerLabel, QDateTimeEdit* dteLabel, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd);
+    NeuroDeviceController(QStackedWidget* stackedWidget, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd);
     ~NeuroDeviceController();
 
 public slots:
@@ -23,10 +24,10 @@ public slots:
     void menuButtonPressed();
 
 signals:
-    void upArrowButton();
-    void downArrowButton();
-    void startButton();
-    void stopButton();
+    void upArrowButton(bool deviceOn);
+    void downArrowButton(bool deviceOn);
+    void startButton(bool deviceOn);
+    void stopButton(bool deviceOn);
     void powerButton(bool deviceOn);
     void menuButton(bool deviceOn);
 

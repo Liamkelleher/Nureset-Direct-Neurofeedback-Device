@@ -7,33 +7,26 @@
 #include <QDateTimeEdit>
 #include <QElapsedTimer>
 #include <QList>
+#include <QStackedWidget>
 
 class Display: public QObject
 {
     Q_OBJECT
 
 public:
-    Display(QListWidget* disLabel, QProgressBar* progLabel, QLabel* timerLabel, QDateTimeEdit* dteLabel);
-
+    Display(QStackedWidget* stackedWidget);
     int getCurrentMenuSelect();
 
 public slots:
-    void upArrowButton();
-    void downArrowButton();
-    void startButton();
-    void stopButton();
+    void upArrowButton(bool deviceOn);
+    void downArrowButton(bool deviceOn);
+    void startButton(bool deviceOn);
+    void stopButton(bool deviceOn);
     void powerButton(bool deviceOn);
     void menuButton(bool deviceOn);
 
 private:
-    void createMenuList();
-
-    QListWidget *dis;
-    QProgressBar *progBar;
-    QLabel *timerDis;
-    QDateTimeEdit *dTE;
-    QListWidgetItem *sesNew, *sesLog, *tnd;
-    QList<QListWidgetItem *> menuList = {sesNew, sesLog, tnd};
+    QStackedWidget* stackedWidget;
     QElapsedTimer sesTimer;
     bool hidden, sesActive;
 };

@@ -1,6 +1,6 @@
 #include "neurodevicecontroller.h"
 
-NeuroDeviceController::NeuroDeviceController(QListWidget* disLabel, QProgressBar* progLabel, QLabel* timerLabel, QDateTimeEdit* dteLabel, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd)
+NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd)
 {
     deviceOn = false;
 
@@ -8,7 +8,7 @@ NeuroDeviceController::NeuroDeviceController(QListWidget* disLabel, QProgressBar
     treatmentLightIndicator = new LightIndicator(treatmentInd);
     contactLostLightIndicator = new LightIndicator(contactLostInd);
 
-    display = new Display(disLabel, progLabel, timerLabel, dteLabel);
+    display = new Display(stackedWidget);
 
     connect(this, &NeuroDeviceController::upArrowButton, display, &Display::upArrowButton);
     connect(this, &NeuroDeviceController::downArrowButton, display, &Display::downArrowButton);
@@ -28,22 +28,22 @@ NeuroDeviceController::~NeuroDeviceController()
     _DISthread.wait();
 }
 
-void NeuroDeviceController::upArrowButtonPressed() { emit upArrowButton(); }
-void NeuroDeviceController::downArrowButtonPressed() { emit downArrowButton(); }
+void NeuroDeviceController::upArrowButtonPressed() { emit upArrowButton(deviceOn); }
+void NeuroDeviceController::downArrowButtonPressed() { emit downArrowButton(deviceOn); }
 
 void NeuroDeviceController::startButtonPressed()
 {
-    if(display->getCurrentMenuSelect() == 0)
+    if(deviceOn && display->getCurrentMenuSelect() == 0)
     {
         treatmentLightIndicator->updateState(LightIndicatorState::TreatmentInProgress);
     }
-    emit startButton();
+    emit startButton(deviceOn);
 }
 
 void NeuroDeviceController::stopButtonPressed()
 {
     treatmentLightIndicator->updateState(LightIndicatorState::Off);
-    emit stopButton();
+    emit stopButton(deviceOn);
 }
 
 void NeuroDeviceController::powerButtonPressed()
