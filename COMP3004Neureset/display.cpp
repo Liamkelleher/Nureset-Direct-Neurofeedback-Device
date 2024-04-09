@@ -1,122 +1,147 @@
 #include "display.h"
 
-Display::Display(QListWidget* disLabel, QProgressBar* progLabel, QLabel* timerLabel, QDateTimeEdit* dteLabel)
-    : dis(disLabel)
-    , progBar(progLabel)
-    , timerDis(timerLabel)
-    , dTE(dteLabel)
+Display::Display(QStackedWidget* stackedWidget)
+    : stackedWidget(stackedWidget)
 {
-    progBar->hide();
-    timerDis->hide();
-    dTE->hide();
-
-    hidden = true;
-    sesActive = false;
+    // init
+    stackedWidget->setCurrentIndex(0);
+    stackedWidget->hide();
 }
 
-int Display::getCurrentMenuSelect() { return dis->currentRow(); }
-
-void Display::upArrowButton()
+void Display::upArrowButton(bool deviceOn)
 {
-    if (dis->count() != 0)
-    {
-        int curr = dis->currentRow();
+    if (deviceOn)
+       {
+        // check if arrows should be active based on current page
+        QListWidget* widget = NULL;
 
-        if (curr > 0)
+        if (stackedWidget->currentIndex() == 0) // main menu page
         {
-            dis->setCurrentRow(curr - 1);
+            widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
+        }
+        else if (stackedWidget->currentIndex() == 2) // session logs
+        {
+            widget = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
+        }
+
+        // move selection
+        if (widget && widget->count() > 0)
+        {
+            int currentRow = widget->currentRow();
+            if (currentRow > 0)
+            {
+                widget->setCurrentRow(currentRow - 1);
+            }
+        }
+    }
+}
+
+void Display::downArrowButton(bool deviceOn)
+{
+    if (deviceOn)
+       {
+        // check if arrows should be active based on current page
+        QListWidget* widget = NULL;
+
+        if (stackedWidget->currentIndex() == 0) // main menu page
+        {
+            widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
+        }
+        else if (stackedWidget->currentIndex() == 2) // session logs
+        {
+            widget = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
+        }
+
+        // move selection
+        if (widget && widget->count() > 0)
+        {
+            int currentRow = widget->currentRow();
+            if (currentRow < widget->count() - 1)
+            {
+                widget->setCurrentRow(currentRow + 1);
+            }
         }
     }
 }
 
 
-void Display::downArrowButton()
+void Display::startButton(bool deviceOn)
 {
-    if (dis->count() != 0)
-    {
-        int curr = dis->currentRow();
+    if (deviceOn)
+       {
+        int currentIndex = stackedWidget->currentIndex();
 
-        if (curr < (dis->count() - 1))
+        // Based on current index of the QStackedWidget
+        switch (currentIndex)
         {
-            dis->setCurrentRow(curr + 1);
+            case 0: // Main Menu
+            {
+                QListWidget* menuList = dynamic_cast<QListWidget*>(stackedWidget->widget(0)->findChild<QListWidget*>("menuList"));
+
+                int selected = menuList->row(menuList->currentItem());
+
+                switch (selected)
+                {
+                    case 0: // "New Session" is selected
+                        stackedWidget->setCurrentIndex(1);
+                        break;
+                    case 1: // "Session Logs" is selected
+                        stackedWidget->setCurrentIndex(2);
+                        break;
+                    case 2: // "Time and Date" is selected
+                        stackedWidget->setCurrentIndex(3);
+                        break;
+                }
+                break;
+            }
+            case 2: // Session Logs
+                // Logic to handle session log selection.
+                // Implement with PC Device??
+                break;
+            case 3: // Time and Date
+                // After viewing or setting the time and date, go back to the main menu
+                // Will also be needed for session via session manager
+                stackedWidget->setCurrentIndex(0); // Go back to the main menu
+                break;
         }
     }
 }
 
-
-void Display::startButton()
+void Display::stopButton(bool deviceOn)
 {
-    if (dis->currentItem() == menuList[0])
+    if (deviceOn)
     {
-        dis->clear();
+        if (stackedWidget->currentIndex() != 0) // If not on the main menu
+        {
+            if (sesActive)
+            {
+                //stop session protocol
+                // add logic here
+            }
 
-        progBar->show();
-        timerDis->show();
-
-        hidden = false;
-        sesActive = true;
-    }
-
-    if (dis->currentItem() == menuList[1])
-    {
-        dis->clear();
-        //Show session logs
-
-        //Uploading to PC device
-    }
-
-    if (dis->currentItem() == menuList[2])
-    {
-        dis->clear();
-
-        dTE->show();
+            stackedWidget->setCurrentIndex(0); // Go back to the main menu
+        }
     }
 }
-
-
-void Display::stopButton()
-{
-    if (sesActive)
-    {
-        //stop session protocol
-
-        progBar->hide();
-        timerDis->hide();
-
-        hidden = true;
-        sesActive = false;
-
-        createMenuList();
-
-        dis->setCurrentItem(menuList[0]);
-    }
-}
-
 
 void Display::powerButton(bool deviceOn)
 {
     if (deviceOn)
     {
-        if (sesActive)
+        if(sesActive)
         {
-            //stop session protocol
-
-            progBar->hide();
-            timerDis->hide();
-            dTE->hide();
-
-            hidden = true;
-            sesActive = false;
+            // stop session handling
         }
-
-        dis->clear();
+        stackedWidget->setCurrentIndex(0); // main menu
+        stackedWidget->hide(); // hide to simulate 'shut off'
     }
-
     else
     {
-        createMenuList();
 
-        dis->setCurrentItem(menuList[0]);
+        stackedWidget->setCurrentIndex(0); // main menu
+        QListWidget* widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
+        widget->setCurrentRow(0); // reset index
+        stackedWidget->show(); // show widget
     }
 }
 
@@ -124,31 +149,24 @@ void Display::menuButton(bool deviceOn)
 {
     if (deviceOn && !sesActive)
     {
-        dTE->hide();
-
-        //Slight visual bug involving dis->clear();
-        //When a clear call is added prior to setting the current item/row
-        //the ui is unable to set the current row/item as selected
-        //forcing the user to press the down arrow to select the first item/row
-        dis->clear();
-
-        createMenuList();
-
-        dis->setCurrentItem(menuList[0]);
+        int currentIndex = stackedWidget->currentIndex();
+        if (currentIndex != 0)
+        {
+            stackedWidget->setCurrentIndex(0);
+        }
     }
 }
 
-void Display::createMenuList()
+int Display::getCurrentMenuSelect()
 {
-    menuList[0] = new QListWidgetItem("NEW SESSION");
-    menuList[1] = new QListWidgetItem("SESSION LOGS");
-    menuList[2] = new QListWidgetItem("TIME AND DATE");
-
-    menuList[0]->setTextAlignment(4);
-    menuList[1]->setTextAlignment(4);
-    menuList[2]->setTextAlignment(4);
-
-    dis->addItem(menuList[0]);
-    dis->addItem(menuList[1]);
-    dis->addItem(menuList[2]);
+    if (stackedWidget->currentIndex() == 0)
+    {
+        QListWidget* menuList = dynamic_cast<QListWidget*>(stackedWidget->widget(0)->findChild<QListWidget*>("menuList"));
+        if (menuList)
+        {
+            return menuList->currentRow();
+        }
+    }
+    return -1;
 }
+
