@@ -10,7 +10,6 @@ void PCDevice::initializeComponents()
     // Find and initialize UI components
     m_pcNoDataLabel = m_parentWidget->findChild<QLabel*>("pcNoDataTitle");
     m_pcDateValue = m_parentWidget->findChild<QLabel*>("pcDateValue");
-    m_pcTimeValue = m_parentWidget->findChild<QLabel*>("pcTimeValue");
     m_pcElapsedValue = m_parentWidget->findChild<QLabel*>("pcElapsedValue");
     m_pcEEGTable = m_parentWidget->findChild<QTableWidget*>("pcEEGTable");
 }
@@ -44,8 +43,7 @@ void PCDevice::fillTableColumn(int column, const QVector<float> & baseline)
 
 void PCDevice::inputDataIntoLabels(const QString& dateValue, const QString& timeValue, const QString& elapsedValue)
 {
-    m_pcDateValue->setText(dateValue);
-    m_pcTimeValue->setText(timeValue);
+    m_pcDateValue->setText(dateValue + " at " + timeValue);
     m_pcElapsedValue->setText(elapsedValue);
 }
 

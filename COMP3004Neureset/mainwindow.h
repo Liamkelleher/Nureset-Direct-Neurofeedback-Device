@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtDebug>
 #include "neurodevicecontroller.h"
+#include "pcdevice.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -28,6 +29,7 @@ private slots:
     void on_batteryUseButton_clicked();
     void on_batteryFullButton_clicked();
     void on_batteryEmptyButton_clicked();
+    void uploadSession(Session *);
 
 signals:
     void upArrowButtonPressed();
@@ -40,6 +42,7 @@ signals:
 private:
     Ui::MainWindow *ui;
     NeuroDeviceController *nDC;
+    PCDevice *pcdevice;
     QThread _NDCthread;
 
 };

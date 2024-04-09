@@ -7,7 +7,9 @@
 #include <QDateTimeEdit>
 #include <QElapsedTimer>
 #include <QList>
+#include <QDebug>
 #include <QStackedWidget>
+#include "sessionlog.h"
 
 class Display: public QObject
 {
@@ -16,6 +18,7 @@ class Display: public QObject
 public:
     Display(QStackedWidget* stackedWidget);
     int getCurrentMenuSelect();
+    void populateSessionLogs(SessionLog *);
 
 public slots:
     void upArrowButton(bool deviceOn);
@@ -24,6 +27,9 @@ public slots:
     void stopButton(bool deviceOn);
     void powerButton(bool deviceOn);
     void menuButton(bool deviceOn);
+
+signals:
+    void uploadSession(int);
 
 private:
     QStackedWidget* stackedWidget;

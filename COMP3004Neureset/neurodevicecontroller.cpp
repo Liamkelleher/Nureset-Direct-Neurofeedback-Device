@@ -1,4 +1,5 @@
 #include "neurodevicecontroller.h"
+#include <QDebug>
 
 NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd)
 {
@@ -8,6 +9,8 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     treatmentLightIndicator = new LightIndicator(treatmentInd);
     contactLostLightIndicator = new LightIndicator(contactLostInd);
 
+    manager = new SessionManager();
+
     display = new Display(stackedWidget);
 
     connect(this, &NeuroDeviceController::upArrowButton, display, &Display::upArrowButton);
@@ -16,6 +19,7 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(this, &NeuroDeviceController::stopButton, display, &Display::stopButton);
     connect(this, &NeuroDeviceController::menuButton, display, &Display::menuButton);
     connect(this, &NeuroDeviceController::powerButton, display, &Display::powerButton);
+    connect(display, &Display::uploadSession, this, &NeuroDeviceController::uploadSession);
 
     display->moveToThread(&_DISthread);
 
@@ -33,9 +37,17 @@ void NeuroDeviceController::downArrowButtonPressed() { emit downArrowButton(devi
 
 void NeuroDeviceController::startButtonPressed()
 {
-    if(deviceOn && display->getCurrentMenuSelect() == 0)
+    if (deviceOn)
     {
-        treatmentLightIndicator->updateState(LightIndicatorState::TreatmentInProgress);
+        if (display->getCurrentMenuSelect() == 0)
+        {
+            treatmentLightIndicator->updateState(LightIndicatorState::TreatmentInProgress);
+        }
+        if (display->getCurrentMenuSelect() == 1)
+        {
+            qDebug() << "Selected Log Menu";
+            display->populateSessionLogs(manager->getSessionLog());
+        }
     }
     emit startButton(deviceOn);
 }
@@ -71,3 +83,10 @@ void NeuroDeviceController::powerButtonPressed()
 }
 
 void NeuroDeviceController::menuButtonPressed() { emit menuButton(deviceOn); }
+
+void NeuroDeviceController::uploadSession(int index)
+{
+    SessionLog *log = manager->getSessionLog();
+    Session *session = &(*log)[index];
+    emit uploadToPC(session);
+}
