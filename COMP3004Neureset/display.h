@@ -8,6 +8,7 @@
 #include <QElapsedTimer>
 #include <QList>
 #include <QDebug>
+#include <QTime>
 #include <QStackedWidget>
 #include "sessionlog.h"
 
@@ -19,6 +20,7 @@ public:
     Display(QStackedWidget* stackedWidget);
     int getCurrentMenuSelect();
     void populateSessionLogs(SessionLog *);
+    void updateTimer(qint64);
 
 public slots:
     void upArrowButton(bool deviceOn);

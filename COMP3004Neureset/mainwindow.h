@@ -30,6 +30,7 @@ private slots:
     void on_batteryFullButton_clicked();
     void on_batteryEmptyButton_clicked();
     void uploadSession(Session *);
+    void on_pauseButton_pressed();
 
 signals:
     void upArrowButtonPressed();
@@ -38,6 +39,7 @@ signals:
     void stopButtonPressed();
     void powerButtonPressed();
     void menuButtonPressed();
+    void pauseButtonPressed();
 
 private:
     Ui::MainWindow *ui;

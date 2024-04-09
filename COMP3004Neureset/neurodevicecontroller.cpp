@@ -4,6 +4,8 @@
 NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd)
 {
     deviceOn = false;
+    sesActive = false;
+    sesPaused = true;
 
     contactLightIndicator = new LightIndicator(contactInd);
     treatmentLightIndicator = new LightIndicator(treatmentInd);
@@ -12,6 +14,13 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     manager = new SessionManager();
 
     display = new Display(stackedWidget);
+
+    deviceTime = QDateTime::currentDateTime();
+
+    timer = new QTimer();
+    elTimer = new QElapsedTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateUiTimer()));
+    savedTime = 0;
 
     connect(this, &NeuroDeviceController::upArrowButton, display, &Display::upArrowButton);
     connect(this, &NeuroDeviceController::downArrowButton, display, &Display::downArrowButton);
@@ -41,12 +50,16 @@ void NeuroDeviceController::startButtonPressed()
     {
         if (display->getCurrentMenuSelect() == 0)
         {
-            treatmentLightIndicator->updateState(LightIndicatorState::TreatmentInProgress);
+            if (!sesActive)
+                startSession();
         }
         if (display->getCurrentMenuSelect() == 1)
         {
-            qDebug() << "Selected Log Menu";
             display->populateSessionLogs(manager->getSessionLog());
+        }
+        if (sesActive && sesPaused)
+        {
+            resumeSession();
         }
     }
     emit startButton(deviceOn);
@@ -54,7 +67,8 @@ void NeuroDeviceController::startButtonPressed()
 
 void NeuroDeviceController::stopButtonPressed()
 {
-    treatmentLightIndicator->updateState(LightIndicatorState::Off);
+    if (sesActive)
+        endSession();
     emit stopButton(deviceOn);
 }
 
@@ -82,11 +96,79 @@ void NeuroDeviceController::powerButtonPressed()
 
 }
 
-void NeuroDeviceController::menuButtonPressed() { emit menuButton(deviceOn); }
+void NeuroDeviceController::menuButtonPressed()
+{
+    if (!sesActive)
+        emit menuButton(deviceOn);
+    else
+        qDebug() << "Session currently active, cannot go back to main menu.";
+}
 
 void NeuroDeviceController::uploadSession(int index)
 {
     SessionLog *log = manager->getSessionLog();
     Session *session = &(*log)[index];
     emit uploadToPC(session);
+}
+
+void NeuroDeviceController::startSession()
+{
+    sesActive = true;
+    sesPaused = false;
+    resetTimer();
+    manager->createSession(deviceTime);
+    QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 1000));
+    elTimer->start();
+}
+
+void NeuroDeviceController::endSession()
+{
+    qint64 finalTime = savedTime;
+    if (!sesPaused)
+        finalTime += elTimer->elapsed();
+    manager->endSession(QTime(0,0).addMSecs(static_cast<int>(finalTime)));
+    sesActive = false;
+    sesPaused = true;
+    treatmentLightIndicator->updateState(LightIndicatorState::Off);
+    resetTimer();
+    display->updateTimer(0);
+}
+
+void NeuroDeviceController::pauseSession()
+{
+    if (sesActive)
+    {
+        sesPaused = true;
+        savedTime += elTimer->elapsed();
+        QMetaObject::invokeMethod(timer, "stop", Qt::QueuedConnection);
+        elTimer->invalidate();
+    }
+}
+
+void NeuroDeviceController::resumeSession()
+{
+    sesPaused = false;
+    if (!elTimer->isValid())
+    {
+        elTimer->restart();
+    }
+    QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 1000));
+
+}
+
+void NeuroDeviceController::resetTimer()
+{
+    if (timer->isActive()) {
+        QMetaObject::invokeMethod(timer, "stop", Qt::QueuedConnection); // Ensures timer is stopped before resetting
+    }
+
+    elTimer->invalidate();
+    savedTime = 0;
+}
+
+
+void NeuroDeviceController::updateUiTimer()
+{
+    qint64 msecsElapsed = savedTime + elTimer->elapsed();
+    display->updateTimer(msecsElapsed);
 }

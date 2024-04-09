@@ -102,7 +102,8 @@ void Display::startButton(bool deviceOn)
                     return;
                 }
                 // emit Device, Device emit signals, mainWindow calls pc upload with session
-                emit uploadSession(sessionList->currentRow());
+                if (sessionList->currentRow() >= 0)
+                    emit uploadSession(sessionList->currentRow());
                 break;
             }
             case 3: // Time and Date
@@ -190,7 +191,7 @@ void Display::populateSessionLogs(SessionLog *sessionLogs)
         qDebug() << "Error: Failed to find or cast to QListWidget for 'sessionList'";
         return;
     }
-
+    sessionList->clear();
     // Check the count method and array access are safe
     int logCount = sessionLogs->count();
     if (logCount <= 0) {
@@ -205,9 +206,21 @@ void Display::populateSessionLogs(SessionLog *sessionLogs)
             qDebug() << "Warning: Empty log entry at index" << i;
             continue;
         }
-        QListWidgetItem* newItem = new QListWidgetItem(logEntry, sessionList);
+        QListWidgetItem* newItem = new QListWidgetItem(logEntry);
         sessionList->addItem(newItem);
     }
 }
 
+void Display::updateTimer(qint64 timeInMSecs)
+{
+    QLabel* timerLabel = dynamic_cast<QLabel*>(stackedWidget->widget(1)->findChild<QLabel*>("timerLabel"));
+
+    if (timerLabel)
+    {
+        QTime time = QTime(0,0).addMSecs(static_cast<int>(timeInMSecs));
+        // qDebug() << time;
+        QString text = time.toString("mm:ss");
+        timerLabel->setText(text);
+    }
+}
 

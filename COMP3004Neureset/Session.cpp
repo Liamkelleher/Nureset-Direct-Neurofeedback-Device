@@ -1,6 +1,6 @@
 #include "Session.h"
 
-Session::Session(QDateTime dateTime) : dateTime(dateTime), accumulatedTime(0), isPaused(false)
+Session::Session(QDateTime dateTime) : dateTime(dateTime)
 {
     beforeBaselines.resize(NUM_NODES);
     afterBaselines.resize(NUM_NODES);
@@ -10,31 +10,12 @@ Session::~Session() {}
 
 void Session::startSession()
 {
-    elapsedTime.start();
+    elapsedTime = QTime(0,0);
 }
 
-void Session::pauseSession() {
-    if (!isPaused) {
-            accumulatedTime += elapsedTime.elapsed();
-            elapsedTime.invalidate();
-            isPaused = true;
-    }
-}
-
-void Session::resumeSession()
+void Session::endSession(QTime elapsed)
 {
-    if (isPaused) {
-           elapsedTime.start();
-           isPaused = false;
-    }
-}
-
-void Session::endSession()
-{
-    if (!isPaused) {
-        accumulatedTime += elapsedTime.elapsed();
-    }
-    elapsedTime.invalidate();
+    this->elapsedTime = elapsed;
 }
 
 void Session::updateBeforeBaseline(int node, float value)
@@ -55,15 +36,12 @@ void Session::updateAfterBaseline(int node, float value)
 
 QTime Session::getTimeElapsed()
 {
-    if (elapsedTime.isValid()) {
-        return QTime(0, 0).addMSecs(accumulatedTime + elapsedTime.elapsed());
-    }
-    return QTime(0, 0).addMSecs(accumulatedTime);
+    return elapsedTime;
 }
 
-bool Session::getIsPaused() const
+void Session::setTimeElapsed(QTime newTime)
 {
-    return isPaused;
+    this->elapsedTime = newTime;
 }
 
 QVector<float> Session::getBeforeBaselines()
