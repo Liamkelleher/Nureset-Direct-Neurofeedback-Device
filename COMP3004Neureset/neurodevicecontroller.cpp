@@ -151,7 +151,6 @@ void NeuroDeviceController::resumeSession()
     if (!elTimer->isValid())
     {
         elTimer->restart();
-        qDebug() << "Resuming";
     }
     QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 1000));
 
