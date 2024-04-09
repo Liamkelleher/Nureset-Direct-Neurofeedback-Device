@@ -126,7 +126,6 @@ void NeuroDeviceController::endSession()
     qint64 finalTime = savedTime;
     if (!sesPaused)
         finalTime += elTimer->elapsed();
-    qDebug() << savedTime;
     manager->endSession(QTime(0,0).addMSecs(static_cast<int>(finalTime)));
     sesActive = false;
     sesPaused = true;

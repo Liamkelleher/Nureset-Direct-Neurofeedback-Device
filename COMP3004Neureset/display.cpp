@@ -218,11 +218,9 @@ void Display::updateTimer(qint64 timeInMSecs)
     if (timerLabel)
     {
         QTime time = QTime(0,0).addMSecs(static_cast<int>(timeInMSecs));
-        qDebug() << time;
+        // qDebug() << time;
         QString text = time.toString("mm:ss");
         timerLabel->setText(text);
-    } else {
-        qDebug() << "erfse";
     }
 }
 
