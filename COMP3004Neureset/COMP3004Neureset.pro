@@ -20,7 +20,8 @@ SOURCES += \
     qcustomplot.cpp \
     sessionlog.cpp \
     sessionmanager.cpp \
-    pcdevice.cpp
+    pcdevice.cpp \
+    waveform.cpp
 
 HEADERS += \
     LightIndicator.h \
@@ -34,7 +35,8 @@ HEADERS += \
     qcustomplot.h \
     sessionlog.h \
     sessionmanager.h \
-    pcdevice.h
+    pcdevice.h \
+    waveform.h
 
 FORMS += \
     mainwindow.ui

@@ -2,6 +2,10 @@
 #define DEFS_H
 
 #include <QString>
+#include <QVector>
+#include <cmath>
+
+#define NUM_NODES 7
 
 namespace LightIndicatorColors {
     const QString CONTACT_ON_COLOUR = "rgba(0, 150, 255, 1)"; // Blue inner
@@ -24,6 +28,21 @@ enum class LightIndicatorState {
     ContactLost, // Red light
 };
 
-#define NUM_NODES 7
+struct functionDataType {
+    double amplitude;
+    double frequency;
+    QVector<double> values;
+
+    functionDataType(double amp = 0.0, double freq = 0.0) : amplitude(amp), frequency(freq) {}
+
+    void calculateWave(int numberOfPoints, double timeInterval) {
+        values.clear(); // Clear existing values
+        for (int i = 0; i < numberOfPoints; ++i) {
+            double t = i * timeInterval;
+            double waveValue = amplitude * std::sin(2 * M_PI * frequency * t);
+            values.push_back(waveValue);
+        }
+    }
+};
 
 #endif // DEFS_H
