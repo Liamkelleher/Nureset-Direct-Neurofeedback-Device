@@ -1,21 +1,22 @@
 #ifndef EEGNODE_H
 #define EEGNODE_H
 
-#include <QVector>
-#include <cmath>
 #include <QDebug>
+#include "waveform.h"
+#include "defs.h"
 
 class EEGNode : public QObject
 {
     Q_OBJECT
 public:
-    EEGNode();
+    EEGNode(double, double, double, double, double, double, double, double);
 
-    QVector<double> generateWaveSignal();
-    QVector<double> getWaveSignal();
+    void captureWave();
+    Waveform getWaveSignal();
+    void updateWaveSignal(QVector<double>);
 
 private:
-    QVector<double> sinFunction;
+    Waveform wave;
 };
 
 #endif // EEGNODE_H

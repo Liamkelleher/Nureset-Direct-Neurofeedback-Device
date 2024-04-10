@@ -49,3 +49,8 @@ QVector<double> Waveform::getWaveSignal()
 {
     return eegReading.values;
 }
+
+void Waveform::setWaveSignal(QVector<double> newSignal)
+{
+    eegReading.values = newSignal;
+}

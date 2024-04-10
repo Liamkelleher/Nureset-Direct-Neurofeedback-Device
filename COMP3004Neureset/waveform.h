@@ -10,6 +10,7 @@ public:
     void generateWave();
     function getBand(BandType);
     QVector<double> getWaveSignal();
+    void setWaveSignal(QVector<double>);
 
 private:
     function alphaBand;

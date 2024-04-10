@@ -1,23 +1,20 @@
 #include "eegnode.h"
 
-EEGNode::EEGNode() {}
+EEGNode::EEGNode(double a_ampl, double a_freq, double b_ampl, double b_freq,double d_ampl, double d_freq,double t_ampl, double t_freq)
+            : wave(a_ampl, a_freq, b_ampl, b_freq, d_ampl, d_freq, t_ampl, t_freq)
+{}
 
-QVector<double> EEGNode::generateWaveSignal()
+Waveform EEGNode::getWaveSignal()
 {
-    const double pi = std::acos(-1);
-    const int numSteps = 100;
-
-    for (int i = 0; i <= numSteps; ++i) {
-        double x = i * 0.01;
-        double value = 0.2 * std::sin(18 * pi * x) +
-                       0.2 * std::sin(26 * pi * x) +
-                       0.2 * std::sin(3 * pi * x);
-        sinFunction.push_back(value);
-    }
-    return sinFunction;
+    return wave;
 }
 
-QVector<double> EEGNode::getWaveSignal()
+void EEGNode::updateWaveSignal(QVector<double> newSignal)
 {
-    return sinFunction;
+    wave.setWaveSignal(newSignal);
+}
+
+void EEGNode::captureWave()
+{
+    wave.generateWave();
 }
