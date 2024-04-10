@@ -2,19 +2,21 @@
 #define WAVEFORM_H
 
 #include <cmath>
-#include "defs.h" // for functionDataType
+#include "defs.h"
 
 class Waveform {
 public:
-    functionDataType alphaBand;
-    functionDataType betaBand;
-    functionDataType deltaBand;
-    functionDataType thetaBand;
-    functionDataType eegReading;
+    Waveform(double, double, double, double, double, double, double, double);
+    void generateWave();
+    function getBand(BandType);
+    QVector<double> getWaveSignal();
 
-    Waveform(functionDataType alpha, functionDataType beta, functionDataType delta, functionDataType theta);
-    void calculateAllWaves(int numberOfPoints, double timeInterval);
-    void calculateEEGReading();
+private:
+    function alphaBand;
+    function betaBand;
+    function deltaBand;
+    function thetaBand;
+    function eegReading;
 };
 
 #endif // WAVEFORM_H
