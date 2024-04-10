@@ -12,6 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     pcdevice->toggleComponents(false);
 
+    ui->EEGGraph->addGraph();
+    ui->EEGGraph->xAxis->setRange(0, 1);
+    ui->EEGGraph->yAxis->setRange(-1, 1);
+
     connect(this, &MainWindow::upArrowButtonPressed, nDC, &NeuroDeviceController::upArrowButtonPressed);
     connect(this, &MainWindow::downArrowButtonPressed, nDC, &NeuroDeviceController::downArrowButtonPressed);
     connect(this, &MainWindow::startButtonPressed, nDC, &NeuroDeviceController::startButtonPressed);
