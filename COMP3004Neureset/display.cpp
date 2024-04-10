@@ -6,6 +6,8 @@ Display::Display(QStackedWidget* stackedWidget)
     // init
     stackedWidget->setCurrentIndex(0);
     stackedWidget->hide();
+
+    dynamic_cast<QDateTimeEdit*>(stackedWidget->widget(3)->findChild<QDateTimeEdit*>("dateTimeEdit"))->setDateTime(QDateTime::currentDateTime());
 }
 
 void Display::upArrowButton(bool deviceOn)
@@ -107,8 +109,9 @@ void Display::startButton(bool deviceOn)
                 break;
             }
             case 3: // Time and Date
-                // After viewing or setting the time and date, go back to the main menu
-                // Will also be needed for session via session manager
+                QDateTimeEdit* dateTime = dynamic_cast<QDateTimeEdit*>(stackedWidget->widget(3)->findChild<QDateTimeEdit*>("dateTimeEdit"));
+                QDateTime newDateTime = dateTime->dateTime();
+                emit updateDateTime(newDateTime);
                 stackedWidget->setCurrentIndex(0); // Go back to the main menu
                 break;
         }

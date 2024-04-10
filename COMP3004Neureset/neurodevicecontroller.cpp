@@ -29,6 +29,7 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(this, &NeuroDeviceController::menuButton, display, &Display::menuButton);
     connect(this, &NeuroDeviceController::powerButton, display, &Display::powerButton);
     connect(display, &Display::uploadSession, this, &NeuroDeviceController::uploadSession);
+    connect(display, &Display::updateDateTime, this, &NeuroDeviceController::setDateTime);
 
     display->moveToThread(&_DISthread);
 
@@ -171,4 +172,9 @@ void NeuroDeviceController::updateUiTimer()
 {
     qint64 msecsElapsed = savedTime + elTimer->elapsed();
     display->updateTimer(msecsElapsed);
+}
+
+void NeuroDeviceController::setDateTime(QDateTime newDateTime)
+{
+    this->deviceTime = newDateTime;
 }

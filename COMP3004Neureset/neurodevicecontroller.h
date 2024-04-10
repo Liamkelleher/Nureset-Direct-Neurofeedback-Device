@@ -32,6 +32,7 @@ public slots:
     void uploadSession(int);
     void updateUiTimer();
     void pauseSession();
+    void setDateTime(QDateTime);
 
 signals:
     void upArrowButton(bool deviceOn);

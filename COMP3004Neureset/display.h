@@ -32,6 +32,7 @@ public slots:
 
 signals:
     void uploadSession(int);
+    void updateDateTime(QDateTime);
 
 private:
     QStackedWidget* stackedWidget;
