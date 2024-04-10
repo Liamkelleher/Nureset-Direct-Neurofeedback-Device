@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 CONFIG += c++11
 
@@ -12,9 +12,11 @@ SOURCES += \
     Session.cpp \
     display.cpp \
     LightIndicator.cpp \
+    eegnode.cpp \
     main.cpp \
     mainwindow.cpp \
     neurodevicecontroller.cpp \
+    qcustomplot.cpp \
     sessionlog.cpp \
     sessionmanager.cpp \
     pcdevice.cpp
@@ -24,8 +26,10 @@ HEADERS += \
     Session.h \
     defs.h \
     display.h \
+    eegnode.h \
     mainwindow.h \
     neurodevicecontroller.h \
+    qcustomplot.h \
     sessionlog.h \
     sessionmanager.h \
     pcdevice.h
