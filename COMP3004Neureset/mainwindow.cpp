@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::powerButtonPressed, nDC, &NeuroDeviceController::powerButtonPressed);
     connect(this, &MainWindow::pauseButtonPressed, nDC, &NeuroDeviceController::pauseSession);
     connect(nDC, &NeuroDeviceController::uploadToPC, this, &MainWindow::uploadSession);
+    connect(nDC, &NeuroDeviceController::updateGraph, this, &MainWindow::updateGraph);
 
     //moves the ndc to a new thread
     nDC->moveToThread(&_NDCthread);
@@ -65,4 +66,15 @@ void MainWindow::on_batteryEmptyButton_clicked()
 void MainWindow::uploadSession(Session* session)
 {
     pcdevice->uploadToPC(session);
+}
+
+void MainWindow::updateGraph(EEGNode* node)
+{
+    QVector<double> x(101);
+    for (int i = 0; i < 101; ++i)
+    {
+        x[i] = 0.01 * i;
+    }
+    ui->EEGGraph->graph()->setData(x, node->getWaveSignal());
+    ui->EEGGraph->replot();
 }

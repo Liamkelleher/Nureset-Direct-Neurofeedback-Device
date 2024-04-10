@@ -5,12 +5,14 @@
 #include <cmath>
 #include <QDebug>
 
-class EEGNode
+class EEGNode : public QObject
 {
+    Q_OBJECT
 public:
     EEGNode();
 
     QVector<double> generateWaveSignal();
+    QVector<double> getWaveSignal();
 
 private:
     QVector<double> sinFunction;

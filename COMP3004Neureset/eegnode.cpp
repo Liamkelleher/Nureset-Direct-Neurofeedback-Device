@@ -16,3 +16,8 @@ QVector<double> EEGNode::generateWaveSignal()
     }
     return sinFunction;
 }
+
+QVector<double> EEGNode::getWaveSignal()
+{
+    return sinFunction;
+}

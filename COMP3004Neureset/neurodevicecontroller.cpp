@@ -15,6 +15,8 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
 
     display = new Display(stackedWidget);
 
+    headset = new EEGHeadset();
+
     deviceTime = QDateTime::currentDateTime();
 
     timer = new QTimer();
