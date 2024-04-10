@@ -5,6 +5,7 @@
 #include "defs.h"
 #include <QThread>
 #include <QTimer>
+#include <QRandomGenerator>
 
 class EEGHeadset : public QObject
 {

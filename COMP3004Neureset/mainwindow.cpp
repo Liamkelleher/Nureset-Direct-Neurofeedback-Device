@@ -75,6 +75,6 @@ void MainWindow::updateGraph(EEGNode* node)
     {
         x[i] = 0.01 * i;
     }
-    ui->EEGGraph->graph()->setData(x, node->getWaveSignal());
+    ui->EEGGraph->graph()->setData(x, node->getWaveSignal().getWaveSignal());
     ui->EEGGraph->replot();
 }
