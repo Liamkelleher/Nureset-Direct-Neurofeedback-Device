@@ -279,6 +279,7 @@ void NeuroDeviceController::endSession()
     resetTimer();
     progBar->setValue(progBar->minimum());
     display->updateTimer(0);
+    display->menuButton();
 }
 
 void NeuroDeviceController::pauseSession()
