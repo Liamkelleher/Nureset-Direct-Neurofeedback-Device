@@ -18,6 +18,8 @@ private:
 
 public:
     Session(QDateTime);
+    Session(Session&);
+    Session();
     ~Session();
     void startSession();
     void endSession(QTime);
@@ -29,6 +31,9 @@ public:
     void setTimeElapsed(QTime);
     QDateTime getDateTime();
     QString toString() const;
+
+    friend QDataStream& operator<<(QDataStream& out, const Session& session);
+    friend QDataStream& operator>>(QDataStream& in, Session& session);
 };
 
 #endif // SESSION_H

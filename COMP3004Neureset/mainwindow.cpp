@@ -7,6 +7,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    for (int i = 0; i < NUM_NODES; ++i)
+    {
+        ui->nodeDropDown->addItem("Node " + QString::number(i+1));
+    }
+
     nDC = new NeuroDeviceController(ui->stackedWidget, ui->contactLight, ui->treatmentLight, ui->contactLostLight);
     pcdevice = new PCDevice(ui->pcDeviceWidget);
 
