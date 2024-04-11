@@ -11,7 +11,8 @@ void PCDevice::initializeComponents()
     m_pcNoDataLabel = m_parentWidget->findChild<QLabel*>("pcNoDataTitle");
     m_pcDateValue = m_parentWidget->findChild<QLabel*>("pcDateValue");
     m_pcElapsedValue = m_parentWidget->findChild<QLabel*>("pcElapsedValue");
-    m_pcEEGTable = m_parentWidget->findChild<QTableWidget*>("pcEEGTable");
+    m_pcBeforeValue = m_parentWidget->findChild<QLabel*>("pcBeforeValue");
+    m_pcAfterValue = m_parentWidget->findChild<QLabel*>("pcAfterValue");
 }
 
 void PCDevice::toggleComponents(bool isVisible)
@@ -25,26 +26,16 @@ void PCDevice::toggleComponents(bool isVisible)
     m_pcNoDataLabel->setVisible(!isVisible);
 }
 
-void PCDevice::inputDataIntoTable(const QVector<float>& beforeBaselines, const QVector<float>& afterBaselines)
+void PCDevice::inputDataIntoLabels(const QString& dateValue, const QString& timeValue, const QString& elapsedValue, const QString& beforeValue, const QString& afterValue)
 {
-    m_pcEEGTable->clearContents();
-    fillTableColumn(0, beforeBaselines);
-    fillTableColumn(1, afterBaselines);
-}
-
-void PCDevice::fillTableColumn(int column, const QVector<float> & baseline)
-{
-    int numRowsBefore = baseline.size();
-    m_pcEEGTable->setRowCount(numRowsBefore);
-    for (int row = 0; row < numRowsBefore; ++row) {
-        m_pcEEGTable->setItem(row, column, new QTableWidgetItem(QString::number(baseline[row])));
-    }
-}
-
-void PCDevice::inputDataIntoLabels(const QString& dateValue, const QString& timeValue, const QString& elapsedValue)
-{
+    QFont font = m_pcBeforeValue->font();
+    font.setPointSize(24);
     m_pcDateValue->setText(dateValue + " at " + timeValue);
     m_pcElapsedValue->setText(elapsedValue);
+    m_pcBeforeValue->setText(beforeValue + " Hz");
+    m_pcBeforeValue->setFont(font);
+    m_pcAfterValue->setText(afterValue + " Hz");
+    m_pcAfterValue->setFont(font);
 }
 
 void PCDevice::uploadToPC(Session* session)
@@ -53,11 +44,7 @@ void PCDevice::uploadToPC(Session* session)
         return;
 
     QMap<QString, QString> parsedData = parseDataToString(session);
-    // Update labels with session data
-    inputDataIntoLabels(parsedData["Date"],parsedData["Time"], parsedData["Elapsed"]);
-
-    // Upload before and after baselines to table
-    inputDataIntoTable(session->getBeforeBaselines(), session->getAfterBaselines());
+    inputDataIntoLabels(parsedData["Date"], parsedData["Time"], parsedData["Elapsed"], QString::number(session->getBeforeBaseline()), QString::number(session->getAfterBaseline()));
 
     toggleComponents(true);
 }

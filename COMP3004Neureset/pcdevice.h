@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QTableWidget>
+#include <QFont>
 #include "Session.h"
 
 class PCDevice : public QObject
@@ -14,9 +15,7 @@ public:
     PCDevice(QWidget *parentWidget);
 
     void toggleComponents(bool);
-    void inputDataIntoTable(const QVector<float>&, const QVector<float>&);
-    void inputDataIntoLabels(const QString&, const QString&, const QString&);
-    void fillTableColumn(int, const QVector<float>&);
+    void inputDataIntoLabels(const QString&, const QString&, const QString&, const QString&, const QString&);
     void uploadToPC(Session *);
 
 private:
@@ -24,7 +23,9 @@ private:
     QLabel* m_pcNoDataLabel;
     QLabel* m_pcDateValue;
     QLabel* m_pcElapsedValue;
-    QTableWidget* m_pcEEGTable;
+    QLabel* m_pcBeforeValue;
+    QLabel* m_pcAfterValue;
+
 
     void initializeComponents();
     QMap<QString, QString> parseDataToString(Session *);

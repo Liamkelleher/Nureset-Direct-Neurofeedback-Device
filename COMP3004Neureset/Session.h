@@ -12,8 +12,8 @@
 class Session {
 private:
     QDateTime dateTime;
-    QVector<float> beforeBaselines;
-    QVector<float> afterBaselines;
+    double beforeBaseline;
+    double afterBaseline;
     QTime elapsedTime;
 
 public:
@@ -21,10 +21,10 @@ public:
     ~Session();
     void startSession();
     void endSession(QTime);
-    void updateBeforeBaseline(int node, float value);
-    void updateAfterBaseline(int node, float value);
-    QVector<float> getBeforeBaselines();
-    QVector<float> getAfterBaselines();
+    void updateBeforeBaseline(double value);
+    void updateAfterBaseline(double value);
+    double getBeforeBaseline();
+    double getAfterBaseline();
     QTime getTimeElapsed();
     void setTimeElapsed(QTime);
     QDateTime getDateTime();
