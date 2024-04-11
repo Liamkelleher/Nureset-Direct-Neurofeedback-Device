@@ -8,7 +8,7 @@
 #define NUM_NODES 7
 #define GRAPH_STEPS 100
 #define STEP 0.01
-#define LOGS_FILE "sessionlog.txt"
+#define LOGS_FILE "sessionlog.dat"
 
 enum BandType {
     ALPHA,
