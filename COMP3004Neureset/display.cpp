@@ -10,161 +10,134 @@ Display::Display(QStackedWidget* stackedWidget)
     dynamic_cast<QDateTimeEdit*>(stackedWidget->widget(3)->findChild<QDateTimeEdit*>("dateTimeEdit"))->setDateTime(QDateTime::currentDateTime());
 }
 
-void Display::upArrowButton(bool deviceOn)
+void Display::upArrowButton()
 {
-    if (deviceOn)
-       {
-        // check if arrows should be active based on current page
-        QListWidget* widget = NULL;
+    // check if arrows should be active based on current page
+    QListWidget* widget = NULL;
 
-        if (stackedWidget->currentIndex() == 0) // main menu page
-        {
-            widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
-        }
-        else if (stackedWidget->currentIndex() == 2) // session logs
-        {
-            widget = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
-        }
-
-        // move selection
-        if (widget && widget->count() > 0)
-        {
-            int currentRow = widget->currentRow();
-            if (currentRow > 0)
-            {
-                widget->setCurrentRow(currentRow - 1);
-            }
-        }
-    }
-}
-
-void Display::downArrowButton(bool deviceOn)
-{
-    if (deviceOn)
-       {
-        // check if arrows should be active based on current page
-        QListWidget* widget = NULL;
-
-        if (stackedWidget->currentIndex() == 0) // main menu page
-        {
-            widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
-        }
-        else if (stackedWidget->currentIndex() == 2) // session logs
-        {
-            widget = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
-        }
-
-        // move selection
-        if (widget && widget->count() > 0)
-        {
-            int currentRow = widget->currentRow();
-            if (currentRow < widget->count() - 1)
-            {
-                widget->setCurrentRow(currentRow + 1);
-            }
-        }
-    }
-}
-
-
-void Display::startButton(bool deviceOn)
-{
-    if (deviceOn)
-       {
-        int currentIndex = stackedWidget->currentIndex();
-
-        // Based on current index of the QStackedWidget
-        switch (currentIndex)
-        {
-            case 0: // Main Menu
-            {
-                QListWidget* menuList = dynamic_cast<QListWidget*>(stackedWidget->widget(0)->findChild<QListWidget*>("menuList"));
-
-                int selected = menuList->currentRow();
-
-                switch (selected)
-                {
-                    case 0: // "New Session" is selected
-                        stackedWidget->setCurrentIndex(1);
-                        break;
-                    case 1: // "Session Logs" is selected
-                        stackedWidget->setCurrentIndex(2);
-                        break;
-                    case 2: // "Time and Date" is selected
-                        stackedWidget->setCurrentIndex(3);
-                        break;
-                }
-                break;
-            }
-            case 2: // Session Logs
-            {
-                QListWidget* sessionList = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
-                if (!sessionList) {
-                    qDebug() << "Error: Failed to find or cast to QListWidget for 'sessionList'";
-                    return;
-                }
-                // emit Device, Device emit signals, mainWindow calls pc upload with session
-                if (sessionList->currentRow() >= 0)
-                    emit uploadSession(sessionList->currentRow());
-                break;
-            }
-            case 3: // Time and Date
-                QDateTimeEdit* dateTime = dynamic_cast<QDateTimeEdit*>(stackedWidget->widget(3)->findChild<QDateTimeEdit*>("dateTimeEdit"));
-                QDateTime newDateTime = dateTime->dateTime();
-                emit updateDateTime(newDateTime);
-                stackedWidget->setCurrentIndex(0); // Go back to the main menu
-                break;
-        }
-    }
-}
-
-void Display::stopButton(bool deviceOn)
-{
-    if (deviceOn)
+    if (stackedWidget->currentIndex() == 0) // main menu page
     {
-        if (stackedWidget->currentIndex() != 0) // If not on the main menu
+        widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
+    }
+    else if (stackedWidget->currentIndex() == 2) // session logs
+    {
+        widget = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
+    }
+
+    // move selection
+    if (widget && widget->count() > 0)
+    {
+        int currentRow = widget->currentRow();
+        if (currentRow > 0)
         {
-            if (sesActive)
+            widget->setCurrentRow(currentRow - 1);
+        }
+    }
+}
+
+void Display::downArrowButton()
+{
+    // check if arrows should be active based on current page
+    QListWidget* widget = NULL;
+
+    if (stackedWidget->currentIndex() == 0) // main menu page
+    {
+        widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
+    }
+    else if (stackedWidget->currentIndex() == 2) // session logs
+    {
+        widget = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
+    }
+
+    // move selection
+    if (widget && widget->count() > 0)
+    {
+        int currentRow = widget->currentRow();
+        if (currentRow < widget->count() - 1)
+        {
+            widget->setCurrentRow(currentRow + 1);
+        }
+    }
+}
+
+
+void Display::startButton()
+{
+    int currentIndex = stackedWidget->currentIndex();
+
+    // Based on current index of the QStackedWidget
+    switch (currentIndex)
+    {
+        case 0: // Main Menu
+        {
+            QListWidget* menuList = dynamic_cast<QListWidget*>(stackedWidget->widget(0)->findChild<QListWidget*>("menuList"));
+
+            int selected = menuList->currentRow();
+
+            switch (selected)
             {
-                //stop session protocol
-                // add logic here
+                case 0: // "New Session" is selected
+                    stackedWidget->setCurrentIndex(1);
+                    break;
+                case 1: // "Session Logs" is selected
+                    stackedWidget->setCurrentIndex(2);
+                    break;
+                case 2: // "Time and Date" is selected
+                    stackedWidget->setCurrentIndex(3);
+                    break;
+            }
+            break;
+        }
+        case 2: // Session Logs
+        {
+            QListWidget* sessionList = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
+            if (!sessionList) {
+                qDebug() << "Error: Failed to find or cast to QListWidget for 'sessionList'";
+                return;
             }
 
+            // emit Device, Device emit signals, mainWindow calls pc upload with session
+            if (sessionList->currentRow() >= 0)
+                emit uploadSession(sessionList->currentRow());
+
+            break;
+        }
+        case 3: // Time and Date
+        {
+            QDateTimeEdit* dateTime = dynamic_cast<QDateTimeEdit*>(stackedWidget->widget(3)->findChild<QDateTimeEdit*>("dateTimeEdit"));
+            QDateTime newDateTime = dateTime->dateTime();
+            emit updateDateTime(newDateTime);
             stackedWidget->setCurrentIndex(0); // Go back to the main menu
+            break;
         }
     }
 }
 
-void Display::powerButton(bool deviceOn)
+void Display::stopButton()
 {
-    if (deviceOn)
-    {
-        if(sesActive)
-        {
-            // stop session handling
-        }
-        stackedWidget->setCurrentIndex(0); // main menu
-        stackedWidget->hide(); // hide to simulate 'shut off'
-    }
-    else
-    {
-
-        stackedWidget->setCurrentIndex(0); // main menu
-        QListWidget* widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
-        widget->setCurrentRow(0); // reset index
-        stackedWidget->show(); // show widget
-    }
+    stackedWidget->setCurrentIndex(0); // Go back to the main menu
 }
 
-void Display::menuButton(bool deviceOn)
+void Display::powerOnDisplay()
 {
-    if (deviceOn && !sesActive)
+    stackedWidget->setCurrentIndex(0); // main menu
+    QListWidget* widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
+    widget->setCurrentRow(0); // reset index
+    stackedWidget->show(); // show widget
+}
+
+void Display::powerOffDisplay()
+{
+    stackedWidget->setCurrentIndex(0); // main menu
+    stackedWidget->hide(); // hide to simulate 'shut off'
+}
+
+void Display::menuButton()
+{
+    int currentIndex = stackedWidget->currentIndex();
+    if (currentIndex != 0)
     {
-        int currentIndex = stackedWidget->currentIndex();
-        if (currentIndex != 0)
-        {
-            stackedWidget->setCurrentIndex(0);
-        }
+        stackedWidget->setCurrentIndex(0);
     }
 }
 
@@ -194,6 +167,7 @@ void Display::populateSessionLogs(SessionLog *sessionLogs)
         qDebug() << "Error: Failed to find or cast to QListWidget for 'sessionList'";
         return;
     }
+
     sessionList->clear();
     // Check the count method and array access are safe
     int logCount = sessionLogs->count();

@@ -6,10 +6,12 @@
 #include <QTimer>
 #include <QElapsedTimer>
 #include <QMetaObject>
+#include <QProgressBar>
 #include "display.h"
 #include "sessionmanager.h"
 #include "eegheadset.h"
 #include "LightIndicator.h"
+#include "treatment.h"
 
 
 class NeuroDeviceController: public QObject
@@ -17,8 +19,9 @@ class NeuroDeviceController: public QObject
     Q_OBJECT
 
 public:
-    NeuroDeviceController(QStackedWidget* stackedWidget, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd);
+    NeuroDeviceController(QStackedWidget* stackedWidget, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd, QProgressBar* progressBar, QProgressBar* batteryCharge);
     ~NeuroDeviceController();
+
     void startSession();
     void endSession();
     void resumeSession();
@@ -33,26 +36,39 @@ public slots:
     void uploadSession(int);
     void updateUiTimer();
     void pauseSession();
+    void returnBaseLine();
+    void nodeTreated();
+    void returnTreatedBaseLine();
     void setDateTime(QDateTime);
+    void nodeDisplayChanged(int index);
 
 signals:
-    void upArrowButton(bool deviceOn);
-    void downArrowButton(bool deviceOn);
-    void startButton(bool deviceOn);
-    void stopButton(bool deviceOn);
-    void powerButton(bool deviceOn);
-    void menuButton(bool deviceOn);
+    void upArrowButton();
+    void downArrowButton();
+    void startButton();
+    void stopButton();
+    void powerOnDisplay();
+    void powerOffDisplay();
+    void menuButton();
+    void getBaseLine();
+    void treatNodes();
+    void getTreatedBaseLine();
     void uploadToPC(Session *);
     void updateGraph(EEGNode*);
 
 private:
     Display *display;
-    QThread _DISthread;
+    QThread _DISThread, _HeadSetThread, _TreatThread;
     bool deviceOn, sesActive, sesPaused;
+    int numNodesTreated, curStep;
+
+    // Declare LightIndicator instances
     LightIndicator *contactLightIndicator;
     LightIndicator *treatmentLightIndicator;
     LightIndicator *contactLostLightIndicator;
+
     SessionManager *manager;
+
     EEGHeadset *headset;
     QDateTime deviceTime;
     QTimer* timer;
@@ -60,7 +76,11 @@ private:
     qint64 savedTime;
     qint64 pausedTime;
 
+    QProgressBar *progBar, *batCharge;
+    Treatment* treatment;
+
     void resetTimer();
+    void powerOff();
 };
 
 #endif // NEURODEVICECONTROLLER_H

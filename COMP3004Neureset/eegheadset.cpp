@@ -36,3 +36,15 @@ EEGNode& EEGHeadset::operator[](int index)
 {
     return *nodes.at(index);
 }
+
+void EEGHeadset::getBaseLine()
+{
+    QThread::msleep(5000);
+    emit returnBaseLine();
+}
+
+void EEGHeadset::getTreatedBaseLine()
+{
+    QThread::msleep(5000);
+    emit returnTreatedBaseLine();
+}

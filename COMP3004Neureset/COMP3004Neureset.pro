@@ -21,6 +21,7 @@ SOURCES += \
     sessionlog.cpp \
     sessionmanager.cpp \
     pcdevice.cpp \
+    treatment.cpp \
     waveform.cpp
 
 HEADERS += \
@@ -36,6 +37,7 @@ HEADERS += \
     sessionlog.h \
     sessionmanager.h \
     pcdevice.h \
+    treatment.h \
     waveform.h
 
 FORMS += \

@@ -32,6 +32,7 @@ private slots:
     void uploadSession(Session *);
     void on_pauseButton_pressed();
     void updateGraph(EEGNode*);
+    void on_nodeDropDown_currentIndexChanged(int index);
 
 signals:
     void upArrowButtonPressed();
@@ -41,6 +42,7 @@ signals:
     void powerButtonPressed();
     void menuButtonPressed();
     void pauseButtonPressed();
+    void nodeDisplayChanged(int index);
 
 private:
     Ui::MainWindow *ui;
