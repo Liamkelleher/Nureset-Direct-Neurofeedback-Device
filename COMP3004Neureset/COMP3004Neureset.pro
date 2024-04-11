@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 CONFIG += c++11
 
@@ -9,14 +9,36 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Session.cpp \
+    display.cpp \
     LightIndicator.cpp \
+    eegheadset.cpp \
+    eegnode.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    neurodevicecontroller.cpp \
+    qcustomplot.cpp \
+    sessionlog.cpp \
+    sessionmanager.cpp \
+    pcdevice.cpp \
+    treatment.cpp \
+    waveform.cpp
 
 HEADERS += \
     LightIndicator.h \
+    Session.h \
     defs.h \
-    mainwindow.h
+    display.h \
+    eegheadset.h \
+    eegnode.h \
+    mainwindow.h \
+    neurodevicecontroller.h \
+    qcustomplot.h \
+    sessionlog.h \
+    sessionmanager.h \
+    pcdevice.h \
+    treatment.h \
+    waveform.h
 
 FORMS += \
     mainwindow.ui

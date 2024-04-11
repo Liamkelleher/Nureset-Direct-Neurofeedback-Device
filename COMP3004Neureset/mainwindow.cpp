@@ -6,175 +6,82 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+	
+	for (int i = 0; i < NUM_NODES; ++i)
+    {
+        ui->nodeDropDown->addItem("Node " + QString::number(i+1));
+    }
 
-    ui->sessionProgressBar->hide();
-    ui->timeElapsed->hide();
-    hidden = true;
-    sesActive = false;
+    nDC = new NeuroDeviceController(ui->stackedWidget, ui->contactLight, ui->treatmentLight, ui->contactLostLight, ui->progressBar, ui->batteryCharge);
+    pcdevice = new PCDevice(ui->pcDeviceWidget);
 
-    // Create LightIndicator instances for each light indicator button
-    contactLightIndicator = new LightIndicator(ui->contactLight);
-    treatmentLightIndicator = new LightIndicator(ui->treatmentLight);
-    contactLostLightIndicator = new LightIndicator(ui->contactLostLight);
+    pcdevice->toggleComponents(false);
+	
+	ui->EEGGraph->addGraph();
+    ui->EEGGraph->xAxis->setRange(0, 1);
+    ui->EEGGraph->yAxis->setRange(-1, 1);
+
+    connect(this, &MainWindow::upArrowButtonPressed, nDC, &NeuroDeviceController::upArrowButtonPressed);
+    connect(this, &MainWindow::downArrowButtonPressed, nDC, &NeuroDeviceController::downArrowButtonPressed);
+    connect(this, &MainWindow::startButtonPressed, nDC, &NeuroDeviceController::startButtonPressed);
+    connect(this, &MainWindow::stopButtonPressed, nDC, &NeuroDeviceController::stopButtonPressed);
+    connect(this, &MainWindow::menuButtonPressed, nDC, &NeuroDeviceController::menuButtonPressed);
+    connect(this, &MainWindow::powerButtonPressed, nDC, &NeuroDeviceController::powerButtonPressed);
+    connect(this, &MainWindow::pauseButtonPressed, nDC, &NeuroDeviceController::pauseSession);
+    connect(this, &MainWindow::nodeDisplayChanged, nDC, &NeuroDeviceController::nodeDisplayChanged);
+    connect(nDC, &NeuroDeviceController::uploadToPC, this, &MainWindow::uploadSession);
+    connect(nDC, &NeuroDeviceController::updateGraph, this, &MainWindow::updateGraph);
+
+    //moves the ndc to a new thread
+    nDC->moveToThread(&_NDCthread);
+
+    _NDCthread.start();
 }
 
 MainWindow::~MainWindow()
 {
+    _NDCthread.exit();
+    _NDCthread.wait();
     delete ui;
 }
 
-void MainWindow::on_upArrowButton_clicked()
-{
-
-    if (ui->display->count() != 0)
-    {
-        int curr = menuList.indexOf(ui->display->currentItem());
-
-        if (curr > 0)
-        {
-            ui->display->setCurrentItem(menuList[curr - 1]);
-        }
-    }
-
-}
-
-
-void MainWindow::on_downArrowButton_clicked()
-{
-    if (ui->display->count() != 0)
-    {
-        int curr = menuList.indexOf(ui->display->currentItem());
-
-        if (curr < (menuList.length() - 1))
-        {
-            ui->display->setCurrentItem(menuList[curr + 1]);
-        }
-    }
-}
-
-
-void MainWindow::on_startButton_clicked()
-{
-    if (ui->display->currentItem() == menuList[0])
-    {
-        ui->display->clear();
-
-        ui->sessionProgressBar->show();
-        ui->timeElapsed->show();
-
-        hidden = false;
-        sesActive = true;
-    }
-
-    if (ui->display->currentItem() == menuList[1])
-    {
-        ui->display->clear();
-        //Show session logs
-
-        //Uploading to PC device
-    }
-
-    if (ui->display->currentItem() == menuList[2])
-    {
-        ui->display->clear();
-
-        //time and date adjustment
-    }
-}
-
-
-void MainWindow::on_stopButton_clicked()
-{
-    if (sesActive)
-    {
-        //stop session protocol
-
-        ui->sessionProgressBar->hide();
-        ui->timeElapsed->hide();
-
-        hidden = true;
-        sesActive = false;
-
-        createMenuList();
-
-        ui->display->setCurrentItem(menuList[0]);
-    }
-}
-
-
-void MainWindow::on_powerButton_clicked()
-{
-    if (deviceOn)
-    {
-        deviceOn = false;
-
-        if (sesActive)
-        {
-            //stop session protocol
-
-            ui->sessionProgressBar->hide();
-            ui->timeElapsed->hide();
-
-            hidden = true;
-            sesActive = false;
-        }
-
-        ui->display->clear();
-    }
-
-    else
-    {
-        deviceOn = true;
-
-        createMenuList();
-
-        ui->display->setCurrentItem(menuList[0]);
-    }
-}
-
-
-void MainWindow::on_menuButton_clicked()
-{
-    if (deviceOn && !sesActive)
-    {
-        ui->display->clear();
-
-        createMenuList();
-
-        ui->display->setCurrentItem(menuList[0]);
-    }
-}
-
-void MainWindow::createMenuList()
-{
-    menuList[0] = new QListWidgetItem("NEW SESSION");
-    menuList[1] = new QListWidgetItem("SESSION LOGS");
-    menuList[2] = new QListWidgetItem("TIME AND DATE");
-
-    menuList[0]->setTextAlignment(4);
-    menuList[1]->setTextAlignment(4);
-    menuList[2]->setTextAlignment(4);
-
-    ui->display->addItem(menuList[0]);
-    ui->display->addItem(menuList[1]);
-    ui->display->addItem(menuList[2]);
-}
-
+void MainWindow::on_upArrowButton_clicked() { emit upArrowButtonPressed(); }
+void MainWindow::on_downArrowButton_clicked() { emit downArrowButtonPressed(); }
+void MainWindow::on_startButton_clicked() { emit startButtonPressed(); }
+void MainWindow::on_stopButton_clicked() { emit stopButtonPressed(); }
+void MainWindow::on_powerButton_clicked() { emit powerButtonPressed(); }
+void MainWindow::on_menuButton_clicked() { emit menuButtonPressed(); }
+void MainWindow::on_pauseButton_pressed(){ emit pauseButtonPressed(); }
+void MainWindow::on_nodeDropDown_currentIndexChanged(int index) { emit nodeDisplayChanged(index); }
 
 void MainWindow::on_batteryUseButton_clicked()
 {
     ui->batteryCharge->setValue(ui->batteryCharge->value() - 10);
 }
 
-
 void MainWindow::on_batteryFullButton_clicked()
 {
     ui->batteryCharge->setValue(ui->batteryCharge->maximum());
 }
 
-
 void MainWindow::on_batteryEmptyButton_clicked()
 {
     ui->batteryCharge->setValue(ui->batteryCharge->minimum());
+}
+
+void MainWindow::uploadSession(Session* session)
+{
+    pcdevice->uploadToPC(session);
+}
+
+void MainWindow::updateGraph(EEGNode* node)
+{
+    QVector<double> x(101);
+    for (int i = 0; i < 101; ++i)
+    {
+        x[i] = 0.01 * i;
+    }
+    ui->EEGGraph->graph()->setData(x, node->getWaveSignal().getWaveSignal());
+    ui->EEGGraph->replot();
 }
 
