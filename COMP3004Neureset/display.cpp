@@ -123,10 +123,6 @@ void Display::powerOnDisplay()
     stackedWidget->setCurrentIndex(0); // main menu
     QListWidget* widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
     widget->setCurrentRow(0); // reset index
-
-
-
-
     stackedWidget->show(); // show widget
 }
 
