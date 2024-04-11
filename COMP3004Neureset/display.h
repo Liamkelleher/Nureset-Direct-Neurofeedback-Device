@@ -8,7 +8,6 @@
 #include <QElapsedTimer>
 #include <QList>
 #include <QDebug>
-#include <QTime>
 #include <QStackedWidget>
 #include "sessionlog.h"
 
@@ -23,12 +22,13 @@ public:
     void updateTimer(qint64);
 
 public slots:
-    void upArrowButton(bool deviceOn);
-    void downArrowButton(bool deviceOn);
-    void startButton(bool deviceOn);
-    void stopButton(bool deviceOn);
-    void powerButton(bool deviceOn);
-    void menuButton(bool deviceOn);
+    void upArrowButton();
+    void downArrowButton();
+    void startButton();
+    void stopButton();
+    void powerOnDisplay();
+    void powerOffDisplay();
+    void menuButton();
 
 signals:
     void uploadSession(int);
@@ -37,7 +37,6 @@ signals:
 private:
     QStackedWidget* stackedWidget;
     QElapsedTimer sesTimer;
-    bool hidden, sesActive;
 };
 
 #endif // DISPLAY_H

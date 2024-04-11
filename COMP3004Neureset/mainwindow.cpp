@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->nodeDropDown->addItem("Node " + QString::number(i+1));
     }
 
-    nDC = new NeuroDeviceController(ui->stackedWidget, ui->contactLight, ui->treatmentLight, ui->contactLostLight);
+    nDC = new NeuroDeviceController(ui->stackedWidget, ui->contactLight, ui->treatmentLight, ui->contactLostLight, ui->progressBar, ui->batteryCharge);
     pcdevice = new PCDevice(ui->pcDeviceWidget);
 
     pcdevice->toggleComponents(false);
@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::menuButtonPressed, nDC, &NeuroDeviceController::menuButtonPressed);
     connect(this, &MainWindow::powerButtonPressed, nDC, &NeuroDeviceController::powerButtonPressed);
     connect(this, &MainWindow::pauseButtonPressed, nDC, &NeuroDeviceController::pauseSession);
+    connect(this, &MainWindow::nodeDisplayChanged, nDC, &NeuroDeviceController::nodeDisplayChanged);
     connect(nDC, &NeuroDeviceController::uploadToPC, this, &MainWindow::uploadSession);
     connect(nDC, &NeuroDeviceController::updateGraph, this, &MainWindow::updateGraph);
 
@@ -49,9 +50,9 @@ void MainWindow::on_downArrowButton_clicked() { emit downArrowButtonPressed(); }
 void MainWindow::on_startButton_clicked() { emit startButtonPressed(); }
 void MainWindow::on_stopButton_clicked() { emit stopButtonPressed(); }
 void MainWindow::on_powerButton_clicked() { emit powerButtonPressed(); }
-void MainWindow::on_menuButton_clicked() { emit menuButtonPressed(); }\
+void MainWindow::on_menuButton_clicked() { emit menuButtonPressed(); }
 void MainWindow::on_pauseButton_pressed(){ emit pauseButtonPressed(); }
-
+void MainWindow::on_nodeDropDown_currentIndexChanged(int index) { emit nodeDisplayChanged(index); }
 
 void MainWindow::on_batteryUseButton_clicked()
 {

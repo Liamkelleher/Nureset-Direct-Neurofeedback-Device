@@ -17,6 +17,15 @@ public:
     void captureWaves();
     EEGNode& operator[](int index);
 
+public slots:
+    void getBaseLine();
+    void getTreatedBaseLine();
+
+signals:
+    void returnBaseLine();
+    void returnTreatedBaseLine();
+
+
 private:
     QVector<EEGNode *> nodes;
 };
