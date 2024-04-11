@@ -705,16 +705,6 @@
       <string>Batter Empty</string>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="eegGraphDisplay">
-     <property name="geometry">
-      <rect>
-       <x>430</x>
-       <y>39</y>
-       <width>360</width>
-       <height>261</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QComboBox" name="nodeDropDown">
      <property name="geometry">
       <rect>
@@ -1033,9 +1023,27 @@
       </property>
      </widget>
     </widget>
+    <widget class="QCustomPlot" name="EEGGraph" native="true">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>40</y>
+       <width>341</width>
+       <height>251</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

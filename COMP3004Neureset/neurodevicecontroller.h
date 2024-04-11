@@ -8,6 +8,7 @@
 #include <QMetaObject>
 #include "display.h"
 #include "sessionmanager.h"
+#include "eegheadset.h"
 #include "LightIndicator.h"
 
 
@@ -42,6 +43,7 @@ signals:
     void powerButton(bool deviceOn);
     void menuButton(bool deviceOn);
     void uploadToPC(Session *);
+    void updateGraph(EEGNode*);
 
 private:
     Display *display;
@@ -51,6 +53,7 @@ private:
     LightIndicator *treatmentLightIndicator;
     LightIndicator *contactLostLightIndicator;
     SessionManager *manager;
+    EEGHeadset *headset;
     QDateTime deviceTime;
     QTimer* timer;
     QElapsedTimer *elTimer;

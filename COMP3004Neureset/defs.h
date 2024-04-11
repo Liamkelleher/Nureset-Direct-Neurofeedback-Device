@@ -2,6 +2,19 @@
 #define DEFS_H
 
 #include <QString>
+#include <QVector>
+#include <cmath>
+
+#define NUM_NODES 7
+#define GRAPH_STEPS 100
+#define STEP 0.01
+
+enum BandType {
+    ALPHA,
+    BETA,
+    DELTA,
+    THETA
+};
 
 namespace LightIndicatorColors {
     const QString CONTACT_ON_COLOUR = "rgba(0, 150, 255, 1)"; // Blue inner
@@ -24,6 +37,21 @@ enum class LightIndicatorState {
     ContactLost, // Red light
 };
 
-#define NUM_NODES 7
+struct function {
+    double amplitude;
+    double frequency;
+    QVector<double> values;
+
+    function(double amp = 0.0, double freq = 0.0) : amplitude(amp), frequency(freq) {}
+
+    void calculateWave() {
+        values.clear();
+        for (int i = 0; i < GRAPH_STEPS; ++i) {
+            double x = i * STEP;
+            double waveValue = amplitude * std::sin(2 * frequency * M_PI * x);
+            values.push_back(waveValue);
+        }
+    }
+};
 
 #endif // DEFS_H

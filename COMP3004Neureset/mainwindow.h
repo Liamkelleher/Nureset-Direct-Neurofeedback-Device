@@ -31,6 +31,7 @@ private slots:
     void on_batteryEmptyButton_clicked();
     void uploadSession(Session *);
     void on_pauseButton_pressed();
+    void updateGraph(EEGNode*);
 
 signals:
     void upArrowButtonPressed();
