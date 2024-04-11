@@ -17,8 +17,8 @@ public:
     void createSession(QDateTime);
     void endSession(QTime);
     QTime getCurrentSessionElapsedTime() const;
-    void updateBeforeBaseline(int, float);
-    void updateAfterBaseline(int, float);
+    void updateBeforeBaseline(double);
+    void updateAfterBaseline(double);
     SessionLog* getSessionLog() const;
 };
 

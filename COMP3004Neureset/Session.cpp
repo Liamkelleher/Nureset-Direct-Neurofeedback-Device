@@ -1,10 +1,6 @@
 #include "Session.h"
 
-Session::Session(QDateTime dateTime) : dateTime(dateTime)
-{
-    beforeBaselines.resize(NUM_NODES);
-    afterBaselines.resize(NUM_NODES);
-}
+Session::Session(QDateTime dateTime) : dateTime(dateTime), beforeBaseline(0.0), afterBaseline(0.0) {}
 
 Session::~Session() {}
 
@@ -18,20 +14,14 @@ void Session::endSession(QTime elapsed)
     this->elapsedTime = elapsed;
 }
 
-void Session::updateBeforeBaseline(int node, float value)
+void Session::updateBeforeBaseline(double value)
 {
-    if(node >= 0 && node < beforeBaselines.size())
-    {
-        beforeBaselines[node] = value;
-    }
+    beforeBaseline = value;
 }
 
-void Session::updateAfterBaseline(int node, float value)
+void Session::updateAfterBaseline(double value)
 {
-    if(node >= 0 && node < afterBaselines.size())
-    {
-        afterBaselines[node] = value;
-    }
+    afterBaseline = value;
 }
 
 QTime Session::getTimeElapsed()
@@ -44,14 +34,14 @@ void Session::setTimeElapsed(QTime newTime)
     this->elapsedTime = newTime;
 }
 
-QVector<float> Session::getBeforeBaselines()
+double Session::getBeforeBaseline()
 {
-    return beforeBaselines;
+    return beforeBaseline;
 }
 
-QVector<float> Session::getAfterBaselines()
+double Session::getAfterBaseline()
 {
-    return afterBaselines;
+    return afterBaseline;
 }
 
 QDateTime Session::getDateTime()

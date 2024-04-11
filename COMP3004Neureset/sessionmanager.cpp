@@ -29,15 +29,15 @@ QTime SessionManager::getCurrentSessionElapsedTime() const {
     return QTime(0, 0);
 }
 
-void SessionManager::updateBeforeBaseline(int nodeNum, float beforeValue) {
+void SessionManager::updateBeforeBaseline(double beforeValue) {
     if(currentSession) {
-        currentSession->updateBeforeBaseline(nodeNum, beforeValue);
+        currentSession->updateBeforeBaseline(beforeValue);
     }
 }
 
-void SessionManager::updateAfterBaseline(int nodeNum, float afterValue) {
+void SessionManager::updateAfterBaseline(double afterValue) {
     if(currentSession) {
-        currentSession->updateAfterBaseline(nodeNum, afterValue);
+        currentSession->updateAfterBaseline(afterValue);
     }
 }
 
