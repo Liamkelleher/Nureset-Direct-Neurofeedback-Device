@@ -6,6 +6,8 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     deviceOn = false;
     sesActive = false;
     sesPaused = false;
+    connection = true;
+    sessionCreated = false;
 
     numNodesTreated = 0;
     curStep = 0;
@@ -34,6 +36,8 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
 
     treatment = new Treatment();
 
+    contactLost = new ContactLost();
+
     connect(this, &NeuroDeviceController::upArrowButton, display, &Display::upArrowButton);
     connect(this, &NeuroDeviceController::downArrowButton, display, &Display::downArrowButton);
     connect(this, &NeuroDeviceController::startButton, display, &Display::startButton);
@@ -41,27 +45,34 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(this, &NeuroDeviceController::menuButton, display, &Display::menuButton);
     connect(this, &NeuroDeviceController::powerOffDisplay, display, &Display::powerOffDisplay);
     connect(this, &NeuroDeviceController::powerOnDisplay, display, &Display::powerOnDisplay);
+    connect(display, &Display::uploadSession, this, &NeuroDeviceController::uploadSession);
+    connect(display, &Display::updateDateTime, this, &NeuroDeviceController::setDateTime);
 
+    connect(this, &NeuroDeviceController::applyTreatment, treatment, &Treatment::applyTreatment);
     connect(treatment, &Treatment::beforeDominantFreq, this, &NeuroDeviceController::addBeforeDominant);
     connect(treatment, &Treatment::afterDominantFreq, this, &NeuroDeviceController::addAfterDominant);
     connect(treatment, &Treatment::sendFeedback, this, &NeuroDeviceController::getFeedbackFreq);
     connect(treatment, &Treatment::captureAllWaves, this, &NeuroDeviceController::captureAllWaves);
-    connect(this, &NeuroDeviceController::applyTreatment, treatment, &Treatment::applyTreatment);
+    connect(treatment, &Treatment::endAnalysis, this, &NeuroDeviceController::endAnalysis);
+    connect(treatment, &Treatment::toggleTreatmentLight, this, &NeuroDeviceController::toggleTreatmentLight);
 
     connect(this, &NeuroDeviceController::getInitialBaseline, headset, &EEGHeadset::getInitialBaseline);
     connect(headset, &EEGHeadset::startAnalysis, this, &NeuroDeviceController::startAnalysis);
-    connect(treatment, &Treatment::endAnalysis, this, &NeuroDeviceController::endAnalysis);
 
-    connect(display, &Display::uploadSession, this, &NeuroDeviceController::uploadSession);
-    connect(display, &Display::updateDateTime, this, &NeuroDeviceController::setDateTime);
+    connect(this, &NeuroDeviceController::pausedWarning, contactLost, &ContactLost::pausedWarning);
+    connect(this, &NeuroDeviceController::contactWarning, contactLost, &ContactLost::contactWarning);
+    connect(contactLost, &ContactLost::toggleContactLostLight, this, &NeuroDeviceController::toggleContactLostLight);
+    connect(contactLost, &ContactLost::sessionExpired, this, &NeuroDeviceController::sessionExpired);
 
     display->moveToThread(&_DISThread);
     headset->moveToThread(&_HeadSetThread);
     treatment->moveToThread(&_TreatThread);
+    contactLost->moveToThread(&_CLThread);
 
     _DISThread.start();
     _HeadSetThread.start();
     _TreatThread.start();
+    _CLThread.start();
 }
 
 NeuroDeviceController::~NeuroDeviceController()
@@ -74,6 +85,9 @@ NeuroDeviceController::~NeuroDeviceController()
 
     _TreatThread.exit();
     _TreatThread.wait();
+
+    _CLThread.exit();
+    _CLThread.wait();
 }
 
 void NeuroDeviceController::upArrowButtonPressed() { if (deviceOn) { emit upArrowButton(); } }
@@ -87,11 +101,12 @@ void NeuroDeviceController::startButtonPressed()
 
         if (display->getCurrentMenuSelect() == 0)
         {
-            if (!sesActive)
+            if (!sesActive && connection)
             {
+                contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
                 startSession();
-                treatmentLightIndicator->updateState(LightIndicatorState::TreatmentInProgress);
             }
+
             if (sesActive && sesPaused)
             {
                 resumeSession();
@@ -124,20 +139,10 @@ void NeuroDeviceController::getFeedbackFreq(double feedbackFreq)
     headset->forwardFeedback(feedbackFreq);
 }
 
-void NeuroDeviceController::captureAllWaves()
-{
-    headset->captureAllWaves();
-}
+void NeuroDeviceController::captureAllWaves() { headset->captureAllWaves(); }
 
-void NeuroDeviceController::addBeforeDominant(double freq)
-{
-    manager->updateBeforeBaseline(freq);
-}
-
-void NeuroDeviceController::addAfterDominant(double freq)
-{
-    manager->updateAfterBaseline(freq);
-}
+void NeuroDeviceController::addBeforeDominant(double freq) { manager->updateBeforeBaseline(freq); }
+void NeuroDeviceController::addAfterDominant(double freq) { manager->updateAfterBaseline(freq); }
 
 bool NeuroDeviceController::checkBatteryLevel(int btDrain)
 {
@@ -222,9 +227,6 @@ void NeuroDeviceController::powerButtonPressed()
 
     else
     {
-        //Bootup Protocols
-        contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
-
         emit powerOnDisplay();
 
         deviceOn = true;
@@ -243,7 +245,12 @@ void NeuroDeviceController::powerOff()
     contactLightIndicator->updateState(LightIndicatorState::Off);
     treatmentLightIndicator->updateState(LightIndicatorState::Off);
 
+    treatment->cancelTreatment();
+
     emit powerOffDisplay();
+
+    connection = true;
+    sesPaused = false;
 
     deviceOn = false;
 }
@@ -271,6 +278,7 @@ void NeuroDeviceController::startSession()
     headset->clearNodes();
     resetTimer();
     manager->createSession(deviceTime);
+    sessionCreated = true;
     QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 1000));
     elTimer->start();
     emit getInitialBaseline();
@@ -285,9 +293,11 @@ void NeuroDeviceController::endSession()
     if (!sesPaused)
         finalTime += elTimer->elapsed();
     manager->endSession(QTime(0,0).addMSecs(static_cast<int>(finalTime)));
+    sessionCreated = false;
     sesActive = false;
     sesPaused = true;
     treatmentLightIndicator->updateState(LightIndicatorState::Off);
+    contactLightIndicator->updateState(LightIndicatorState::Off);
     resetTimer();
     progBar->setValue(progBar->minimum());
     display->updateTimer(0);
@@ -298,6 +308,11 @@ void NeuroDeviceController::pauseSession()
 {
     if (sesActive)
     {
+        if (connection)
+        {
+            contactLost->setPausedState(true);
+            emit pausedWarning();
+        }
         sesPaused = true;
         savedTime += elTimer->elapsed();
         QMetaObject::invokeMethod(timer, "stop", Qt::QueuedConnection);
@@ -308,6 +323,8 @@ void NeuroDeviceController::pauseSession()
 void NeuroDeviceController::resumeSession()
 {
     sesPaused = false;
+    contactLost->setPausedState(false);
+
     if (!elTimer->isValid())
     {
         elTimer->restart();
@@ -366,6 +383,57 @@ void NeuroDeviceController::nodeDisplayChanged(int index)
     {
         emit updateGraph(&(*headset)[index]);
     }
+}
 
-    //Otherwise keep graph blank
+void NeuroDeviceController::toggleTreatmentLight(bool on)
+{
+    if (on)
+    {
+        treatmentLightIndicator->updateState(LightIndicatorState::TreatmentInProgress);
+    }
+
+    else
+    {
+        treatmentLightIndicator->updateState(LightIndicatorState::Off);
+    }
+}
+
+void NeuroDeviceController::toggleContactLostLight(bool on)
+{
+    if (on)
+    {
+        contactLostLightIndicator->updateState(LightIndicatorState::ContactLost);
+    }
+
+    else
+    {
+        contactLostLightIndicator->updateState(LightIndicatorState::Off);
+    }
+}
+
+void NeuroDeviceController::terminateConnection()
+{
+    connection = false;
+    contactLost->setContactState(true);
+    pauseSession();
+    emit contactWarning();
+}
+
+void NeuroDeviceController::establishConnection()
+{
+    connection = true;
+    contactLost->setContactState(false);
+    resumeSession();
+}
+
+void NeuroDeviceController::sessionExpired()
+{
+    qDebug() << "Session Expired: Powering OFF";
+    powerOff();
+
+    if (sessionCreated)
+    {
+        //remove most recent session
+    }
+
 }

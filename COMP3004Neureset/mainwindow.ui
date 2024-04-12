@@ -715,43 +715,17 @@
       </rect>
      </property>
     </widget>
-    <widget class="QPushButton" name="batteryUseButton_2">
+    <widget class="QPushButton" name="terminateConnection">
      <property name="geometry">
       <rect>
-       <x>650</x>
+       <x>590</x>
        <y>350</y>
-       <width>141</width>
+       <width>201</width>
        <height>25</height>
       </rect>
      </property>
      <property name="text">
-      <string>Activity 1</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="batteryUseButton_3">
-     <property name="geometry">
-      <rect>
-       <x>650</x>
-       <y>380</y>
-       <width>141</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Activity 2</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="batteryUseButton_4">
-     <property name="geometry">
-      <rect>
-       <x>650</x>
-       <y>410</y>
-       <width>141</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Activity 3</string>
+      <string>Terminate Connection</string>
      </property>
     </widget>
     <widget class="QWidget" name="pcDeviceWidget" native="true">
@@ -916,6 +890,19 @@
        <width>341</width>
        <height>251</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="establishConnection">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>410</y>
+       <width>201</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Establish Connection</string>
      </property>
     </widget>
    </widget>
