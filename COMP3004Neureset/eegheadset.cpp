@@ -24,9 +24,13 @@ EEGHeadset::~EEGHeadset()
     }
 }
 
-void EEGHeadset::captureWave(int node)
+void EEGHeadset::captureAllWaves()
 {
-    nodes.at(node)->captureWave();
+    for (EEGNode *node : nodes)
+    {
+         node->captureWave();
+    }
+
 }
 
 EEGNode& EEGHeadset::operator[](int index)
@@ -34,19 +38,18 @@ EEGNode& EEGHeadset::operator[](int index)
     return *nodes.at(index);
 }
 
-void EEGHeadset::getBaseLine()
+void EEGHeadset::forwardFeedback(double feedbackFreq)
 {
-    QThread::msleep(5000);
-    emit returnBaseLine();
+    qDebug() << "Sending "<< feedbackFreq << " Hz feedback to all nodes ";
 }
 
-void EEGHeadset::getTreatedBaseLine()
+QVector<EEGNode *> EEGHeadset::getNodes()
 {
-    QThread::msleep(5000);
-    emit returnTreatedBaseLine();
+    return nodes;
 }
 
-void EEGHeadset::forwardFeedback(double feedbackFreq, int node)
+void EEGHeadset::getInitialBaseline()
 {
-    qDebug() << "Sending "<< feedbackFreq << " Hz feedback to node " << node;
+    QThread::msleep(5000);
+    emit startAnalysis();
 }

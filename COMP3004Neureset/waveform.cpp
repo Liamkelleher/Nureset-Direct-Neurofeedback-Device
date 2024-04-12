@@ -6,6 +6,7 @@ Waveform::Waveform(double a_ampl, double a_freq, double b_ampl, double b_freq,do
     betaBand = new function(b_ampl, b_freq);
     deltaBand = new function(d_ampl, d_freq);
     thetaBand = new function(t_ampl, t_freq);
+    eegReading = new function();
 
     alphaBand->calculateWave();
     betaBand->calculateWave();
