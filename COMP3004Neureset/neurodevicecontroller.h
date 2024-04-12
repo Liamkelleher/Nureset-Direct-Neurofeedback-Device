@@ -41,6 +41,9 @@ public slots:
     void returnTreatedBaseLine();
     void setDateTime(QDateTime);
     void nodeDisplayChanged(int index);
+    void addBeforeDominants(double freqs);
+    void addAfterDominants(double freqs);
+    void getFeedbackFreq(double feedbackFreq, int node);
 
 signals:
     void upArrowButton();
@@ -55,6 +58,7 @@ signals:
     void getTreatedBaseLine();
     void uploadToPC(Session *);
     void updateGraph(EEGNode*);
+    void forwardFeedback(double feedbaclFreq, int node);
 
 private:
     Display *display;
@@ -78,6 +82,9 @@ private:
 
     QProgressBar *progBar, *batCharge;
     Treatment* treatment;
+
+    QVector<double> beforeDominantFreqs;
+    QVector<double> afterDominantFreqs;
 
     void resetTimer();
     void powerOff();
