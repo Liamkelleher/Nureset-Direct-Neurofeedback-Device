@@ -7,10 +7,12 @@
 class Waveform {
 public:
     Waveform(double, double, double, double, double, double, double, double);
+    ~Waveform();
     void generateWave();
     function* getBand(BandType);
     QVector<double> getWaveSignal();
     void setWaveSignal(QVector<double>);
+    void clearWave();
 
 private:
     function* alphaBand;

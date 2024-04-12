@@ -1,18 +1,7 @@
 #include "treatment.h"
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-Treatment::Treatment()
-{
-    treatCancelled = false;
-}
-
-void Treatment::treatNodes()
-=======
-=======
 Treatment::Treatment() : cancelled(false) {}
 
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
 double Treatment::calculateDominantFrequency(Waveform* waveform)
 {
     function* alphaBand = waveform->getBand(BandType::ALPHA);
@@ -32,21 +21,10 @@ double Treatment::calculateDominantFrequency(Waveform* waveform)
     return totalWeighted / totalAmplitude;
 }
 
-<<<<<<< HEAD
-void Treatment::applyTreatment(Waveform* waveform, int node)
->>>>>>> fbd85c6 (did more stuff)
-{
-<<<<<<< HEAD
-    if(!treatCancelled)
-=======
-    emit captureWave(node);
-    //apply 5 sec delay
-=======
 void Treatment::applyTreatment(EEGHeadset* nodes)
 {
     cancelled = false;
     emit captureAllWaves();
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
 
     QVector<double> dominantFreq;
     for (EEGNode *node : nodes->getNodes())
@@ -116,19 +94,11 @@ void Treatment::simulateTherapy(double dominantFrequency)
         return;
     double offset = 5;
     for (int round = 1; round <= 4; ++round)
->>>>>>> 126fcbf (added more)
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        QThread::msleep(3000);
-        emit nodeTreated();
-=======
-=======
         if (cancelled)
             return;
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
         qDebug() << "Round "<< round << " of therapy";
-        qDebug() << "Analyzing Final Wave";
+        qDebug() << "Re-Analyzing Wave";
         // ADD 5 SECOND DELAY HERE FOR RE-ANALYSIS
         QThread::msleep(5000);
         if (cancelled)
@@ -140,16 +110,11 @@ void Treatment::simulateTherapy(double dominantFrequency)
             return;
         emit sendFeedback((dominantFrequency + offset)/16);
         offset += 5;
->>>>>>> 0a2175b (baseline calcs)
     }
 }
 
 void Treatment::cancelTreatment()
 {
-<<<<<<< HEAD
-    treatCancelled = true;
-}
-=======
     cancelled = true;
 }
 
@@ -165,4 +130,3 @@ double Treatment::calculateBasline(QVector<double> dominantFreqs)
    return sumOfNodes / NUM_NODES;
 }
 
->>>>>>> b73866d (added treatment logic, timing, and battery checks)

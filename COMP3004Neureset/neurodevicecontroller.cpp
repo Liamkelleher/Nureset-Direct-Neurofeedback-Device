@@ -42,34 +42,15 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(this, &NeuroDeviceController::powerOffDisplay, display, &Display::powerOffDisplay);
     connect(this, &NeuroDeviceController::powerOnDisplay, display, &Display::powerOnDisplay);
 
-<<<<<<< HEAD
-    connect(this, &NeuroDeviceController::getBaseLine, headset, &EEGHeadset::getBaseLine);
-    connect(headset, &EEGHeadset::returnBaseLine, this, &NeuroDeviceController::returnBaseLine);
-
-    connect(this, &NeuroDeviceController::getTreatedBaseLine, headset, &EEGHeadset::getTreatedBaseLine);
-    connect(headset, &EEGHeadset::returnTreatedBaseLine, this, &NeuroDeviceController::returnTreatedBaseLine);
-
-<<<<<<< HEAD
-    connect(this, &NeuroDeviceController::treatNodes, treatment, &Treatment::treatNodes);
-    connect(treatment, &Treatment::nodeTreated, this, &NeuroDeviceController::nodeTreated);
-=======
-    connect(treatment, &Treatment::beforeDominantFreq, this, &NeuroDeviceController::addBeforeDominants);
-    connect(treatment, &Treatment::afterDominantFreq, this, &NeuroDeviceController::nodeTreated);
-=======
     connect(treatment, &Treatment::beforeDominantFreq, this, &NeuroDeviceController::addBeforeDominant);
     connect(treatment, &Treatment::afterDominantFreq, this, &NeuroDeviceController::addAfterDominant);
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
     connect(treatment, &Treatment::sendFeedback, this, &NeuroDeviceController::getFeedbackFreq);
     connect(treatment, &Treatment::captureAllWaves, this, &NeuroDeviceController::captureAllWaves);
     connect(this, &NeuroDeviceController::applyTreatment, treatment, &Treatment::applyTreatment);
 
-<<<<<<< HEAD
->>>>>>> 126fcbf (added more)
-=======
     connect(this, &NeuroDeviceController::getInitialBaseline, headset, &EEGHeadset::getInitialBaseline);
     connect(headset, &EEGHeadset::startAnalysis, this, &NeuroDeviceController::startAnalysis);
     connect(treatment, &Treatment::endAnalysis, this, &NeuroDeviceController::endAnalysis);
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
 
     connect(display, &Display::uploadSession, this, &NeuroDeviceController::uploadSession);
     connect(display, &Display::updateDateTime, this, &NeuroDeviceController::setDateTime);
@@ -125,18 +106,7 @@ void NeuroDeviceController::startButtonPressed()
     }
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-void NeuroDeviceController::getFeedbackFreq(double feedbackFreq, int node){emit forwardFeedback(feedbackFreq, node);}
-=======
-=======
-double NeuroDeviceController::calculateBasline(QVector<double> dominantFreqs)
-=======
 double NeuroDeviceController::calculateBasline(QVector<double>* dominantFreqs)
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
 {
     double sumOfNodes = 0;
 
@@ -148,17 +118,11 @@ double NeuroDeviceController::calculateBasline(QVector<double>* dominantFreqs)
    return sumOfNodes / NUM_NODES;
 }
 
-<<<<<<< HEAD
->>>>>>> d450c75 (baseline calcs)
-void NeuroDeviceController::getFeedbackFreq(double feedbackFreq, int node)
-=======
 void NeuroDeviceController::getFeedbackFreq(double feedbackFreq)
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
 {
     nodeTreated();
     headset->forwardFeedback(feedbackFreq);
 }
->>>>>>> fbd85c6 (did more stuff)
 
 void NeuroDeviceController::captureAllWaves()
 {
@@ -170,12 +134,7 @@ void NeuroDeviceController::addBeforeDominant(double freq)
     manager->updateBeforeBaseline(freq);
 }
 
-<<<<<<< HEAD
->>>>>>> 126fcbf (added more)
-void NeuroDeviceController::returnBaseLine()
-=======
 void NeuroDeviceController::addAfterDominant(double freq)
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
 {
     manager->updateAfterBaseline(freq);
 }
@@ -195,18 +154,6 @@ bool NeuroDeviceController::checkBatteryLevel(int btDrain)
     return true;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    //emit treatNodes(headset->operator[](i));
-    emit treatNodes();
-    qDebug() << "Treating Node: 1";
-=======
-=======
-    // calculate avg baseline before
-    double beforeBaseline = calculateBasline(beforeDominantFreqs);
-    manager->updateBeforeBaseline(beforeBaseline);
-=======
 void NeuroDeviceController::startAnalysis()
 {
     if (!sesActive || sesPaused) { return; }
@@ -215,23 +162,13 @@ void NeuroDeviceController::startAnalysis()
     if (!checkBatteryLevel(15))
         return;
     batCharge->setValue(batCharge->value() - 15);
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
 
->>>>>>> d450c75 (baseline calcs)
     for (int i = 0; i < NUM_NODES; ++i)
     {
         (*headset)[i].captureWave();
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    // calculate avg baseline
->>>>>>> 126fcbf (added more)
-=======
->>>>>>> d450c75 (baseline calcs)
-=======
     updateGraph(&(*headset)[dropdown->currentIndex()]);
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
 
     emit applyTreatment(headset);
     curStep = 1;
@@ -244,17 +181,7 @@ void NeuroDeviceController::nodeTreated()
     numNodesTreated += 1;
 
     progBar->setValue(progBar->value() + 10);
-<<<<<<< HEAD
-    batCharge->setValue(batCharge->value() - 5);
-
-    if (batCharge->value() - 5 <= 0)
-    {
-        batCharge->setValue(batCharge->minimum());
-        powerOff();
-        treatment->cancelTreatment();
-=======
     if (!checkBatteryLevel(5))
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
         return;
     batCharge->setValue(batCharge->value() - 5);
 
@@ -314,6 +241,7 @@ void NeuroDeviceController::powerOff()
     if(sesActive)
     {
         endSession();
+        sesActive = false;
     }
 
     //Shutdown Protocols
@@ -323,7 +251,6 @@ void NeuroDeviceController::powerOff()
     emit powerOffDisplay();
 
     deviceOn = false;
-    sesActive = false;
 }
 
 void NeuroDeviceController::menuButtonPressed()
@@ -345,6 +272,8 @@ void NeuroDeviceController::startSession()
 {
     sesActive = true;
     sesPaused = false;
+    updateGraph(nullptr);
+    headset->clearNodes();
     resetTimer();
     manager->createSession(deviceTime);
     QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 1000));
@@ -440,11 +369,7 @@ void NeuroDeviceController::nodeDisplayChanged(int index)
 {
     if (deviceOn)
     {
-<<<<<<< HEAD
-        emit updateGraph(&(*headset)[index]);
-=======
         updateGraph(&(*headset)[index]);
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
     }
 
     //Otherwise keep graph blank

@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     pcdevice->toggleComponents(false);
 
     ui->EEGGraph->addGraph();
-    ui->EEGGraph->xAxis->setRange(0, 0.5);
+    ui->EEGGraph->xAxis->setRange(0, 1);
     ui->EEGGraph->yAxis->setRange(-1, 1);
 
     connect(this, &MainWindow::upArrowButtonPressed, nDC, &NeuroDeviceController::upArrowButtonPressed);
@@ -76,6 +76,13 @@ void MainWindow::uploadSession(Session* session)
 
 void MainWindow::updateGraph(EEGNode* node)
 {
+    if (node == nullptr)
+    {
+        qDebug() << "clearing graph";
+        ui->EEGGraph->graph()->setData({0}, {0});
+        ui->EEGGraph->replot();
+        return;
+    }
     QVector<double> x(GRAPH_STEPS + 1);
     for (int i = 0; i < GRAPH_STEPS + 1; ++i)
     {

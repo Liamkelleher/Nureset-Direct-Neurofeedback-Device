@@ -14,6 +14,15 @@ Waveform::Waveform(double a_ampl, double a_freq, double b_ampl, double b_freq,do
     thetaBand->calculateWave();
 }
 
+Waveform::~Waveform()
+{
+    delete alphaBand;
+    delete betaBand;
+    delete deltaBand;
+    delete thetaBand;
+    delete eegReading;
+}
+
 void Waveform::generateWave()
 {
     eegReading->values.clear();
@@ -52,4 +61,9 @@ QVector<double> Waveform::getWaveSignal()
 void Waveform::setWaveSignal(QVector<double> newSignal)
 {
     eegReading->values = newSignal;
+}
+
+void Waveform::clearWave()
+{
+    eegReading->values.clear();
 }

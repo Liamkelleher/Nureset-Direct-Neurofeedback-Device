@@ -53,3 +53,11 @@ void EEGHeadset::getInitialBaseline()
     QThread::msleep(5000);
     emit startAnalysis();
 }
+
+void EEGHeadset::clearNodes()
+{
+    for (EEGNode *node : nodes)
+    {
+        node->getWaveSignal()->clearWave();
+    }
+}

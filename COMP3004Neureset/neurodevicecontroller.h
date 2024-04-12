@@ -39,21 +39,12 @@ public slots:
     void pauseSession();
     void setDateTime(QDateTime);
     void nodeDisplayChanged(int index);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    void addBeforeDominants(double freqs);
-    void getFeedbackFreq(double feedbackFreq, int node);
-    void captureWave(int node);
->>>>>>> 126fcbf (added more)
-=======
     void addBeforeDominant(double freqs);
     void addAfterDominant(double freqs);
     void getFeedbackFreq(double feedbackFreq);
     void captureAllWaves();
     void startAnalysis();
     void endAnalysis();
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
 
 signals:
     void upArrowButton();
@@ -90,10 +81,7 @@ private:
 
     QProgressBar *progBar, *batCharge;
     Treatment* treatment;
-<<<<<<< HEAD
-=======
     QComboBox *dropdown;
->>>>>>> b73866d (added treatment logic, timing, and battery checks)
 
     void resetTimer();
     void powerOff();

@@ -18,6 +18,7 @@ public:
     void forwardFeedback(double feedbackFreq);
     EEGNode& operator[](int index);
     QVector<EEGNode *> getNodes();
+    void clearNodes();
 
 public slots:
     void getInitialBaseline();

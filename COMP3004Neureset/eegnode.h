@@ -10,6 +10,7 @@ class EEGNode : public QObject
     Q_OBJECT
 public:
     EEGNode(double, double, double, double, double, double, double, double);
+    ~EEGNode();
 
     void captureWave();
     Waveform* getWaveSignal();
