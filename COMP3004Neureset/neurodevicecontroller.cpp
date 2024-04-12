@@ -123,8 +123,6 @@ void NeuroDeviceController::returnBaseLine()
         return;
     }
 
-    //collect all the nodes and call treatment on all of them
-
     //emit treatNodes(headset->operator[](i));
     emit treatNodes();
     qDebug() << "Treating Node: 1";
@@ -222,7 +220,6 @@ void NeuroDeviceController::powerOff()
     if(sesActive)
     {
         endSession();
-        sesActive = false;
     }
 
     //Shutdown Protocols
@@ -232,6 +229,7 @@ void NeuroDeviceController::powerOff()
     emit powerOffDisplay();
 
     deviceOn = false;
+    sesActive = false;
 }
 
 void NeuroDeviceController::menuButtonPressed()
@@ -239,11 +237,6 @@ void NeuroDeviceController::menuButtonPressed()
     if (deviceOn && !sesActive)
     {
         emit menuButton();
-    }
-
-    else
-    {
-        qDebug() << "Session currently active, cannot go back to main menu.";
     }
 }
 
@@ -360,7 +353,7 @@ void NeuroDeviceController::nodeDisplayChanged(int index)
 {
     if (sesActive)
     {
-        //Update graph
+        emit updateGraph(&(*headset)[index]);
     }
 
     //Otherwise keep graph blank
