@@ -14,17 +14,17 @@ public:
     EEGHeadset();
     ~EEGHeadset();
 
-    void captureWaves();
+    void captureAllWaves();
+    void forwardFeedback(double feedbackFreq);
     EEGNode& operator[](int index);
+    QVector<EEGNode *> getNodes();
+    void clearNodes();
 
 public slots:
-    void getBaseLine();
-    void getTreatedBaseLine();
+    void getInitialBaseline();
 
 signals:
-    void returnBaseLine();
-    void returnTreatedBaseLine();
-
+    void startAnalysis();
 
 private:
     QVector<EEGNode *> nodes;

@@ -27,7 +27,6 @@ void SessionLog::writeToFile(Session *session)
 {
     QFile file(LOGS_FILE);
     if (!file.open(QIODevice::Append)) {
-        qDebug() << "Cannot open or create file for writing:" << LOGS_FILE;
         return;
     }
 
@@ -35,15 +34,12 @@ void SessionLog::writeToFile(Session *session)
     out.setVersion(QDataStream::Qt_5_15);
     out << *session;
     file.close();
-    qDebug() << "Session appended to file successfully.";
-
 }
 
 void SessionLog::readFromFile()
 {
     QFile file(LOGS_FILE);
         if (!file.open(QIODevice::ReadOnly)) {
-            qDebug() << "Failed to open the file for reading:" << LOGS_FILE;
             return;
         }
 
@@ -56,5 +52,4 @@ void SessionLog::readFromFile()
             sessions.append(new Session(session));
         }
         file.close();
-        qDebug() << "Sessions read from file successfully.";
 }

@@ -1,7 +1,7 @@
 #include "eegheadset.h"
 
 EEGHeadset::EEGHeadset()
-{
+{    
     for (int i = 0; i < NUM_NODES; ++i)
     {
        double a_ampl = 0.15 + QRandomGenerator::global()->generateDouble() * 0.05;
@@ -24,12 +24,13 @@ EEGHeadset::~EEGHeadset()
     }
 }
 
-void EEGHeadset::captureWaves()
+void EEGHeadset::captureAllWaves()
 {
-    for (EEGNode* node : nodes)
+    for (EEGNode *node : nodes)
     {
-        node->captureWave();
+         node->captureWave();
     }
+
 }
 
 EEGNode& EEGHeadset::operator[](int index)
@@ -37,14 +38,26 @@ EEGNode& EEGHeadset::operator[](int index)
     return *nodes.at(index);
 }
 
-void EEGHeadset::getBaseLine()
+void EEGHeadset::forwardFeedback(double feedbackFreq)
 {
-    QThread::msleep(5000);
-    emit returnBaseLine();
+    qDebug() << "Sending "<< feedbackFreq << " Hz feedback to all nodes ";
 }
 
-void EEGHeadset::getTreatedBaseLine()
+QVector<EEGNode *> EEGHeadset::getNodes()
+{
+    return nodes;
+}
+
+void EEGHeadset::getInitialBaseline()
 {
     QThread::msleep(5000);
-    emit returnTreatedBaseLine();
+    emit startAnalysis();
+}
+
+void EEGHeadset::clearNodes()
+{
+    for (EEGNode *node : nodes)
+    {
+        node->getWaveSignal()->clearWave();
+    }
 }

@@ -13,14 +13,18 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDateTimeEdit>
+#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QFrame>
-#include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "qcustomplot.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -43,12 +47,22 @@ public:
     QPushButton *treatmentLight;
     QPushButton *contactLostLight;
     QProgressBar *batteryCharge;
+    QStackedWidget *stackedWidget;
+    QWidget *mainMenuWidget;
+    QListWidget *menuList;
+    QWidget *newSessionWidget;
+    QProgressBar *progressBar;
+    QLabel *label;
+    QLabel *timerLabel;
+    QWidget *sessionLogWidget;
+    QListWidget *sessionList;
+    QLabel *label_3;
+    QWidget *dateTimeWidget;
+    QLabel *label_4;
     QDateTimeEdit *dateTimeEdit;
-    QWidget *cTGDisplay;
+    QLabel *label_5;
     QFrame *environmentManagerFrame;
-    QListWidget *pcDeviceInfo;
     QLabel *pcDeviceLabel;
-    QWidget *cTGPC;
     QFrame *line;
     QFrame *line_2;
     QLabel *EEGLabel;
@@ -56,11 +70,28 @@ public:
     QPushButton *batteryUseButton;
     QPushButton *batteryFullButton;
     QPushButton *batteryEmptyButton;
-    QGraphicsView *eegGraphDisplay;
     QComboBox *nodeDropDown;
     QPushButton *batteryUseButton_2;
     QPushButton *batteryUseButton_3;
     QPushButton *batteryUseButton_4;
+    QWidget *pcDeviceWidget;
+    QWidget *formLayoutWidget;
+    QFormLayout *formLayout;
+    QLabel *pcDate;
+    QLabel *pcDateValue;
+    QLabel *pcElapsedTime;
+    QLabel *pcElapsedValue;
+    QSpacerItem *verticalSpacer;
+    QLabel *pcSessionTitle;
+    QLabel *pcNoDataTitle;
+    QLabel *pcEEGTitle;
+    QWidget *formLayoutWidget_2;
+    QVBoxLayout *verticalLayout;
+    QLabel *pcBeforeLabel;
+    QLabel *pcBeforeValue;
+    QLabel *pcAfterLabel;
+    QLabel *pcAfterValue;
+    QCustomPlot *EEGGraph;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -82,15 +113,18 @@ public:
         downArrowButton = new QPushButton(pcDeviceFrame);
         downArrowButton->setObjectName(QString::fromUtf8("downArrowButton"));
         downArrowButton->setGeometry(QRect(630, 325, 83, 25));
+        QFont font;
+        font.setPointSize(10);
+        downArrowButton->setFont(font);
         display = new QListWidget(pcDeviceFrame);
         display->setObjectName(QString::fromUtf8("display"));
         display->setEnabled(true);
         display->setGeometry(QRect(200, 150, 400, 300));
-        QFont font;
-        font.setPointSize(20);
-        font.setBold(true);
-        font.setWeight(75);
-        display->setFont(font);
+        QFont font1;
+        font1.setPointSize(20);
+        font1.setBold(true);
+        font1.setWeight(75);
+        display->setFont(font1);
         display->viewport()->setProperty("cursor", QVariant(QCursor(Qt::ArrowCursor)));
         display->setFocusPolicy(Qt::StrongFocus);
         display->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed);
@@ -117,11 +151,11 @@ public:
         timeElapsed = new QLabel(pcDeviceFrame);
         timeElapsed->setObjectName(QString::fromUtf8("timeElapsed"));
         timeElapsed->setGeometry(QRect(325, 220, 150, 100));
-        QFont font1;
-        font1.setPointSize(30);
-        font1.setBold(false);
-        font1.setWeight(50);
-        timeElapsed->setFont(font1);
+        QFont font2;
+        font2.setPointSize(30);
+        font2.setBold(false);
+        font2.setWeight(50);
+        timeElapsed->setFont(font2);
         timeElapsed->setAutoFillBackground(false);
         timeElapsed->setAlignment(Qt::AlignCenter);
         menuButton = new QPushButton(pcDeviceFrame);
@@ -154,9 +188,7 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(batteryCharge->sizePolicy().hasHeightForWidth());
         batteryCharge->setSizePolicy(sizePolicy);
-        QFont font2;
-        font2.setPointSize(10);
-        batteryCharge->setFont(font2);
+        batteryCharge->setFont(font);
         batteryCharge->setLayoutDirection(Qt::LeftToRight);
         batteryCharge->setStyleSheet(QString::fromUtf8("QProgressBar::chunk{\n"
 "	background-color: black;}"));
@@ -167,15 +199,96 @@ public:
         batteryCharge->setOrientation(Qt::Vertical);
         batteryCharge->setInvertedAppearance(false);
         batteryCharge->setTextDirection(QProgressBar::TopToBottom);
-        dateTimeEdit = new QDateTimeEdit(pcDeviceFrame);
+        stackedWidget = new QStackedWidget(pcDeviceFrame);
+        stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
+        stackedWidget->setGeometry(QRect(200, 150, 400, 300));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(stackedWidget->sizePolicy().hasHeightForWidth());
+        stackedWidget->setSizePolicy(sizePolicy1);
+        QFont font3;
+        font3.setPointSize(20);
+        stackedWidget->setFont(font3);
+        stackedWidget->setFocusPolicy(Qt::NoFocus);
+        stackedWidget->setFrameShape(QFrame::Box);
+        mainMenuWidget = new QWidget();
+        mainMenuWidget->setObjectName(QString::fromUtf8("mainMenuWidget"));
+        menuList = new QListWidget(mainMenuWidget);
+        QFont font4;
+        font4.setBold(true);
+        font4.setWeight(75);
+        QListWidgetItem *__qlistwidgetitem = new QListWidgetItem(menuList);
+        __qlistwidgetitem->setTextAlignment(Qt::AlignCenter);
+        __qlistwidgetitem->setFont(font4);
+        QListWidgetItem *__qlistwidgetitem1 = new QListWidgetItem(menuList);
+        __qlistwidgetitem1->setTextAlignment(Qt::AlignCenter);
+        __qlistwidgetitem1->setFont(font4);
+        QListWidgetItem *__qlistwidgetitem2 = new QListWidgetItem(menuList);
+        __qlistwidgetitem2->setTextAlignment(Qt::AlignCenter);
+        __qlistwidgetitem2->setFont(font4);
+        menuList->setObjectName(QString::fromUtf8("menuList"));
+        menuList->setGeometry(QRect(0, 0, 401, 301));
+        menuList->setFrameShape(QFrame::NoFrame);
+        menuList->setFrameShadow(QFrame::Plain);
+        stackedWidget->addWidget(mainMenuWidget);
+        newSessionWidget = new QWidget();
+        newSessionWidget->setObjectName(QString::fromUtf8("newSessionWidget"));
+        progressBar = new QProgressBar(newSessionWidget);
+        progressBar->setObjectName(QString::fromUtf8("progressBar"));
+        progressBar->setGeometry(QRect(50, 200, 301, 23));
+        progressBar->setValue(0);
+        label = new QLabel(newSessionWidget);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setGeometry(QRect(10, 20, 211, 31));
+        QFont font5;
+        font5.setPointSize(15);
+        font5.setBold(true);
+        font5.setItalic(true);
+        font5.setWeight(75);
+        label->setFont(font5);
+        timerLabel = new QLabel(newSessionWidget);
+        timerLabel->setObjectName(QString::fromUtf8("timerLabel"));
+        timerLabel->setGeometry(QRect(140, 90, 131, 41));
+        QFont font6;
+        font6.setPointSize(30);
+        font6.setBold(true);
+        font6.setWeight(75);
+        font6.setStrikeOut(false);
+        font6.setKerning(true);
+        timerLabel->setFont(font6);
+        stackedWidget->addWidget(newSessionWidget);
+        sessionLogWidget = new QWidget();
+        sessionLogWidget->setObjectName(QString::fromUtf8("sessionLogWidget"));
+        sessionList = new QListWidget(sessionLogWidget);
+        sessionList->setObjectName(QString::fromUtf8("sessionList"));
+        sessionList->setGeometry(QRect(10, 60, 381, 231));
+        label_3 = new QLabel(sessionLogWidget);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setGeometry(QRect(10, 20, 171, 31));
+        label_3->setFont(font5);
+        stackedWidget->addWidget(sessionLogWidget);
+        dateTimeWidget = new QWidget();
+        dateTimeWidget->setObjectName(QString::fromUtf8("dateTimeWidget"));
+        label_4 = new QLabel(dateTimeWidget);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setGeometry(QRect(10, 20, 171, 31));
+        label_4->setFont(font5);
+        dateTimeEdit = new QDateTimeEdit(dateTimeWidget);
         dateTimeEdit->setObjectName(QString::fromUtf8("dateTimeEdit"));
-        dateTimeEdit->setGeometry(QRect(320, 260, 160, 40));
-        cTGDisplay = new QWidget(pcDeviceFrame);
-        cTGDisplay->setObjectName(QString::fromUtf8("cTGDisplay"));
-        cTGDisplay->setGeometry(QRect(200, 150, 400, 300));
+        dateTimeEdit->setGeometry(QRect(70, 110, 261, 61));
+        label_5 = new QLabel(dateTimeWidget);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setGeometry(QRect(70, 80, 171, 31));
+        QFont font7;
+        font7.setPointSize(10);
+        font7.setBold(true);
+        font7.setItalic(true);
+        font7.setWeight(75);
+        label_5->setFont(font7);
+        stackedWidget->addWidget(dateTimeWidget);
         upArrowButton->raise();
         downArrowButton->raise();
-        display->raise();
         startButton->raise();
         pauseButton->raise();
         stopButton->raise();
@@ -187,8 +300,8 @@ public:
         contactLostLight->raise();
         batteryCharge->raise();
         sessionProgressBar->raise();
-        dateTimeEdit->raise();
-        cTGDisplay->raise();
+        display->raise();
+        stackedWidget->raise();
         environmentManagerFrame = new QFrame(centralwidget);
         environmentManagerFrame->setObjectName(QString::fromUtf8("environmentManagerFrame"));
         environmentManagerFrame->setGeometry(QRect(810, 10, 800, 600));
@@ -196,25 +309,9 @@ public:
         environmentManagerFrame->setAutoFillBackground(true);
         environmentManagerFrame->setFrameShape(QFrame::Box);
         environmentManagerFrame->setFrameShadow(QFrame::Raised);
-        pcDeviceInfo = new QListWidget(environmentManagerFrame);
-        pcDeviceInfo->setObjectName(QString::fromUtf8("pcDeviceInfo"));
-        pcDeviceInfo->setEnabled(true);
-        pcDeviceInfo->setGeometry(QRect(10, 40, 400, 551));
-        pcDeviceInfo->setFont(font);
-        pcDeviceInfo->viewport()->setProperty("cursor", QVariant(QCursor(Qt::ArrowCursor)));
-        pcDeviceInfo->setFocusPolicy(Qt::StrongFocus);
-        pcDeviceInfo->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed);
-        pcDeviceInfo->setSelectionMode(QAbstractItemView::SingleSelection);
-        pcDeviceInfo->setSelectionBehavior(QAbstractItemView::SelectItems);
-        pcDeviceInfo->setSpacing(10);
-        pcDeviceInfo->setSelectionRectVisible(false);
-        pcDeviceInfo->setItemAlignment(Qt::AlignCenter);
         pcDeviceLabel = new QLabel(environmentManagerFrame);
         pcDeviceLabel->setObjectName(QString::fromUtf8("pcDeviceLabel"));
         pcDeviceLabel->setGeometry(QRect(10, 10, 401, 20));
-        cTGPC = new QWidget(environmentManagerFrame);
-        cTGPC->setObjectName(QString::fromUtf8("cTGPC"));
-        cTGPC->setGeometry(QRect(10, 40, 400, 551));
         line = new QFrame(environmentManagerFrame);
         line->setObjectName(QString::fromUtf8("line"));
         line->setGeometry(QRect(420, 300, 381, 20));
@@ -240,19 +337,7 @@ public:
         batteryEmptyButton = new QPushButton(environmentManagerFrame);
         batteryEmptyButton->setObjectName(QString::fromUtf8("batteryEmptyButton"));
         batteryEmptyButton->setGeometry(QRect(430, 410, 141, 25));
-        eegGraphDisplay = new QGraphicsView(environmentManagerFrame);
-        eegGraphDisplay->setObjectName(QString::fromUtf8("eegGraphDisplay"));
-        eegGraphDisplay->setGeometry(QRect(430, 39, 360, 261));
         nodeDropDown = new QComboBox(environmentManagerFrame);
-        nodeDropDown->addItem(QString());
-        nodeDropDown->addItem(QString());
-        nodeDropDown->addItem(QString());
-        nodeDropDown->addItem(QString());
-        nodeDropDown->addItem(QString());
-        nodeDropDown->addItem(QString());
-        nodeDropDown->addItem(QString());
-        nodeDropDown->addItem(QString());
-        nodeDropDown->addItem(QString());
         nodeDropDown->setObjectName(QString::fromUtf8("nodeDropDown"));
         nodeDropDown->setGeometry(QRect(655, 10, 130, 20));
         batteryUseButton_2 = new QPushButton(environmentManagerFrame);
@@ -264,9 +349,86 @@ public:
         batteryUseButton_4 = new QPushButton(environmentManagerFrame);
         batteryUseButton_4->setObjectName(QString::fromUtf8("batteryUseButton_4"));
         batteryUseButton_4->setGeometry(QRect(650, 410, 141, 25));
+        pcDeviceWidget = new QWidget(environmentManagerFrame);
+        pcDeviceWidget->setObjectName(QString::fromUtf8("pcDeviceWidget"));
+        pcDeviceWidget->setGeometry(QRect(10, 40, 401, 551));
+        pcDeviceWidget->setAutoFillBackground(false);
+        formLayoutWidget = new QWidget(pcDeviceWidget);
+        formLayoutWidget->setObjectName(QString::fromUtf8("formLayoutWidget"));
+        formLayoutWidget->setGeometry(QRect(20, 40, 371, 121));
+        formLayout = new QFormLayout(formLayoutWidget);
+        formLayout->setObjectName(QString::fromUtf8("formLayout"));
+        formLayout->setLabelAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        formLayout->setContentsMargins(0, 0, 0, 0);
+        pcDate = new QLabel(formLayoutWidget);
+        pcDate->setObjectName(QString::fromUtf8("pcDate"));
+
+        formLayout->setWidget(0, QFormLayout::LabelRole, pcDate);
+
+        pcDateValue = new QLabel(formLayoutWidget);
+        pcDateValue->setObjectName(QString::fromUtf8("pcDateValue"));
+
+        formLayout->setWidget(0, QFormLayout::FieldRole, pcDateValue);
+
+        pcElapsedTime = new QLabel(formLayoutWidget);
+        pcElapsedTime->setObjectName(QString::fromUtf8("pcElapsedTime"));
+
+        formLayout->setWidget(1, QFormLayout::LabelRole, pcElapsedTime);
+
+        pcElapsedValue = new QLabel(formLayoutWidget);
+        pcElapsedValue->setObjectName(QString::fromUtf8("pcElapsedValue"));
+
+        formLayout->setWidget(1, QFormLayout::FieldRole, pcElapsedValue);
+
+        verticalSpacer = new QSpacerItem(20, 30, QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+        formLayout->setItem(2, QFormLayout::SpanningRole, verticalSpacer);
+
+        pcSessionTitle = new QLabel(pcDeviceWidget);
+        pcSessionTitle->setObjectName(QString::fromUtf8("pcSessionTitle"));
+        pcSessionTitle->setGeometry(QRect(0, 0, 248, 25));
+        pcNoDataTitle = new QLabel(pcDeviceWidget);
+        pcNoDataTitle->setObjectName(QString::fromUtf8("pcNoDataTitle"));
+        pcNoDataTitle->setEnabled(false);
+        pcNoDataTitle->setGeometry(QRect(50, 210, 294, 62));
+        pcEEGTitle = new QLabel(pcDeviceWidget);
+        pcEEGTitle->setObjectName(QString::fromUtf8("pcEEGTitle"));
+        pcEEGTitle->setGeometry(QRect(20, 170, 369, 25));
+        formLayoutWidget_2 = new QWidget(pcDeviceWidget);
+        formLayoutWidget_2->setObjectName(QString::fromUtf8("formLayoutWidget_2"));
+        formLayoutWidget_2->setGeometry(QRect(20, 210, 361, 281));
+        verticalLayout = new QVBoxLayout(formLayoutWidget_2);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        pcBeforeLabel = new QLabel(formLayoutWidget_2);
+        pcBeforeLabel->setObjectName(QString::fromUtf8("pcBeforeLabel"));
+
+        verticalLayout->addWidget(pcBeforeLabel);
+
+        pcBeforeValue = new QLabel(formLayoutWidget_2);
+        pcBeforeValue->setObjectName(QString::fromUtf8("pcBeforeValue"));
+
+        verticalLayout->addWidget(pcBeforeValue);
+
+        pcAfterLabel = new QLabel(formLayoutWidget_2);
+        pcAfterLabel->setObjectName(QString::fromUtf8("pcAfterLabel"));
+
+        verticalLayout->addWidget(pcAfterLabel);
+
+        pcAfterValue = new QLabel(formLayoutWidget_2);
+        pcAfterValue->setObjectName(QString::fromUtf8("pcAfterValue"));
+
+        verticalLayout->addWidget(pcAfterValue);
+
+        EEGGraph = new QCustomPlot(environmentManagerFrame);
+        EEGGraph->setObjectName(QString::fromUtf8("EEGGraph"));
+        EEGGraph->setGeometry(QRect(440, 40, 341, 251));
         MainWindow->setCentralWidget(centralwidget);
 
         retranslateUi(MainWindow);
+
+        stackedWidget->setCurrentIndex(3);
+
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -285,25 +447,42 @@ public:
         contactLight->setText(QString());
         treatmentLight->setText(QString());
         contactLostLight->setText(QString());
+
+        const bool __sortingEnabled = menuList->isSortingEnabled();
+        menuList->setSortingEnabled(false);
+        QListWidgetItem *___qlistwidgetitem = menuList->item(0);
+        ___qlistwidgetitem->setText(QCoreApplication::translate("MainWindow", "New Session", nullptr));
+        QListWidgetItem *___qlistwidgetitem1 = menuList->item(1);
+        ___qlistwidgetitem1->setText(QCoreApplication::translate("MainWindow", "Session Logs", nullptr));
+        QListWidgetItem *___qlistwidgetitem2 = menuList->item(2);
+        ___qlistwidgetitem2->setText(QCoreApplication::translate("MainWindow", "Time and Date", nullptr));
+        menuList->setSortingEnabled(__sortingEnabled);
+
+        label->setText(QCoreApplication::translate("MainWindow", "New Session", nullptr));
+        timerLabel->setText(QCoreApplication::translate("MainWindow", "00:00", nullptr));
+        label_3->setText(QCoreApplication::translate("MainWindow", "Session Logs:", nullptr));
+        label_4->setText(QCoreApplication::translate("MainWindow", "Time and Date:", nullptr));
+        label_5->setText(QCoreApplication::translate("MainWindow", "Enter today's date", nullptr));
         pcDeviceLabel->setText(QCoreApplication::translate("MainWindow", "PC Device", nullptr));
         EEGLabel->setText(QCoreApplication::translate("MainWindow", "EEG Display", nullptr));
         ECLabel->setText(QCoreApplication::translate("MainWindow", "Environment Controls", nullptr));
         batteryUseButton->setText(QCoreApplication::translate("MainWindow", "Use Battery", nullptr));
         batteryFullButton->setText(QCoreApplication::translate("MainWindow", "Batter Full", nullptr));
         batteryEmptyButton->setText(QCoreApplication::translate("MainWindow", "Batter Empty", nullptr));
-        nodeDropDown->setItemText(0, QCoreApplication::translate("MainWindow", "Node 1", nullptr));
-        nodeDropDown->setItemText(1, QCoreApplication::translate("MainWindow", "Node 2", nullptr));
-        nodeDropDown->setItemText(2, QCoreApplication::translate("MainWindow", "Node 3", nullptr));
-        nodeDropDown->setItemText(3, QCoreApplication::translate("MainWindow", "Node 4", nullptr));
-        nodeDropDown->setItemText(4, QCoreApplication::translate("MainWindow", "Node 5", nullptr));
-        nodeDropDown->setItemText(5, QCoreApplication::translate("MainWindow", "Node 6", nullptr));
-        nodeDropDown->setItemText(6, QCoreApplication::translate("MainWindow", "Node 7", nullptr));
-        nodeDropDown->setItemText(7, QCoreApplication::translate("MainWindow", "Node 8", nullptr));
-        nodeDropDown->setItemText(8, QCoreApplication::translate("MainWindow", "Node 9", nullptr));
-
         batteryUseButton_2->setText(QCoreApplication::translate("MainWindow", "Activity 1", nullptr));
         batteryUseButton_3->setText(QCoreApplication::translate("MainWindow", "Activity 2", nullptr));
         batteryUseButton_4->setText(QCoreApplication::translate("MainWindow", "Activity 3", nullptr));
+        pcDate->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">Date:</span></p></body></html>", nullptr));
+        pcDateValue->setText(QCoreApplication::translate("MainWindow", "N/A", nullptr));
+        pcElapsedTime->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">Time Elapsed:</span></p></body></html>", nullptr));
+        pcElapsedValue->setText(QCoreApplication::translate("MainWindow", "N/A", nullptr));
+        pcSessionTitle->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">Session History View</span></p></body></html>", nullptr));
+        pcNoDataTitle->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt;\">Currently no session history</span></p><p align=\"center\"><span style=\" font-size:16pt;\">available</span></p></body></html>", nullptr));
+        pcEEGTitle->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">EEG Baselines</span></p></body></html>", nullptr));
+        pcBeforeLabel->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">Before Baseline:</span></p></body></html>", nullptr));
+        pcBeforeValue->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">N/A</span></p></body></html>", nullptr));
+        pcAfterLabel->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">After Baseline:</span></p></body></html>", nullptr));
+        pcAfterValue->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">N/A</span></p></body></html>", nullptr));
     } // retranslateUi
 
 };

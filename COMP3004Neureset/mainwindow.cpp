@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->nodeDropDown->addItem("Node " + QString::number(i+1));
     }
 
-    nDC = new NeuroDeviceController(ui->stackedWidget, ui->contactLight, ui->treatmentLight, ui->contactLostLight, ui->progressBar, ui->batteryCharge);
+    nDC = new NeuroDeviceController(ui->stackedWidget, ui->contactLight, ui->treatmentLight, ui->contactLostLight, ui->progressBar, ui->batteryCharge, ui->nodeDropDown);
     pcdevice = new PCDevice(ui->pcDeviceWidget);
 
     pcdevice->toggleComponents(false);
@@ -56,7 +56,7 @@ void MainWindow::on_nodeDropDown_currentIndexChanged(int index) { emit nodeDispl
 
 void MainWindow::on_batteryUseButton_clicked()
 {
-    ui->batteryCharge->setValue(ui->batteryCharge->value() - 10);
+    ui->batteryCharge->setValue(ui->batteryCharge->value() - 20);
 }
 
 void MainWindow::on_batteryFullButton_clicked()
@@ -76,11 +76,22 @@ void MainWindow::uploadSession(Session* session)
 
 void MainWindow::updateGraph(EEGNode* node)
 {
-    QVector<double> x(101);
-    for (int i = 0; i < 101; ++i)
+    if (node == nullptr)
+    {
+        qDebug() << "clearing graph";
+        ui->EEGGraph->graph()->setData({0}, {0});
+        ui->EEGGraph->replot();
+        return;
+    }
+    QVector<double> x(GRAPH_STEPS + 1);
+    for (int i = 0; i < GRAPH_STEPS + 1; ++i)
     {
         x[i] = 0.01 * i;
     }
-    ui->EEGGraph->graph()->setData(x, node->getWaveSignal().getWaveSignal());
-    ui->EEGGraph->replot();
+    QVector<double> wave = node->getWaveSignal()->getWaveSignal();
+    if (!wave.empty())
+    {
+        ui->EEGGraph->graph()->setData(x, wave);
+        ui->EEGGraph->replot();
+    }
 }

@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_QML_DEBUG -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../COMP3004Neureset -I. -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
+INCPATH       = -I../COMP3004Neureset -I. -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -37,10 +37,10 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = COMP3004Neureset1.0.0
-DISTDIR = /home/student/build-COMP3004Neureset-Desktop-Debug/.tmp/COMP3004Neureset1.0.0
+DISTDIR = /home/student/Desktop/Nureset-Direct-Neurofeedback-Device/build-COMP3004Neureset-Desktop-Debug/.tmp/COMP3004Neureset1.0.0
 LINK          = g++
 LFLAGS        = 
-LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
+LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5PrintSupport.so /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -52,19 +52,49 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../COMP3004Neureset/display.cpp \
+SOURCES       = ../COMP3004Neureset/Session.cpp \
+		../COMP3004Neureset/display.cpp \
+		../COMP3004Neureset/LightIndicator.cpp \
+		../COMP3004Neureset/eegheadset.cpp \
+		../COMP3004Neureset/eegnode.cpp \
 		../COMP3004Neureset/main.cpp \
 		../COMP3004Neureset/mainwindow.cpp \
-		../COMP3004Neureset/neurodevicecontroller.cpp moc_display.cpp \
+		../COMP3004Neureset/neurodevicecontroller.cpp \
+		../COMP3004Neureset/qcustomplot.cpp \
+		../COMP3004Neureset/sessionlog.cpp \
+		../COMP3004Neureset/sessionmanager.cpp \
+		../COMP3004Neureset/pcdevice.cpp \
+		../COMP3004Neureset/treatment.cpp \
+		../COMP3004Neureset/waveform.cpp moc_display.cpp \
+		moc_eegheadset.cpp \
+		moc_eegnode.cpp \
 		moc_mainwindow.cpp \
-		moc_neurodevicecontroller.cpp
-OBJECTS       = display.o \
+		moc_neurodevicecontroller.cpp \
+		moc_qcustomplot.cpp \
+		moc_pcdevice.cpp \
+		moc_treatment.cpp
+OBJECTS       = Session.o \
+		display.o \
+		LightIndicator.o \
+		eegheadset.o \
+		eegnode.o \
 		main.o \
 		mainwindow.o \
 		neurodevicecontroller.o \
+		qcustomplot.o \
+		sessionlog.o \
+		sessionmanager.o \
+		pcdevice.o \
+		treatment.o \
+		waveform.o \
 		moc_display.o \
+		moc_eegheadset.o \
+		moc_eegnode.o \
 		moc_mainwindow.o \
-		moc_neurodevicecontroller.o
+		moc_neurodevicecontroller.o \
+		moc_qcustomplot.o \
+		moc_pcdevice.o \
+		moc_treatment.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -143,12 +173,33 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../COMP3004Neureset/COMP3004Neureset.pro ../COMP3004Neureset/display.h \
+		../COMP3004Neureset/COMP3004Neureset.pro ../COMP3004Neureset/LightIndicator.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h \
+		../COMP3004Neureset/display.h \
+		../COMP3004Neureset/eegheadset.h \
+		../COMP3004Neureset/eegnode.h \
 		../COMP3004Neureset/mainwindow.h \
-		../COMP3004Neureset/neurodevicecontroller.h ../COMP3004Neureset/display.cpp \
+		../COMP3004Neureset/neurodevicecontroller.h \
+		../COMP3004Neureset/qcustomplot.h \
+		../COMP3004Neureset/sessionlog.h \
+		../COMP3004Neureset/sessionmanager.h \
+		../COMP3004Neureset/pcdevice.h \
+		../COMP3004Neureset/treatment.h \
+		../COMP3004Neureset/waveform.h ../COMP3004Neureset/Session.cpp \
+		../COMP3004Neureset/display.cpp \
+		../COMP3004Neureset/LightIndicator.cpp \
+		../COMP3004Neureset/eegheadset.cpp \
+		../COMP3004Neureset/eegnode.cpp \
 		../COMP3004Neureset/main.cpp \
 		../COMP3004Neureset/mainwindow.cpp \
-		../COMP3004Neureset/neurodevicecontroller.cpp
+		../COMP3004Neureset/neurodevicecontroller.cpp \
+		../COMP3004Neureset/qcustomplot.cpp \
+		../COMP3004Neureset/sessionlog.cpp \
+		../COMP3004Neureset/sessionmanager.cpp \
+		../COMP3004Neureset/pcdevice.cpp \
+		../COMP3004Neureset/treatment.cpp \
+		../COMP3004Neureset/waveform.cpp
 QMAKE_TARGET  = COMP3004Neureset
 DESTDIR       = 
 TARGET        = COMP3004Neureset
@@ -334,8 +385,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../COMP3004Neureset/display.h ../COMP3004Neureset/mainwindow.h ../COMP3004Neureset/neurodevicecontroller.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../COMP3004Neureset/display.cpp ../COMP3004Neureset/main.cpp ../COMP3004Neureset/mainwindow.cpp ../COMP3004Neureset/neurodevicecontroller.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../COMP3004Neureset/LightIndicator.h ../COMP3004Neureset/Session.h ../COMP3004Neureset/defs.h ../COMP3004Neureset/display.h ../COMP3004Neureset/eegheadset.h ../COMP3004Neureset/eegnode.h ../COMP3004Neureset/mainwindow.h ../COMP3004Neureset/neurodevicecontroller.h ../COMP3004Neureset/qcustomplot.h ../COMP3004Neureset/sessionlog.h ../COMP3004Neureset/sessionmanager.h ../COMP3004Neureset/pcdevice.h ../COMP3004Neureset/treatment.h ../COMP3004Neureset/waveform.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../COMP3004Neureset/Session.cpp ../COMP3004Neureset/display.cpp ../COMP3004Neureset/LightIndicator.cpp ../COMP3004Neureset/eegheadset.cpp ../COMP3004Neureset/eegnode.cpp ../COMP3004Neureset/main.cpp ../COMP3004Neureset/mainwindow.cpp ../COMP3004Neureset/neurodevicecontroller.cpp ../COMP3004Neureset/qcustomplot.cpp ../COMP3004Neureset/sessionlog.cpp ../COMP3004Neureset/sessionmanager.cpp ../COMP3004Neureset/pcdevice.cpp ../COMP3004Neureset/treatment.cpp ../COMP3004Neureset/waveform.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../COMP3004Neureset/mainwindow.ui $(DISTDIR)/
 
 
@@ -368,26 +419,82 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_display.cpp moc_mainwindow.cpp moc_neurodevicecontroller.cpp
+compiler_moc_header_make_all: moc_display.cpp moc_eegheadset.cpp moc_eegnode.cpp moc_mainwindow.cpp moc_neurodevicecontroller.cpp moc_qcustomplot.cpp moc_pcdevice.cpp moc_treatment.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_display.cpp moc_mainwindow.cpp moc_neurodevicecontroller.cpp
+	-$(DEL_FILE) moc_display.cpp moc_eegheadset.cpp moc_eegnode.cpp moc_mainwindow.cpp moc_neurodevicecontroller.cpp moc_qcustomplot.cpp moc_pcdevice.cpp moc_treatment.cpp
 moc_display.cpp: ../COMP3004Neureset/display.h \
+		../COMP3004Neureset/sessionlog.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/display.h -o moc_display.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/Desktop/Nureset-Direct-Neurofeedback-Device/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/Desktop/Nureset-Direct-Neurofeedback-Device/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/display.h -o moc_display.cpp
+
+moc_eegheadset.cpp: ../COMP3004Neureset/eegheadset.h \
+		../COMP3004Neureset/eegnode.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/defs.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/Desktop/Nureset-Direct-Neurofeedback-Device/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/Desktop/Nureset-Direct-Neurofeedback-Device/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/eegheadset.h -o moc_eegheadset.cpp
+
+moc_eegnode.cpp: ../COMP3004Neureset/eegnode.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/defs.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/Desktop/Nureset-Direct-Neurofeedback-Device/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/Desktop/Nureset-Direct-Neurofeedback-Device/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/eegnode.h -o moc_eegnode.cpp
 
 moc_mainwindow.cpp: ../COMP3004Neureset/mainwindow.h \
 		../COMP3004Neureset/neurodevicecontroller.h \
 		../COMP3004Neureset/display.h \
+		../COMP3004Neureset/sessionlog.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h \
+		../COMP3004Neureset/sessionmanager.h \
+		../COMP3004Neureset/eegheadset.h \
+		../COMP3004Neureset/eegnode.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/LightIndicator.h \
+		../COMP3004Neureset/treatment.h \
+		../COMP3004Neureset/pcdevice.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/mainwindow.h -o moc_mainwindow.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/Desktop/Nureset-Direct-Neurofeedback-Device/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/Desktop/Nureset-Direct-Neurofeedback-Device/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/mainwindow.h -o moc_mainwindow.cpp
 
 moc_neurodevicecontroller.cpp: ../COMP3004Neureset/neurodevicecontroller.h \
 		../COMP3004Neureset/display.h \
+		../COMP3004Neureset/sessionlog.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h \
+		../COMP3004Neureset/sessionmanager.h \
+		../COMP3004Neureset/eegheadset.h \
+		../COMP3004Neureset/eegnode.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/LightIndicator.h \
+		../COMP3004Neureset/treatment.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/neurodevicecontroller.h -o moc_neurodevicecontroller.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/Desktop/Nureset-Direct-Neurofeedback-Device/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/Desktop/Nureset-Direct-Neurofeedback-Device/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/neurodevicecontroller.h -o moc_neurodevicecontroller.cpp
+
+moc_qcustomplot.cpp: ../COMP3004Neureset/qcustomplot.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/Desktop/Nureset-Direct-Neurofeedback-Device/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/Desktop/Nureset-Direct-Neurofeedback-Device/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/qcustomplot.h -o moc_qcustomplot.cpp
+
+moc_pcdevice.cpp: ../COMP3004Neureset/pcdevice.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/Desktop/Nureset-Direct-Neurofeedback-Device/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/Desktop/Nureset-Direct-Neurofeedback-Device/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/pcdevice.h -o moc_pcdevice.cpp
+
+moc_treatment.cpp: ../COMP3004Neureset/treatment.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/defs.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/student/Desktop/Nureset-Direct-Neurofeedback-Device/build-COMP3004Neureset-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/student/Desktop/Nureset-Direct-Neurofeedback-Device/COMP3004Neureset -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../COMP3004Neureset/treatment.h -o moc_treatment.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -397,7 +504,8 @@ compiler_uic_make_all: ui_mainwindow.h
 compiler_uic_clean:
 	-$(DEL_FILE) ui_mainwindow.h
 ui_mainwindow.h: ../COMP3004Neureset/mainwindow.ui \
-		/usr/lib/qt5/bin/uic
+		/usr/lib/qt5/bin/uic \
+		../COMP3004Neureset/qcustomplot.h
 	/usr/lib/qt5/bin/uic ../COMP3004Neureset/mainwindow.ui -o ui_mainwindow.h
 
 compiler_yacc_decl_make_all:
@@ -410,32 +518,126 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 ####### Compile
 
-display.o: ../COMP3004Neureset/display.cpp ../COMP3004Neureset/display.h
+Session.o: ../COMP3004Neureset/Session.cpp ../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Session.o ../COMP3004Neureset/Session.cpp
+
+display.o: ../COMP3004Neureset/display.cpp ../COMP3004Neureset/display.h \
+		../COMP3004Neureset/sessionlog.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o display.o ../COMP3004Neureset/display.cpp
+
+LightIndicator.o: ../COMP3004Neureset/LightIndicator.cpp ../COMP3004Neureset/LightIndicator.h \
+		../COMP3004Neureset/defs.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o LightIndicator.o ../COMP3004Neureset/LightIndicator.cpp
+
+eegheadset.o: ../COMP3004Neureset/eegheadset.cpp ../COMP3004Neureset/eegheadset.h \
+		../COMP3004Neureset/eegnode.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/defs.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o eegheadset.o ../COMP3004Neureset/eegheadset.cpp
+
+eegnode.o: ../COMP3004Neureset/eegnode.cpp ../COMP3004Neureset/eegnode.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/defs.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o eegnode.o ../COMP3004Neureset/eegnode.cpp
 
 main.o: ../COMP3004Neureset/main.cpp ../COMP3004Neureset/mainwindow.h \
 		../COMP3004Neureset/neurodevicecontroller.h \
-		../COMP3004Neureset/display.h
+		../COMP3004Neureset/display.h \
+		../COMP3004Neureset/sessionlog.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h \
+		../COMP3004Neureset/sessionmanager.h \
+		../COMP3004Neureset/eegheadset.h \
+		../COMP3004Neureset/eegnode.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/LightIndicator.h \
+		../COMP3004Neureset/treatment.h \
+		../COMP3004Neureset/pcdevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../COMP3004Neureset/main.cpp
 
 mainwindow.o: ../COMP3004Neureset/mainwindow.cpp ../COMP3004Neureset/mainwindow.h \
 		../COMP3004Neureset/neurodevicecontroller.h \
 		../COMP3004Neureset/display.h \
+		../COMP3004Neureset/sessionlog.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h \
+		../COMP3004Neureset/sessionmanager.h \
+		../COMP3004Neureset/eegheadset.h \
+		../COMP3004Neureset/eegnode.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/LightIndicator.h \
+		../COMP3004Neureset/treatment.h \
+		../COMP3004Neureset/pcdevice.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../COMP3004Neureset/mainwindow.cpp
 
 neurodevicecontroller.o: ../COMP3004Neureset/neurodevicecontroller.cpp ../COMP3004Neureset/neurodevicecontroller.h \
-		../COMP3004Neureset/display.h
+		../COMP3004Neureset/display.h \
+		../COMP3004Neureset/sessionlog.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h \
+		../COMP3004Neureset/sessionmanager.h \
+		../COMP3004Neureset/eegheadset.h \
+		../COMP3004Neureset/eegnode.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/LightIndicator.h \
+		../COMP3004Neureset/treatment.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o neurodevicecontroller.o ../COMP3004Neureset/neurodevicecontroller.cpp
+
+qcustomplot.o: ../COMP3004Neureset/qcustomplot.cpp ../COMP3004Neureset/qcustomplot.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qcustomplot.o ../COMP3004Neureset/qcustomplot.cpp
+
+sessionlog.o: ../COMP3004Neureset/sessionlog.cpp ../COMP3004Neureset/sessionlog.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sessionlog.o ../COMP3004Neureset/sessionlog.cpp
+
+sessionmanager.o: ../COMP3004Neureset/sessionmanager.cpp ../COMP3004Neureset/sessionmanager.h \
+		../COMP3004Neureset/sessionlog.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sessionmanager.o ../COMP3004Neureset/sessionmanager.cpp
+
+pcdevice.o: ../COMP3004Neureset/pcdevice.cpp ../COMP3004Neureset/pcdevice.h \
+		../COMP3004Neureset/Session.h \
+		../COMP3004Neureset/defs.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o pcdevice.o ../COMP3004Neureset/pcdevice.cpp
+
+treatment.o: ../COMP3004Neureset/treatment.cpp ../COMP3004Neureset/treatment.h \
+		../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/defs.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o treatment.o ../COMP3004Neureset/treatment.cpp
+
+waveform.o: ../COMP3004Neureset/waveform.cpp ../COMP3004Neureset/waveform.h \
+		../COMP3004Neureset/defs.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o waveform.o ../COMP3004Neureset/waveform.cpp
 
 moc_display.o: moc_display.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_display.o moc_display.cpp
+
+moc_eegheadset.o: moc_eegheadset.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_eegheadset.o moc_eegheadset.cpp
+
+moc_eegnode.o: moc_eegnode.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_eegnode.o moc_eegnode.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
 
 moc_neurodevicecontroller.o: moc_neurodevicecontroller.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_neurodevicecontroller.o moc_neurodevicecontroller.cpp
+
+moc_qcustomplot.o: moc_qcustomplot.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qcustomplot.o moc_qcustomplot.cpp
+
+moc_pcdevice.o: moc_pcdevice.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_pcdevice.o moc_pcdevice.cpp
+
+moc_treatment.o: moc_treatment.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_treatment.o moc_treatment.cpp
 
 ####### Install
 
