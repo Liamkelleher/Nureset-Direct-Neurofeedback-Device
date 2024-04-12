@@ -15,6 +15,7 @@ public:
     ~EEGHeadset();
 
     void captureWave(int node);
+    void forwardFeedback(double feedbackFreq, int node);
     EEGNode& operator[](int index);
 
 public slots:

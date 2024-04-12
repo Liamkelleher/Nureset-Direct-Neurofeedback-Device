@@ -10,11 +10,6 @@ Waveform* EEGNode::getWaveSignal()
     return wave;
 }
 
-void EEGNode::updateWaveSignal(QVector<double> newSignal)
-{
-    wave->setWaveSignal(newSignal);
-}
-
 void EEGNode::captureWave()
 {
     wave->generateWave();

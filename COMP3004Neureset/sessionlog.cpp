@@ -43,7 +43,6 @@ void SessionLog::readFromFile()
 {
     QFile file(LOGS_FILE);
         if (!file.open(QIODevice::ReadOnly)) {
-            qDebug() << "Failed to open the file for reading:" << LOGS_FILE;
             return;
         }
 

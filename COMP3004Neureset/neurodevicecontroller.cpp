@@ -118,8 +118,15 @@ void NeuroDeviceController::startButtonPressed()
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 void NeuroDeviceController::getFeedbackFreq(double feedbackFreq, int node){emit forwardFeedback(feedbackFreq, node);}
+=======
+void NeuroDeviceController::getFeedbackFreq(double feedbackFreq, int node)
+{
+    headset->forwardFeedback(feedbackFreq, node);
+}
+>>>>>>> fbd85c6 (did more stuff)
 
 void NeuroDeviceController::captureWave(int node)
 {
@@ -153,7 +160,7 @@ void NeuroDeviceController::returnBaseLine()
 =======
     for (int i = 0; i < NUM_NODES; ++i)
     {
-        treatment->applyTreatment(*(*headset)[i].getWaveSignal(), i);
+        treatment->applyTreatment((*headset)[i].getWaveSignal(), i);
 
         qDebug() << "Treating Node: " << i+1;
     }

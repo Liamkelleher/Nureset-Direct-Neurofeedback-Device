@@ -1,7 +1,7 @@
 #include "eegheadset.h"
 
 EEGHeadset::EEGHeadset()
-{
+{    
     for (int i = 0; i < NUM_NODES; ++i)
     {
        double a_ampl = 0.15 + QRandomGenerator::global()->generateDouble() * 0.05;
@@ -44,4 +44,9 @@ void EEGHeadset::getTreatedBaseLine()
 {
     QThread::msleep(5000);
     emit returnTreatedBaseLine();
+}
+
+void EEGHeadset::forwardFeedback(double feedbackFreq, int node)
+{
+    qDebug() << "Sending "<< feedbackFreq << " Hz feedback to node " << node;
 }

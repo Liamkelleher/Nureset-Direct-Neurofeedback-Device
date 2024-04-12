@@ -13,7 +13,6 @@ public:
 
     void captureWave();
     Waveform* getWaveSignal();
-    void updateWaveSignal(QVector<double>);
 
 private:
     Waveform* wave;

@@ -9,12 +9,16 @@ class Treatment: public QObject
     Q_OBJECT
 
 public:
+<<<<<<< HEAD
     Treatment();
 
     void cancelTreatment();
 
 public slots:
     void treatNodes();
+=======
+    void applyTreatment(Waveform* waveform, int node);
+>>>>>>> fbd85c6 (did more stuff)
 
 signals:
 <<<<<<< HEAD
@@ -27,8 +31,14 @@ signals:
 >>>>>>> 126fcbf (added more)
 
 private:
+<<<<<<< HEAD
     bool treatCancelled;
 
+=======
+    double calculateDominantFrequency(Waveform* waveform);
+    void captureNewWave(Waveform* waveform);
+    void simulateTherapy(double dominantFrequency, int node);
+>>>>>>> fbd85c6 (did more stuff)
 };
 
 #endif // TREATMENT_H

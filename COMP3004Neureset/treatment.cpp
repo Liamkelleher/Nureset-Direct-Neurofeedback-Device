@@ -1,11 +1,35 @@
 #include "treatment.h"
 
+<<<<<<< HEAD
 Treatment::Treatment()
 {
     treatCancelled = false;
 }
 
 void Treatment::treatNodes()
+=======
+double Treatment::calculateDominantFrequency(Waveform* waveform)
+{
+
+    function* alphaBand = waveform->getBand(BandType::ALPHA);
+    function* betaBand = waveform->getBand(BandType::BETA);
+    function* deltaBand = waveform->getBand(BandType::DELTA);
+    function* thetaBand = waveform->getBand(BandType::THETA);
+
+    // calculate dominant freq using equation from specs:
+    double totalWeighted = (pow(alphaBand->amplitude, 2) * alphaBand->frequency +
+                            pow(betaBand->amplitude,2) * betaBand->frequency +
+                            pow(deltaBand->amplitude,2) * deltaBand->frequency +
+                            pow(thetaBand->amplitude, 2) * thetaBand->frequency);
+
+    double totalAmplitude = (pow(alphaBand->amplitude, 2) + pow(betaBand->amplitude,2) +
+                             pow(deltaBand->amplitude,2) + pow(thetaBand->amplitude, 2));
+
+    return totalWeighted / totalAmplitude;
+}
+
+void Treatment::applyTreatment(Waveform* waveform, int node)
+>>>>>>> fbd85c6 (did more stuff)
 {
 <<<<<<< HEAD
     if(!treatCancelled)
@@ -30,32 +54,32 @@ void Treatment::treatNodes()
     emit afterDominantFreq(dominantFrequency);
 }
 
-void Treatment::captureNewWave(Waveform& waveform)
+void Treatment::captureNewWave(Waveform* waveform)
 {
 
-    function alphaBand = waveform.getBand(BandType::ALPHA);
-    function betaBand = waveform.getBand(BandType::BETA);
-    function deltaBand = waveform.getBand(BandType::DELTA);
-    function thetaBand = waveform.getBand(BandType::THETA);
+    function* alphaBand = waveform->getBand(BandType::ALPHA);
+    function* betaBand = waveform->getBand(BandType::BETA);
+    function* deltaBand = waveform->getBand(BandType::DELTA);
+    function* thetaBand = waveform->getBand(BandType::THETA);
 
     // Change these band's frequencies
     bool shouldAdd = QRandomGenerator::global()->bounded(2);
     double randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.02;
-    alphaBand.frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    alphaBand->frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
 
     shouldAdd = QRandomGenerator::global()->bounded(2);
     randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.02;
-    betaBand.frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    betaBand->frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
 
     shouldAdd = QRandomGenerator::global()->bounded(2);
     randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.02;
-    deltaBand.frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    deltaBand->frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
 
     shouldAdd = QRandomGenerator::global()->bounded(2);
     randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.02;
-    thetaBand.frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    thetaBand->frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
 
-    waveform.generateWave(); // new wave signal post round of therapy
+    waveform->generateWave(); // new wave signal post round of therapy
 
 }
 
