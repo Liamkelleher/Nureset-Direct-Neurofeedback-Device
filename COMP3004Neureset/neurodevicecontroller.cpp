@@ -46,12 +46,8 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(this, &NeuroDeviceController::getTreatedBaseLine, headset, &EEGHeadset::getTreatedBaseLine);
     connect(headset, &EEGHeadset::returnTreatedBaseLine, this, &NeuroDeviceController::returnTreatedBaseLine);
 
-//    connect(this, &NeuroDeviceController::treatNodes, treatment, &Treatment::treatNodes);
+    connect(this, &NeuroDeviceController::treatNodes, treatment, &Treatment::treatNodes);
     connect(treatment, &Treatment::nodeTreated, this, &NeuroDeviceController::nodeTreated);
-    connect(treatment, &Treatment::beforeDominantFreq, this, &NeuroDeviceController::addBeforeDominants);
-    connect(treatment, &Treatment::afterDominantFreq, this, &NeuroDeviceController::addAfterDominants);
-    connect(treatment, &Treatment::sendFeedback, this, &NeuroDeviceController::getFeedbackFreq);
-
 
     connect(display, &Display::uploadSession, this, &NeuroDeviceController::uploadSession);
     connect(display, &Display::updateDateTime, this, &NeuroDeviceController::setDateTime);
@@ -113,18 +109,6 @@ void NeuroDeviceController::startButtonPressed()
     }
 }
 
-void NeuroDeviceController::getFeedbackFreq(double feedbackFreq, int node){emit forwardFeedback(feedbackFreq, node);}
-
-void NeuroDeviceController::addBeforeDominants(double freq)
-{
-    beforeDominantFreqs.push_back(freq);
-}
-
-void NeuroDeviceController::addAfterDominants(double freq)
-{
-    afterDominantFreqs.push_back(freq);
-}
-
 void NeuroDeviceController::returnBaseLine()
 {
     if (!sesActive || sesPaused) { return; }
@@ -142,7 +126,7 @@ void NeuroDeviceController::returnBaseLine()
     //collect all the nodes and call treatment on all of them
 
     //emit treatNodes(headset->operator[](i));
-//    emit treatNodes();
+    emit treatNodes();
     qDebug() << "Treating Node: 1";
 
     curStep = 1;
@@ -162,6 +146,7 @@ void NeuroDeviceController::nodeTreated()
     {
         batCharge->setValue(batCharge->minimum());
         powerOff();
+        treatment->cancelTreatment();
         return;
     }
 

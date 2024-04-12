@@ -20,7 +20,6 @@ public:
 public slots:
     void getBaseLine();
     void getTreatedBaseLine();
-    void getFeedbackFreq(double feedbackFreq, int node);
 
 signals:
     void returnBaseLine();

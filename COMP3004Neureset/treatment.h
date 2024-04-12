@@ -1,27 +1,27 @@
 #ifndef TREATMENT_H
 #define TREATMENT_H
 
-#include <QDebug>
-#include <cmath>
-#include <QRandomGenerator>
-#include "waveform.h"
-#include "defs.h"
+#include <QObject>
+#include <QThread>
 
-class Treatment: public QObject {
-    Q_OBJECT;
+class Treatment: public QObject
+{
+    Q_OBJECT
+
 public:
-    void applyTreatment(Waveform& waveform, int node);
+    Treatment();
+
+    void cancelTreatment();
+
+public slots:
+    void treatNodes();
 
 signals:
-    void nodeTreated(double newDominant);
-    void beforeDominantFreq(double beforeDominantFreq);
-    void afterDominantFreq(double afterDominantFreq);
-    void sendFeedback(double feedbackFreq, int node);
+    void nodeTreated();
 
 private:
-    double calculateDominantFrequency(Waveform& waveform);
-    void captureNewWave(Waveform& waveform);
-    void simulateTherapy(double dominantFrequency, int node);
+    bool treatCancelled;
+
 };
 
 #endif // TREATMENT_H
