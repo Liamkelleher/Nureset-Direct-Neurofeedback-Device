@@ -17,7 +17,14 @@ public slots:
     void treatNodes();
 
 signals:
+<<<<<<< HEAD
     void nodeTreated();
+=======
+    void beforeDominantFreq(double beforeDominantFreq);
+    void afterDominantFreq(double afterDominantFreq);
+    void sendFeedback(double feedbackFreq, int node);
+    void captureWave(int node);
+>>>>>>> 126fcbf (added more)
 
 private:
     bool treatCancelled;

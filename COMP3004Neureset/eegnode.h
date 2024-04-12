@@ -12,11 +12,11 @@ public:
     EEGNode(double, double, double, double, double, double, double, double);
 
     void captureWave();
-    Waveform getWaveSignal();
+    Waveform* getWaveSignal();
     void updateWaveSignal(QVector<double>);
 
 private:
-    Waveform wave;
+    Waveform* wave;
 };
 
 #endif // EEGNODE_H

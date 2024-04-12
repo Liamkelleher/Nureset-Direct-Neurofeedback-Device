@@ -24,12 +24,9 @@ EEGHeadset::~EEGHeadset()
     }
 }
 
-void EEGHeadset::captureWaves()
+void EEGHeadset::captureWave(int node)
 {
-    for (EEGNode* node : nodes)
-    {
-        node->captureWave();
-    }
+    nodes.at(node)->captureWave();
 }
 
 EEGNode& EEGHeadset::operator[](int index)

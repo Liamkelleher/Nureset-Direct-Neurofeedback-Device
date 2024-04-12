@@ -19,6 +19,8 @@ Waveform::Waveform(double a_ampl, double a_freq, double b_ampl, double b_freq,do
 
 void Waveform::generateWave()
 {
+    eegReading.values.clear();
+
     for (int i = 0; i <= GRAPH_STEPS; ++i) {
         double x = i * STEP;
         double value = alphaBand.amplitude * std::sin(2 * alphaBand.frequency * M_PI * x) +

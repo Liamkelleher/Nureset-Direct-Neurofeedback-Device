@@ -14,7 +14,7 @@ public:
     EEGHeadset();
     ~EEGHeadset();
 
-    void captureWaves();
+    void captureWave(int node);
     EEGNode& operator[](int index);
 
 public slots:

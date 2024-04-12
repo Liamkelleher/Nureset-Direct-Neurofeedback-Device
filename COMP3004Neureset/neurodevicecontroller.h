@@ -37,10 +37,16 @@ public slots:
     void updateUiTimer();
     void pauseSession();
     void returnBaseLine();
-    void nodeTreated();
+    void nodeTreated(double freq);
     void returnTreatedBaseLine();
     void setDateTime(QDateTime);
     void nodeDisplayChanged(int index);
+<<<<<<< HEAD
+=======
+    void addBeforeDominants(double freqs);
+    void getFeedbackFreq(double feedbackFreq, int node);
+    void captureWave(int node);
+>>>>>>> 126fcbf (added more)
 
 signals:
     void upArrowButton();
@@ -51,7 +57,6 @@ signals:
     void powerOffDisplay();
     void menuButton();
     void getBaseLine();
-    void treatNodes();
     void getTreatedBaseLine();
     void uploadToPC(Session *);
     void updateGraph(EEGNode*);

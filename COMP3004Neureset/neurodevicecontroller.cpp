@@ -46,8 +46,16 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(this, &NeuroDeviceController::getTreatedBaseLine, headset, &EEGHeadset::getTreatedBaseLine);
     connect(headset, &EEGHeadset::returnTreatedBaseLine, this, &NeuroDeviceController::returnTreatedBaseLine);
 
+<<<<<<< HEAD
     connect(this, &NeuroDeviceController::treatNodes, treatment, &Treatment::treatNodes);
     connect(treatment, &Treatment::nodeTreated, this, &NeuroDeviceController::nodeTreated);
+=======
+    connect(treatment, &Treatment::beforeDominantFreq, this, &NeuroDeviceController::addBeforeDominants);
+    connect(treatment, &Treatment::afterDominantFreq, this, &NeuroDeviceController::nodeTreated);
+    connect(treatment, &Treatment::sendFeedback, this, &NeuroDeviceController::getFeedbackFreq);
+    connect(treatment, &Treatment::captureWave, this, &NeuroDeviceController::captureWave);
+
+>>>>>>> 126fcbf (added more)
 
     connect(display, &Display::uploadSession, this, &NeuroDeviceController::uploadSession);
     connect(display, &Display::updateDateTime, this, &NeuroDeviceController::setDateTime);
@@ -109,6 +117,21 @@ void NeuroDeviceController::startButtonPressed()
     }
 }
 
+<<<<<<< HEAD
+=======
+void NeuroDeviceController::getFeedbackFreq(double feedbackFreq, int node){emit forwardFeedback(feedbackFreq, node);}
+
+void NeuroDeviceController::captureWave(int node)
+{
+    headset->captureWave(node);
+}
+
+void NeuroDeviceController::addBeforeDominants(double freq)
+{
+    beforeDominantFreqs.push_back(freq);
+}
+
+>>>>>>> 126fcbf (added more)
 void NeuroDeviceController::returnBaseLine()
 {
     if (!sesActive || sesPaused) { return; }
@@ -123,19 +146,30 @@ void NeuroDeviceController::returnBaseLine()
         return;
     }
 
+<<<<<<< HEAD
     //emit treatNodes(headset->operator[](i));
     emit treatNodes();
     qDebug() << "Treating Node: 1";
+=======
+    for (int i = 0; i < NUM_NODES; ++i)
+    {
+        treatment->applyTreatment(*(*headset)[i].getWaveSignal(), i);
+
+        qDebug() << "Treating Node: " << i+1;
+    }
+
+    // calculate avg baseline
+>>>>>>> 126fcbf (added more)
 
     curStep = 1;
 }
 
-void NeuroDeviceController::nodeTreated()
+void NeuroDeviceController::nodeTreated(double freq)
 {
     if (!sesActive || sesPaused) { return; }
 
     numNodesTreated += 1;
-    qDebug() << "Node Treated";
+    afterDominantFreqs.push_back(freq);
 
     progBar->setValue(progBar->value() + 10);
     batCharge->setValue(batCharge->value() - 5);
@@ -155,18 +189,13 @@ void NeuroDeviceController::nodeTreated()
 
         curStep = 2;
     }
-
-    else
-    {
-        //emit treatNodes(headset->operator[](i));
-        emit treatNodes();
-        qDebug() << "Treating Node:" << numNodesTreated + 1;
-    }
 }
 
 void NeuroDeviceController::returnTreatedBaseLine()
 {
     if (!sesActive || sesPaused) { return; }
+
+    // calculate after baseline
 
     progBar->setValue(progBar->value() + 15);
     batCharge->setValue(batCharge->value() - 8);
@@ -177,6 +206,7 @@ void NeuroDeviceController::returnTreatedBaseLine()
         powerOff();
         return;
     }
+
 
     endSession();
     qDebug() << "Session Complete";
@@ -314,7 +344,6 @@ void NeuroDeviceController::resumeSession()
             else
             {
                 //emit treatNodes(headset->operator[](i));
-                emit treatNodes();
                 qDebug() << "Restart Treating Node:" << numNodesTreated + 1;
             }
             break;
