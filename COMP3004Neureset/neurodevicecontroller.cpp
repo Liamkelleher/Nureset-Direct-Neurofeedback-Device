@@ -168,7 +168,7 @@ void NeuroDeviceController::startAnalysis()
         (*headset)[i].captureWave();
     }
 
-    updateGraph(&(*headset)[dropdown->currentIndex()]);
+    emit updateGraph(&(*headset)[dropdown->currentIndex()]);
 
     emit applyTreatment(headset);
     curStep = 1;
@@ -184,12 +184,7 @@ void NeuroDeviceController::nodeTreated()
     if (!checkBatteryLevel(5))
         return;
     batCharge->setValue(batCharge->value() - 5);
-
-    if (numNodesTreated == NUM_NODES)
-    {
-        curStep = 2;
-        endAnalysis();
-    }
+    emit updateGraph(&(*headset)[dropdown->currentIndex()]);
 }
 
 void NeuroDeviceController::endAnalysis()
@@ -272,7 +267,7 @@ void NeuroDeviceController::startSession()
 {
     sesActive = true;
     sesPaused = false;
-    updateGraph(nullptr);
+    emit updateGraph(nullptr);
     headset->clearNodes();
     resetTimer();
     manager->createSession(deviceTime);
@@ -369,7 +364,7 @@ void NeuroDeviceController::nodeDisplayChanged(int index)
 {
     if (deviceOn)
     {
-        updateGraph(&(*headset)[index]);
+        emit updateGraph(&(*headset)[index]);
     }
 
     //Otherwise keep graph blank

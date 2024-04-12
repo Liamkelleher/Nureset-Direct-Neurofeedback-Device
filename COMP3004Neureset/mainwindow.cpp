@@ -88,6 +88,10 @@ void MainWindow::updateGraph(EEGNode* node)
     {
         x[i] = 0.01 * i;
     }
-    ui->EEGGraph->graph()->setData(x, node->getWaveSignal()->getWaveSignal());
-    ui->EEGGraph->replot();
+    QVector<double> wave = node->getWaveSignal()->getWaveSignal();
+    if (!wave.empty())
+    {
+        ui->EEGGraph->graph()->setData(x, node->getWaveSignal()->getWaveSignal());
+        ui->EEGGraph->replot();
+    }
 }
