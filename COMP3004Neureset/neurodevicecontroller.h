@@ -86,6 +86,7 @@ private:
 
     void resetTimer();
     void powerOff();
+    double calculateBasline(QVector<double> dominantFreqs);
 };
 
 #endif // NEURODEVICECONTROLLER_H

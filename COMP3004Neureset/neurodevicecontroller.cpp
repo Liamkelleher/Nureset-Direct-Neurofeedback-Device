@@ -119,9 +119,24 @@ void NeuroDeviceController::startButtonPressed()
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 void NeuroDeviceController::getFeedbackFreq(double feedbackFreq, int node){emit forwardFeedback(feedbackFreq, node);}
 =======
+=======
+double NeuroDeviceController::calculateBasline(QVector<double> dominantFreqs)
+{
+    double sumOfNodes = 0;
+
+   for (int i = 0; i < NUM_NODES; ++i)
+   {
+       sumOfNodes += dominantFreqs[i];
+   }
+
+   return sumOfNodes / NUM_NODES;
+}
+
+>>>>>>> d450c75 (baseline calcs)
 void NeuroDeviceController::getFeedbackFreq(double feedbackFreq, int node)
 {
     headset->forwardFeedback(feedbackFreq, node);
@@ -154,10 +169,17 @@ void NeuroDeviceController::returnBaseLine()
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     //emit treatNodes(headset->operator[](i));
     emit treatNodes();
     qDebug() << "Treating Node: 1";
 =======
+=======
+    // calculate avg baseline before
+    double beforeBaseline = calculateBasline(beforeDominantFreqs);
+    manager->updateBeforeBaseline(beforeBaseline);
+
+>>>>>>> d450c75 (baseline calcs)
     for (int i = 0; i < NUM_NODES; ++i)
     {
         treatment->applyTreatment((*headset)[i].getWaveSignal(), i);
@@ -165,8 +187,11 @@ void NeuroDeviceController::returnBaseLine()
         qDebug() << "Treating Node: " << i+1;
     }
 
+<<<<<<< HEAD
     // calculate avg baseline
 >>>>>>> 126fcbf (added more)
+=======
+>>>>>>> d450c75 (baseline calcs)
 
     curStep = 1;
 }
@@ -203,6 +228,8 @@ void NeuroDeviceController::returnTreatedBaseLine()
     if (!sesActive || sesPaused) { return; }
 
     // calculate after baseline
+    double afterBaseline = calculateBasline(afterDominantFreqs);
+    manager->updateAfterBaseline(afterBaseline);
 
     progBar->setValue(progBar->value() + 15);
     batCharge->setValue(batCharge->value() - 8);
