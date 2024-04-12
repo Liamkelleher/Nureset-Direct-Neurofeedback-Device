@@ -64,20 +64,20 @@ void Treatment::captureNewWave(Waveform* waveform)
 
     // Change these band's frequencies
     bool shouldAdd = QRandomGenerator::global()->bounded(2);
-    double randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.02;
-    alphaBand->frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    double randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.3;
+    alphaBand->frequency +=  0.5 + (shouldAdd ? -randomAdjustment : randomAdjustment);
 
     shouldAdd = QRandomGenerator::global()->bounded(2);
-    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.02;
-    betaBand->frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.3;
+    betaBand->frequency +=  0.5 + (shouldAdd ? -randomAdjustment : randomAdjustment);
 
     shouldAdd = QRandomGenerator::global()->bounded(2);
-    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.02;
-    deltaBand->frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.3;
+    deltaBand->frequency +=  0.5 + (shouldAdd ? -randomAdjustment : randomAdjustment);
 
     shouldAdd = QRandomGenerator::global()->bounded(2);
-    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.02;
-    thetaBand->frequency +=  0.1 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.3;
+    thetaBand->frequency +=  0.5 + (shouldAdd ? -randomAdjustment : randomAdjustment);
 
     waveform->generateWave(); // new wave signal post round of therapy
 
@@ -89,8 +89,15 @@ void Treatment::simulateTherapy(double dominantFrequency, int node)
     for (int round = 1; round <= 4; ++round)
 >>>>>>> 126fcbf (added more)
     {
+<<<<<<< HEAD
         QThread::msleep(3000);
         emit nodeTreated();
+=======
+        qDebug() << "Round "<< round << " of therapy";
+        qDebug() << "Delivering 1 second feedback at 1/16 of "<< dominantFrequency + offset;
+        emit sendFeedback((dominantFrequency + offset)/16, node);
+        offset += 5;
+>>>>>>> 0a2175b (baseline calcs)
     }
 }
 
