@@ -96,16 +96,32 @@ void Treatment::simulateTherapy(double dominantFrequency)
     for (int round = 1; round <= 4; ++round)
     {
         if (cancelled)
+        {
+            emit toggleTreatmentLight(false);
             return;
+        }
+
         qDebug() << "Round "<< round << " of therapy";
         qDebug() << "Re-Analyzing Wave";
         // ADD 5 SECOND DELAY HERE FOR RE-ANALYSIS
-        QThread::msleep(5000);
+        for (int i = 0; i < 5; i++)
+        {
+            emit toggleTreatmentLight(false);
+            QThread::msleep(500);
+            emit toggleTreatmentLight(true);
+            QThread::msleep(500);
+        }
         if (cancelled)
+        {
+            emit toggleTreatmentLight(false);
             return;
+        }
+
         qDebug() << "Delivering 1 second feedback at 1/16 of " << dominantFrequency + offset;
         // ADD 1000 ms DELAY HERE FOR 1/16 FEEDBACK
+        emit toggleTreatmentLight(false);
         QThread::msleep(1000);
+        emit toggleTreatmentLight(true);
         if (cancelled)
             return;
         emit sendFeedback((dominantFrequency + offset)/16);

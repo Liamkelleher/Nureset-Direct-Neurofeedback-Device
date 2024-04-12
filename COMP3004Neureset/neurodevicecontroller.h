@@ -13,6 +13,7 @@
 #include "eegheadset.h"
 #include "LightIndicator.h"
 #include "treatment.h"
+#include "contactlost.h"
 
 
 class NeuroDeviceController: public QObject
@@ -44,7 +45,12 @@ public slots:
     void getFeedbackFreq(double feedbackFreq);
     void captureAllWaves();
     void startAnalysis();
-    void endAnalysis();
+    void endAnalysis();   
+    void toggleTreatmentLight(bool on);
+    void toggleContactLostLight(bool on);
+    void terminateConnection();
+    void establishConnection();
+    void sessionExpired();
 
 signals:
     void upArrowButton();
@@ -58,11 +64,13 @@ signals:
     void updateGraph(EEGNode *);
     void applyTreatment(EEGHeadset *);
     void getInitialBaseline();
+    void contactWarning();
+    void pausedWarning();
 
 private:
     Display *display;
-    QThread _DISThread, _HeadSetThread, _TreatThread;
-    bool deviceOn, sesActive, sesPaused;
+    QThread _DISThread, _HeadSetThread, _TreatThread, _CLThread;
+    bool deviceOn, sesActive, sesPaused, connection, sessionCreated;
     int numNodesTreated, curStep;
 
     // Declare LightIndicator instances
@@ -82,6 +90,8 @@ private:
     QProgressBar *progBar, *batCharge;
     Treatment* treatment;
     QComboBox *dropdown;
+
+    ContactLost* contactLost;
 
     void resetTimer();
     void powerOff();

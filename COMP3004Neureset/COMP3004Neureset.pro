@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     Session.cpp \
+    contactlost.cpp \
     display.cpp \
     LightIndicator.cpp \
     eegheadset.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 HEADERS += \
     LightIndicator.h \
     Session.h \
+    contactlost.h \
     defs.h \
     display.h \
     eegheadset.h \

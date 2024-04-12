@@ -25,6 +25,7 @@ signals:
     void sendFeedback(double feedbackFreq);
     void captureAllWaves();
     void endAnalysis();
+    void toggleTreatmentLight(bool on);
 
 private:
     double calculateDominantFrequency(Waveform* waveform);
