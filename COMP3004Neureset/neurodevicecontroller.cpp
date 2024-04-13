@@ -26,7 +26,7 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
 
     deviceTime = QDateTime::currentDateTime();
 
-    timer = new QTimer();
+    timer = new QTimer(this);
     elTimer = new QElapsedTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(updateUiTimer()));
     savedTime = 0;
@@ -154,7 +154,7 @@ bool NeuroDeviceController::checkBatteryLevel(int btDrain)
     if (batCharge->value() - btDrain <= 0)
     {
         qDebug() << "\nINFO: Device battery has died";
-        emit setValueBat(batCharge->minimum());
+        updateBattery(batCharge->minimum());
         powerOff();
         return false;
     }
@@ -199,13 +199,39 @@ void NeuroDeviceController::updateProgressBar(int value)
     });
 }
 
+void NeuroDeviceController::updateBattery(int value)
+{
+    int currentValue = batCharge->value();
+
+    int increment = (value - currentValue) / 10;
+    if (increment == 0) {
+        increment = (value != currentValue) ? (value > currentValue ? 1 : -1) : 0;
+    }
+
+    QTimer *timer = new QTimer(this);
+    timer->start(50);
+
+    connect(timer, &QTimer::timeout, this, [this, timer, value, increment]() mutable {
+        int newValue = batCharge->value() + increment;
+
+        if ((increment > 0 && newValue >= value) || (increment < 0 && newValue <= value)) {
+            newValue = value;
+            emit setValueBat(newValue);
+            timer->stop();
+            timer->deleteLater();
+        } else {
+            emit setValueBat(newValue);
+        }
+    });
+}
+
 void NeuroDeviceController::startAnalysis()
 {
     if (!sesActive || sesPaused) { return; }
     updateProgressBar(progBar->value() + 30);
     if (!checkBatteryLevel(15))
         return;
-    emit setValueBat(batCharge->value() - 15);
+    updateBattery(batCharge->value() - 15);
 
     for (int i = 0; i < NUM_NODES; ++i)
     {
@@ -225,7 +251,7 @@ void NeuroDeviceController::nodeTreated()
     updateProgressBar((progBar->value() + 10));
     if (!checkBatteryLevel(5))
         return;
-    emit setValueBat(batCharge->value() - 5);
+    updateBattery(batCharge->value() - 5);
     emit updateGraph(&(*headset)[dropdown->currentIndex()]);
 
     if (roundsCompleted == 4)
@@ -241,7 +267,7 @@ void NeuroDeviceController::endAnalysis()
     updateProgressBar(progBar->value() + (progBar->maximum() - progBar->value()));
     if (!checkBatteryLevel(15))
         return;
-    emit setValueBat(batCharge->value() - 15);
+    updateBattery(batCharge->value() - 15);
     QTimer::singleShot(3000, this, SLOT(endSession()));
 }
 

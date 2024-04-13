@@ -13,18 +13,6 @@
     <height>620</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>1656</width>
-    <height>620</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>1656</width>
-    <height>620</height>
-   </size>
-  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -52,9 +40,17 @@
       <rect>
        <x>630</x>
        <y>250</y>
-       <width>80</width>
+       <width>81</width>
        <height>25</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+                         border: none;  // Remove the border
+                         &quot;background-image: url('./images/up-arrow.png');&quot;  // Set the background image
+                         &quot;background-position: center;&quot;  // Center the image on the button
+                         &quot;background-repeat: no-repeat;&quot;  // Do not repeat the image
+                         }</string>
      </property>
      <property name="text">
       <string>Up Arrow</string>
@@ -295,10 +291,10 @@
     <widget class="QProgressBar" name="batteryCharge">
      <property name="geometry">
       <rect>
-       <x>740</x>
-       <y>490</y>
-       <width>50</width>
-       <height>95</height>
+       <x>739</x>
+       <y>514</y>
+       <width>51</width>
+       <height>71</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -322,8 +318,18 @@
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QProgressBar::chunk{
-	background-color: black;}</string>
+      <string notr="true">QProgressBar {
+            border: 2px solid grey;
+            border-radius: 10px;
+			background-color: #ececec;
+			color: rgb(255, 255, 255);
+        }
+
+        QProgressBar::chunk {
+            background-color:  #5BC236;
+            border-radius: 7px; 
+			margin: 2px
+        }</string>
      </property>
      <property name="maximum">
       <number>150</number>
@@ -670,7 +676,7 @@
       <rect>
        <x>420</x>
        <y>300</y>
-       <width>411</width>
+       <width>381</width>
        <height>20</height>
       </rect>
      </property>
@@ -740,7 +746,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Battery Full</string>
+      <string>Batter Full</string>
      </property>
     </widget>
     <widget class="QPushButton" name="batteryEmptyButton">
@@ -753,13 +759,13 @@
       </rect>
      </property>
      <property name="text">
-      <string>Battery Empty</string>
+      <string>Batter Empty</string>
      </property>
     </widget>
     <widget class="QComboBox" name="nodeDropDown">
      <property name="geometry">
       <rect>
-       <x>700</x>
+       <x>655</x>
        <y>10</y>
        <width>130</width>
        <height>20</height>
@@ -936,10 +942,10 @@
     <widget class="QCustomPlot" name="EEGGraph" native="true">
      <property name="geometry">
       <rect>
-       <x>430</x>
+       <x>440</x>
        <y>40</y>
-       <width>401</width>
-       <height>261</height>
+       <width>391</width>
+       <height>251</height>
       </rect>
      </property>
     </widget>
