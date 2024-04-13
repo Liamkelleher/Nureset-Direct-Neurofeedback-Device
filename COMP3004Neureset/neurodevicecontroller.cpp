@@ -277,10 +277,10 @@ void NeuroDeviceController::stopButtonPressed()
     {
         qDebug() << "\n\nINFO: Therapy has been cancelled\n\n";
         endSession();
-        treatmentLightIndicator->updateState(LightIndicatorState::Off);
         sesActive = false;
         emit stopButton();
         treatment->cancelTreatment();
+        treatmentLightIndicator->updateState(LightIndicatorState::Off);
     }
 }
 
@@ -484,11 +484,10 @@ void NeuroDeviceController::nodeDisplayChanged(int index)
 
 void NeuroDeviceController::toggleTreatmentLight(bool on)
 {
-    if (on)
+    if (on && sesActive && !sesPaused)
     {
         treatmentLightIndicator->updateState(LightIndicatorState::TreatmentInProgress);
     }
-
     else
     {
         treatmentLightIndicator->updateState(LightIndicatorState::Off);

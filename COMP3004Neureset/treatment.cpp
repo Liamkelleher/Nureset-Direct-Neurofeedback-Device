@@ -114,6 +114,7 @@ void Treatment::simulateTherapy(double dominantFrequency, int round)
             QThread::msleep(500);
             emit toggleTreatmentLight(true);
             QThread::msleep(500);
+            emit toggleTreatmentLight(false);
         }
         for (EEGNode *node : nodes->getNodes())
         {
