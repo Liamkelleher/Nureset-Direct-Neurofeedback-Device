@@ -13,14 +13,14 @@ PCDevice,
 EEGHeadset,
 EEGNode,
 NeuroDeviceController,
-MainWindow,
+MainWindow
 
 ### Aleksey:
 UML Class Diagrams,
 Display,
 ContactLost,
 NeuroDeviceController,
-MainWindow,
+MainWindow
 
 ### Liam:
 Use Case Diagrams,
@@ -31,13 +31,13 @@ Waveform,
 LightIndicator,
 Treatment,
 NeuroDeviceController,
-MainWindow,
+MainWindow
 
 ### Ryan:
 State Diagrams,
 Session,
 NeuroDeviceController,
-MainWindow,
+MainWindow
 
 ## MainWindow:
 Handles user input and all UI components outside the main device
