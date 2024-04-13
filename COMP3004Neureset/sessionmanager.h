@@ -9,13 +9,13 @@ class SessionManager {
 private:
     Session* currentSession;
     SessionLog* sessionLog;
-    void saveSessionToLog();
+    void saveSessionToLog(bool);
 
 public:
     SessionManager();
     ~SessionManager();
     void createSession(QDateTime);
-    void endSession(QTime);
+    void endSession(QTime, bool);
     QTime getCurrentSessionElapsedTime() const;
     void updateBeforeBaseline(double);
     void updateAfterBaseline(double);

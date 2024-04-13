@@ -14,10 +14,10 @@ void SessionManager::createSession(QDateTime dateTime) {
     currentSession->startSession();
 }
 
-void SessionManager::endSession(QTime elapsed) {
+void SessionManager::endSession(QTime elapsed, bool save) {
     if(currentSession) {
         currentSession->endSession(elapsed);
-        saveSessionToLog();
+        saveSessionToLog(save);
         currentSession = nullptr;
     }
 }
@@ -45,8 +45,9 @@ SessionLog* SessionManager::getSessionLog() const {
     return sessionLog;
 }
 
-void SessionManager::saveSessionToLog() {
+void SessionManager::saveSessionToLog(bool save) {
     if (currentSession) {
-        sessionLog->addSession(currentSession);
+        if (save)
+            sessionLog->addSession(currentSession);
     }
 }

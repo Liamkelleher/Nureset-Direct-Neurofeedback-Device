@@ -76,7 +76,7 @@ signals:
 private:
     Display *display;
     QThread _DISThread, _HeadSetThread, _TreatThread, _CLThread;
-    bool deviceOn, sesActive, sesPaused, connection, sessionCreated;
+    bool deviceOn, sesActive, sesPaused, connection, sessionCreated, isExpired;
     int roundsCompleted, currStep;
 
     // Declare LightIndicator instances

@@ -10,6 +10,7 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     sessionCreated = false;
     roundsCompleted = 0;
     currStep = 0;
+    isExpired = false;
 
     contactLightIndicator = new LightIndicator(contactInd);
     treatmentLightIndicator = new LightIndicator(treatmentInd);
@@ -287,7 +288,6 @@ void NeuroDeviceController::powerOff()
 
     connection = true;
     sesPaused = false;
-
     deviceOn = false;
 }
 
@@ -318,7 +318,7 @@ void NeuroDeviceController::startSession()
     headset->clearNodes();
     resetTimer();
     manager->createSession(deviceTime);
-    sessionCreated = true;
+    isExpired = false;
     QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 1000));
     elTimer->start();
     ++currStep;
@@ -334,8 +334,8 @@ void NeuroDeviceController::endSession()
     qint64 finalTime = savedTime;
     if (!sesPaused)
         finalTime += elTimer->elapsed();
-    manager->endSession(QTime(0,0).addMSecs(static_cast<int>(finalTime)));
-    sessionCreated = false;
+    manager->endSession(QTime(0,0).addMSecs(static_cast<int>(finalTime)), !isExpired);
+    isExpired = false;
     sesActive = false;
     sesPaused = true;
     treatmentLightIndicator->updateState(LightIndicatorState::Off);
@@ -497,11 +497,6 @@ void NeuroDeviceController::establishConnection()
 void NeuroDeviceController::sessionExpired()
 {
     qDebug() << "\n\nINFO: Session Expired, device turned off.\n\n";
+    isExpired = true;
     powerOff();
-
-    if (sessionCreated)
-    {
-        //remove most recent session
-    }
-
 }
