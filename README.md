@@ -54,26 +54,26 @@ Handles updating the main device display
 ## Display:
 Handles updating the main device display
 
-## LightIndicator
+## LightIndicator:
 Handles updating the main device lights
 
-## Treatment
+## Treatment:
 Handles the treatment logic and execution
 
-## EEGHeadset
+## EEGHeadset:
 Contains all the nodes and communicates with the NeuroDeviceController
 
-## EEGNode
+## EEGNode:
 Handle generating and returning the EEG signals
 
-## Waveform
+## Waveform:
 Contains the EEG signals and their components
 
-## SessionManager
+## SessionManager:
 Manages the sessions and session logs
 
-## SessionLog
+## SessionLog:
 Contains all past sessions
 
-## Session
+## Session:
 Contains information about the treatment
