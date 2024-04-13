@@ -120,6 +120,7 @@ void NeuroDeviceController::startButtonPressed()
             {
                 if (!sesActive && connection)
                 {
+                    checkBatteryLevel(0);
                     contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
                     startSession();
                 }

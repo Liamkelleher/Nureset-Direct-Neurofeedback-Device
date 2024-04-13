@@ -84,7 +84,6 @@ void MainWindow::on_establishConnection_clicked() { emit establishConnection(); 
 
 void MainWindow::on_batteryUseButton_clicked() { ui->batteryCharge->setValue(ui->batteryCharge->value() - 20); }
 void MainWindow::on_batteryFullButton_clicked() { ui->batteryCharge->setValue(ui->batteryCharge->maximum()); }
-void MainWindow::on_batteryEmptyButton_clicked() { ui->batteryCharge->setValue(ui->batteryCharge->minimum()); }
 
 void MainWindow::uploadSession(Session* session) { pcdevice->uploadToPC(session); }
 
