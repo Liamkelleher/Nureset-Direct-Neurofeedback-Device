@@ -25,7 +25,8 @@ public:
     ~NeuroDeviceController();
 
     void startSession();
-    void endSession();
+    void resumeSession();
+
 
 public slots:
     void upArrowButtonPressed();
@@ -37,7 +38,6 @@ public slots:
     void uploadSession(int);
     void updateUiTimer();
     void pauseSession();
-    void resumeSession();
     void setDateTime(QDateTime);
     void nodeDisplayChanged(int index);
     void addBeforeDominant(double freqs);
@@ -51,6 +51,7 @@ public slots:
     void terminateConnection();
     void establishConnection();
     void sessionExpired();
+    void endSession();
 
 signals:
     void upArrowButton();
@@ -70,7 +71,7 @@ signals:
     void resumeTreatment(int, int);
     void setValueBat(int);
     void setValueProg(int);
-
+    void sessionComplete();
 
 private:
     Display *display;
@@ -103,6 +104,7 @@ private:
     double calculateBasline(QVector<double>* dominantFreqs);
     void nodeTreated();
     bool checkBatteryLevel(int);
+    void updateProgressBar(int value);
 };
 
 #endif // NEURODEVICECONTROLLER_H
