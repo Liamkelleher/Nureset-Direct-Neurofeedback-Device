@@ -26,7 +26,7 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
 
     deviceTime = QDateTime::currentDateTime();
 
-    timer = new QTimer();
+    timer = new QTimer(this);
     elTimer = new QElapsedTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(updateUiTimer()));
     savedTime = 0;
@@ -103,6 +103,11 @@ void NeuroDeviceController::startButtonPressed()
 
         if (display->getCurrentMenuSelect() == 0)
         {
+            if (!connection)
+            {
+                qDebug() << "\n\nINFO: Cannot start session. Please re-establish connection.\n\n";
+                emit menuButton();
+            }
             if (!sesActive && connection)
             {
                 contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
@@ -149,7 +154,7 @@ bool NeuroDeviceController::checkBatteryLevel(int btDrain)
     if (batCharge->value() - btDrain <= 0)
     {
         qDebug() << "\nINFO: Device battery has died";
-        emit setValueBat(batCharge->minimum());
+        updateBattery(batCharge->minimum());
         powerOff();
         return false;
     }
@@ -194,13 +199,39 @@ void NeuroDeviceController::updateProgressBar(int value)
     });
 }
 
+void NeuroDeviceController::updateBattery(int value)
+{
+    int currentValue = batCharge->value();
+
+    int increment = (value - currentValue) / 10;
+    if (increment == 0) {
+        increment = (value != currentValue) ? (value > currentValue ? 1 : -1) : 0;
+    }
+
+    QTimer *timer = new QTimer(this);
+    timer->start(50);
+
+    connect(timer, &QTimer::timeout, this, [this, timer, value, increment]() mutable {
+        int newValue = batCharge->value() + increment;
+
+        if ((increment > 0 && newValue >= value) || (increment < 0 && newValue <= value)) {
+            newValue = value;
+            emit setValueBat(newValue);
+            timer->stop();
+            timer->deleteLater();
+        } else {
+            emit setValueBat(newValue);
+        }
+    });
+}
+
 void NeuroDeviceController::startAnalysis()
 {
     if (!sesActive || sesPaused) { return; }
     updateProgressBar(progBar->value() + 30);
     if (!checkBatteryLevel(15))
         return;
-    emit setValueBat(batCharge->value() - 15);
+    updateBattery(batCharge->value() - 15);
 
     for (int i = 0; i < NUM_NODES; ++i)
     {
@@ -220,7 +251,7 @@ void NeuroDeviceController::nodeTreated()
     updateProgressBar((progBar->value() + 10));
     if (!checkBatteryLevel(5))
         return;
-    emit setValueBat(batCharge->value() - 5);
+    updateBattery(batCharge->value() - 5);
     emit updateGraph(&(*headset)[dropdown->currentIndex()]);
 
     if (roundsCompleted == 4)
@@ -236,7 +267,7 @@ void NeuroDeviceController::endAnalysis()
     updateProgressBar(progBar->value() + (progBar->maximum() - progBar->value()));
     if (!checkBatteryLevel(15))
         return;
-    emit setValueBat(batCharge->value() - 15);
+    updateBattery(batCharge->value() - 15);
     QTimer::singleShot(3000, this, SLOT(endSession()));
 }
 
@@ -348,6 +379,8 @@ void NeuroDeviceController::endSession()
 
 void NeuroDeviceController::pauseSession()
 {
+    if (sesPaused)
+        return;
     if (sesActive)
     {
         if (connection)
@@ -358,6 +391,7 @@ void NeuroDeviceController::pauseSession()
         } else {
             treatment->togglePauseTreatment(true);
         }
+        qDebug() << "INFO: Therapy paused";
         sesPaused = true;
         savedTime += elTimer->elapsed();
         QMetaObject::invokeMethod(timer, "stop", Qt::QueuedConnection);
@@ -367,6 +401,8 @@ void NeuroDeviceController::pauseSession()
 
 void NeuroDeviceController::resumeSession()
 {
+    if (!sesPaused)
+        return;
     sesPaused = false;
     contactLost->setPausedState(false);
     treatment->togglePauseTreatment(false);
@@ -386,7 +422,7 @@ void NeuroDeviceController::resumeSession()
             break;
         case 2:
         // resume to current round
-            qDebug() << "INFO: Resuming treatment at round " << roundsCompleted + 1;
+            qDebug() << "INFO: Resuming treatment at round " << roundsCompleted + 1 << "\n";
             switch(roundsCompleted)
             {
             case 0:
@@ -479,7 +515,10 @@ void NeuroDeviceController::terminateConnection()
         qDebug() << "";
         connection = false;
         contactLost->setContactState(true);
-        pauseSession();
+        if (sesActive && !sesPaused)
+        {
+            pauseSession();
+        }
         emit contactWarning();
     }
 }
@@ -490,7 +529,8 @@ void NeuroDeviceController::establishConnection()
     {
         connection = true;
         contactLost->setContactState(false);
-        resumeSession();
+        if (sesActive && sesPaused)
+            resumeSession();
     }
 }
 

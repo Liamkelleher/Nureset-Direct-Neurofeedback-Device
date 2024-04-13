@@ -6,7 +6,7 @@
 #include <cmath>
 
 #define NUM_NODES 7
-#define GRAPH_STEPS 100
+#define GRAPH_STEPS 500
 #define STEP 0.01
 #define LOGS_FILE "sessionlog.dat"
 

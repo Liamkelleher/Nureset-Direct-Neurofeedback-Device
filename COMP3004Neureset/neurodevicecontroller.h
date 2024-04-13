@@ -105,6 +105,7 @@ private:
     void nodeTreated();
     bool checkBatteryLevel(int);
     void updateProgressBar(int value);
+    void updateBattery(int value);
 };
 
 #endif // NEURODEVICECONTROLLER_H

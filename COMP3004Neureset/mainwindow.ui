@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1620</width>
+    <width>1656</width>
     <height>620</height>
    </rect>
   </property>
@@ -40,9 +40,12 @@
       <rect>
        <x>630</x>
        <y>250</y>
-       <width>80</width>
+       <width>81</width>
        <height>25</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>Up Arrow</string>
@@ -283,10 +286,10 @@
     <widget class="QProgressBar" name="batteryCharge">
      <property name="geometry">
       <rect>
-       <x>740</x>
-       <y>490</y>
-       <width>50</width>
-       <height>95</height>
+       <x>739</x>
+       <y>514</y>
+       <width>51</width>
+       <height>71</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -310,8 +313,18 @@
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QProgressBar::chunk{
-	background-color: black;}</string>
+      <string notr="true">QProgressBar {
+            border: 2px solid grey;
+            border-radius: 10px;
+			background-color: #ececec;
+			color: rgb(255, 255, 255);
+        }
+
+        QProgressBar::chunk {
+            background-color:  #5BC236;
+            border-radius: 7px; 
+			margin: 2px
+        }</string>
      </property>
      <property name="maximum">
       <number>150</number>
@@ -624,7 +637,7 @@
      <rect>
       <x>810</x>
       <y>10</y>
-      <width>800</width>
+      <width>841</width>
       <height>600</height>
      </rect>
     </property>
@@ -926,7 +939,7 @@
       <rect>
        <x>440</x>
        <y>40</y>
-       <width>341</width>
+       <width>391</width>
        <height>251</height>
       </rect>
      </property>

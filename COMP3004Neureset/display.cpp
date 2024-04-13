@@ -80,9 +80,10 @@ void Display::startButton()
                     stackedWidget->setCurrentIndex(1);
                     break;
                 case 1: // "Session Logs" is selected
-                    stackedWidget->setCurrentIndex(2);
+                    QMetaObject::invokeMethod(stackedWidget, "setCurrentIndex", Qt::QueuedConnection, Q_ARG(int, 2));
                     break;
                 case 2: // "Time and Date" is selected
+                    dynamic_cast<QDateTimeEdit*>(stackedWidget->widget(3)->findChild<QDateTimeEdit*>("dateTimeEdit"))->setDateTime(QDateTime::currentDateTime());
                     stackedWidget->setCurrentIndex(3);
                     break;
             }
@@ -122,7 +123,7 @@ void Display::powerOnDisplay()
     stackedWidget->setCurrentIndex(0); // main menu
     QListWidget* widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
     widget->setCurrentRow(0); // reset index
-    stackedWidget->show(); // show widget
+    QMetaObject::invokeMethod(stackedWidget, "show", Qt::QueuedConnection);
 }
 
 void Display::powerOffDisplay()

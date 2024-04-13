@@ -18,8 +18,21 @@ MainWindow::MainWindow(QWidget *parent)
     pcdevice->toggleComponents(false);
 
     ui->EEGGraph->addGraph();
-    ui->EEGGraph->xAxis->setRange(0, 1);
-    ui->EEGGraph->yAxis->setRange(-1, 1);
+    ui->EEGGraph->xAxis->setRange(0, 5);
+    ui->EEGGraph->yAxis->setRange(-500, 500);
+    ui->EEGGraph->xAxis->setLabel("Time (seconds)");
+    ui->EEGGraph->yAxis->setLabel("Voltage (μV)");
+    ui->EEGGraph->axisRect()->setupFullAxesBox(false);
+    ui->EEGGraph->setBackground(Qt::NoBrush); // Makes the plot's background transparent
+    ui->EEGGraph->axisRect()->setBackground(Qt::NoBrush); // Makes the canvas background transparent
+    QPen plotPen(QColor(0, 0, 255));
+    plotPen.setWidthF(1.5);
+    ui->EEGGraph->graph()->setPen(plotPen);
+    ui->EEGGraph->xAxis->setLabelFont(QFont("sans", 12));
+    ui->EEGGraph->yAxis->setLabelFont(QFont("sans", 12));
+    QPen gridPen(QColor(200, 200, 200), 0, Qt::DashLine);
+    ui->EEGGraph->xAxis->grid()->setPen(gridPen);
+    ui->EEGGraph->yAxis->grid()->setPen(gridPen);
 
     connect(this, &MainWindow::upArrowButtonPressed, nDC, &NeuroDeviceController::upArrowButtonPressed);
     connect(this, &MainWindow::downArrowButtonPressed, nDC, &NeuroDeviceController::downArrowButtonPressed);
@@ -77,20 +90,21 @@ void MainWindow::updateGraph(EEGNode* node)
 {
     if (node == nullptr)
     {
-        ui->EEGGraph->graph()->setData({0}, {0});
+        ui->EEGGraph->graph()->setData({}, {});  // Clear the data
         ui->EEGGraph->replot();
         return;
     }
     QVector<double> x(GRAPH_STEPS + 1);
     for (int i = 0; i < GRAPH_STEPS + 1; ++i)
     {
-        x[i] = 0.01 * i;
+        x[i] = STEP * i;
     }
     QVector<double> wave = node->getWaveSignal()->getWaveSignal();
-    if (!wave.empty())
+    if (!wave.isEmpty())
     {
         ui->EEGGraph->graph()->setData(x, wave);
         ui->EEGGraph->replot();
     }
 }
+
 
