@@ -298,10 +298,16 @@
      <property name="font">
       <font>
        <pointsize>10</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+       <kerning>true</kerning>
       </font>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
      </property>
      <property name="styleSheet">
       <string notr="true">QProgressBar::chunk{
@@ -317,7 +323,7 @@
       <set>Qt::AlignCenter</set>
      </property>
      <property name="textVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -356,7 +362,7 @@
       <enum>QFrame::Box</enum>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="mainMenuWidget">
       <widget class="QListWidget" name="menuList">
@@ -374,12 +380,25 @@
        <property name="frameShadow">
         <enum>QFrame::Plain</enum>
        </property>
+       <property name="movement">
+        <enum>QListView::Static</enum>
+       </property>
+       <property name="viewMode">
+        <enum>QListView::ListMode</enum>
+       </property>
+       <property name="uniformItemSizes">
+        <bool>false</bool>
+       </property>
+       <property name="sortingEnabled">
+        <bool>false</bool>
+       </property>
        <item>
         <property name="text">
          <string>New Session</string>
         </property>
         <property name="font">
          <font>
+          <pointsize>18</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -394,6 +413,7 @@
         </property>
         <property name="font">
          <font>
+          <pointsize>18</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -408,6 +428,7 @@
         </property>
         <property name="font">
          <font>
+          <pointsize>17</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -423,9 +444,9 @@
        <property name="geometry">
         <rect>
          <x>50</x>
-         <y>200</y>
+         <y>192</y>
          <width>301</width>
-         <height>23</height>
+         <height>31</height>
         </rect>
        </property>
        <property name="value">
@@ -480,32 +501,11 @@
       <widget class="QListWidget" name="sessionList">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>381</width>
-         <height>231</height>
+         <x>0</x>
+         <y>0</y>
+         <width>401</width>
+         <height>301</height>
         </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_3">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>20</y>
-         <width>171</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>15</pointsize>
-         <weight>75</weight>
-         <italic>true</italic>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Session Logs:</string>
        </property>
       </widget>
      </widget>
@@ -560,6 +560,45 @@
        </property>
        <property name="text">
         <string>Enter today's date</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="sessionCompleteWidget">
+      <widget class="QProgressBar" name="progressBar_2">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>192</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+       <property name="invertedAppearance">
+        <bool>false</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>130</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+         <weight>75</weight>
+         <italic>false</italic>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Session Complete!</string>
        </property>
       </widget>
      </widget>

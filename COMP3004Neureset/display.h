@@ -29,6 +29,7 @@ public slots:
     void powerOnDisplay();
     void powerOffDisplay();
     void menuButton();
+    void sessionComplete();
 
 signals:
     void uploadSession(int);

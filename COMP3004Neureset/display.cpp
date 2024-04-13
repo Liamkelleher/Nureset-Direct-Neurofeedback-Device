@@ -201,3 +201,7 @@ void Display::updateTimer(qint64 timeInMSecs)
     }
 }
 
+void Display::sessionComplete()
+{
+    stackedWidget->setCurrentIndex(4);
+}

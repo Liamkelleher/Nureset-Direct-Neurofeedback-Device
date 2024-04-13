@@ -39,7 +39,6 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
 
     connect(this, &NeuroDeviceController::setValueBat, batCharge, &QProgressBar::setValue);
     connect(this, &NeuroDeviceController::setValueProg, progBar, &QProgressBar::setValue);
-
     connect(this, &NeuroDeviceController::upArrowButton, display, &Display::upArrowButton);
     connect(this, &NeuroDeviceController::downArrowButton, display, &Display::downArrowButton);
     connect(this, &NeuroDeviceController::startButton, display, &Display::startButton);
@@ -49,7 +48,7 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(this, &NeuroDeviceController::powerOnDisplay, display, &Display::powerOnDisplay);
     connect(display, &Display::uploadSession, this, &NeuroDeviceController::uploadSession);
     connect(display, &Display::updateDateTime, this, &NeuroDeviceController::setDateTime);
-
+    connect(this, &NeuroDeviceController::sessionComplete, display, &Display::sessionComplete);
     connect(this, &NeuroDeviceController::applyTreatment, treatment, &Treatment::applyTreatment);
     connect(this, &NeuroDeviceController::togglePause, treatment, &Treatment::togglePauseTreatment);
     connect(this, &NeuroDeviceController::resumeTreatment, treatment, &Treatment::resumeTreatment);
@@ -59,12 +58,9 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(treatment, &Treatment::captureAllWaves, this, &NeuroDeviceController::captureAllWaves);
     connect(treatment, &Treatment::endAnalysis, this, &NeuroDeviceController::endAnalysis);
     connect(treatment, &Treatment::toggleTreatmentLight, this, &NeuroDeviceController::toggleTreatmentLight);
-
     connect(this, &NeuroDeviceController::getInitialBaseline, headset, &EEGHeadset::getInitialBaseline);
     connect(headset, &EEGHeadset::startAnalysis, this, &NeuroDeviceController::startAnalysis);
-
     connect(this, &NeuroDeviceController::pausedWarning, contactLost, &ContactLost::pausedWarning);
-
     connect(this, &NeuroDeviceController::contactWarning, contactLost, &ContactLost::contactWarning);
     connect(contactLost, &ContactLost::toggleContactLostLight, this, &NeuroDeviceController::toggleContactLostLight);
     connect(contactLost, &ContactLost::sessionExpired, this, &NeuroDeviceController::sessionExpired);
@@ -163,11 +159,44 @@ bool NeuroDeviceController::checkBatteryLevel(int btDrain)
     return true;
 }
 
+void NeuroDeviceController::updateProgressBar(int value)
+{
+    int increment = (value - progBar->value()) / 10;
+
+    // The QTimer's timeout signal will call the lambda function
+    QTimer *timer = new QTimer(this);
+    timer->start(50);
+
+    connect(timer, &QTimer::timeout, this, [this, value, increment, timer]() {
+        // Increment the progress bar's value
+        int newValue = progBar->value() + increment;
+
+        // Ensure the new value does not exceed the final value
+        if ((increment > 0 && newValue > value) ||
+            (increment < 0 && newValue < value)) {
+            newValue = value;
+        }
+
+        // Update the progress bar and check if we've reached the final value
+        emit setValueProg(newValue);
+        if (newValue == value) {
+            timer->stop();
+            timer->deleteLater();
+
+            if (newValue == progBar->maximum())
+            {
+                emit sessionComplete();
+
+            }
+        }
+    });
+}
+
 void NeuroDeviceController::startAnalysis()
 {
     if (!sesActive || sesPaused) { return; }
 
-    emit setValueProg(progBar->value() + 30);
+    updateProgressBar(progBar->value() + 30);
     if (!checkBatteryLevel(15))
         return;
     emit setValueBat(batCharge->value() - 15);
@@ -187,8 +216,7 @@ void NeuroDeviceController::nodeTreated()
     if (!sesActive || sesPaused) { return; }
 
     roundsCompleted += 1;
-
-    emit setValueProg(progBar->value() + 10);
+    updateProgressBar((progBar->value() + 10));
     if (!checkBatteryLevel(5))
         return;
     emit setValueBat(batCharge->value() - 5);
@@ -204,12 +232,13 @@ void NeuroDeviceController::endAnalysis()
 {
     if (!sesActive || sesPaused) { return; }
 
-    emit setValueProg(progBar->value() + 30);
+    updateProgressBar(progBar->value() + (progBar->maximum() - progBar->value()));
     if (!checkBatteryLevel(15))
         return;
     emit setValueBat(batCharge->value() - 15);
 
-    endSession();
+    QTimer::singleShot(3000, this, SLOT(endSession()));
+
 }
 
 void NeuroDeviceController::stopButtonPressed()
