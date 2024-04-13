@@ -83,6 +83,7 @@ void Display::startButton()
                     stackedWidget->setCurrentIndex(2);
                     break;
                 case 2: // "Time and Date" is selected
+                    dynamic_cast<QDateTimeEdit*>(stackedWidget->widget(3)->findChild<QDateTimeEdit*>("dateTimeEdit"))->setDateTime(QDateTime::currentDateTime());
                     stackedWidget->setCurrentIndex(3);
                     break;
             }

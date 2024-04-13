@@ -13,6 +13,18 @@
     <height>620</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1656</width>
+    <height>620</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1656</width>
+    <height>620</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -728,7 +740,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Batter Full</string>
+      <string>Battery Full</string>
      </property>
     </widget>
     <widget class="QPushButton" name="batteryEmptyButton">
@@ -741,7 +753,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Batter Empty</string>
+      <string>Battery Empty</string>
      </property>
     </widget>
     <widget class="QComboBox" name="nodeDropDown">

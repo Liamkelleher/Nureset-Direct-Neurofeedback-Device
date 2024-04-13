@@ -103,6 +103,11 @@ void NeuroDeviceController::startButtonPressed()
 
         if (display->getCurrentMenuSelect() == 0)
         {
+            if (!connection)
+            {
+                qDebug() << "\n\nINFO: Cannot start session. Please re-establish connection.\n\n";
+                emit menuButton();
+            }
             if (!sesActive && connection)
             {
                 contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
@@ -348,6 +353,8 @@ void NeuroDeviceController::endSession()
 
 void NeuroDeviceController::pauseSession()
 {
+    if (sesPaused)
+        return;
     if (sesActive)
     {
         if (connection)
@@ -358,6 +365,7 @@ void NeuroDeviceController::pauseSession()
         } else {
             treatment->togglePauseTreatment(true);
         }
+        qDebug() << "INFO: Therapy paused";
         sesPaused = true;
         savedTime += elTimer->elapsed();
         QMetaObject::invokeMethod(timer, "stop", Qt::QueuedConnection);
@@ -367,6 +375,8 @@ void NeuroDeviceController::pauseSession()
 
 void NeuroDeviceController::resumeSession()
 {
+    if (!sesPaused)
+        return;
     sesPaused = false;
     contactLost->setPausedState(false);
     treatment->togglePauseTreatment(false);
@@ -386,7 +396,7 @@ void NeuroDeviceController::resumeSession()
             break;
         case 2:
         // resume to current round
-            qDebug() << "INFO: Resuming treatment at round " << roundsCompleted + 1;
+            qDebug() << "INFO: Resuming treatment at round " << roundsCompleted + 1 << "\n";
             switch(roundsCompleted)
             {
             case 0:
@@ -479,7 +489,10 @@ void NeuroDeviceController::terminateConnection()
         qDebug() << "";
         connection = false;
         contactLost->setContactState(true);
-        pauseSession();
+        if (sesActive && !sesPaused)
+        {
+            pauseSession();
+        }
         emit contactWarning();
     }
 }
@@ -490,7 +503,8 @@ void NeuroDeviceController::establishConnection()
     {
         connection = true;
         contactLost->setContactState(false);
-        resumeSession();
+        if (sesActive && sesPaused)
+            resumeSession();
     }
 }
 
