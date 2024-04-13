@@ -28,7 +28,6 @@ private slots:
     void on_menuButton_clicked();
     void on_batteryUseButton_clicked();
     void on_batteryFullButton_clicked();
-    void on_batteryEmptyButton_clicked();
     void uploadSession(Session *);
     void on_pauseButton_pressed();
     void updateGraph(EEGNode*);
