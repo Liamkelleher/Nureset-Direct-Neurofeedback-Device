@@ -27,48 +27,43 @@ void LightIndicator::updateState(LightIndicatorState newState) {
 void LightIndicator::updateColour(LightIndicatorState state)
 {
     if (state == LightIndicatorState::Off) {
-        QString styleSheet = QString(R"(
-           QPushButton {
-                border-radius: 10px;
-                background-color: %1;
-                border: 1px solid #555;
-                })").arg(LightIndicatorColors::OFF_COLOUR);
+        QString styleSheet = QString(
+            "QPushButton {"
+            "   border-radius: 10px;"
+            "   background-color: %1;"
+            "   border: 1px solid #555;"
+            "}"
+        ).arg(LightIndicatorColors::OFF_COLOUR);
 
-                button->setStyleSheet(styleSheet);
+        button->setStyleSheet(styleSheet);
     } else {
-        QString styleTemplate = R"(
-            QPushButton {
-                border-radius: 10px;
-                background: qradialgradient(
-                    cx: 0.5, cy: 0.5,
-                    radius: 1,
-                    fx: 0.5, fy: 0.5,
-                    stop: 0.2 %2,
-                    stop: 0.8 %1);
-                }
-            )";
+        QString styleTemplate = QString(
+            "QPushButton {"
+            "   border-radius: 10px;"
+            "   background: qradialgradient("
+            "       cx: 0.5, cy: 0.5,"
+            "       radius: 1,"
+            "       fx: 0.5, fy: 0.5,"
+            "       stop: 0.2 %1,"
+            "       stop: 0.8 %2"
+            "   );"
+            "}"
+        );
 
-        QString innerColour;
-        QString outerColour;
-
-        if (state == LightIndicatorState::ContactEstablished )
-        {
-            innerColour = LightIndicatorColors::CONTACT_ON_COLOUR;
-            outerColour = LightIndicatorColors::CONTACT_ON_COLOUR2;
-        }
-        else if (state == LightIndicatorState::TreatmentInProgress)
-        {
-            innerColour = LightIndicatorColors::TREATMENT_ON_COLOUR;
-            outerColour = LightIndicatorColors::TREATMENT_ON_COLOUR2;
-        }
-        else if (state == LightIndicatorState::ContactLost)
-        {
-            innerColour = LightIndicatorColors::CONTACT_LOST_COLOUR;
-            outerColour = LightIndicatorColors::CONTACT_LOST_COLOUR2;
+        QString innerColour, outerColour;
+        if (state == LightIndicatorState::ContactEstablished) {
+            innerColour = LightIndicatorColors::CONTACT_ON_COLOUR2;
+            outerColour = LightIndicatorColors::CONTACT_ON_COLOUR;
+        } else if (state == LightIndicatorState::TreatmentInProgress) {
+            innerColour = LightIndicatorColors::TREATMENT_ON_COLOUR2;
+            outerColour = LightIndicatorColors::TREATMENT_ON_COLOUR;
+        } else if (state == LightIndicatorState::ContactLost) {
+            innerColour = LightIndicatorColors::CONTACT_LOST_COLOUR2;
+            outerColour = LightIndicatorColors::CONTACT_LOST_COLOUR;
         }
 
-        // Set the stylesheet based on the color
-        button->setStyleSheet(styleTemplate.arg(outerColour, innerColour));
+        QString finalStyleSheet = styleTemplate.arg(innerColour, outerColour);
+        button->setStyleSheet(finalStyleSheet);
     }
 }
 
