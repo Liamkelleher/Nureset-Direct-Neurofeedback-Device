@@ -496,14 +496,16 @@ void NeuroDeviceController::terminateConnection()
 {
     if (connection == true && deviceOn)
     {
-        qDebug() << "";
         connection = false;
         contactLost->setContactState(true);
+        qDebug() << "CONNECTION TERMINATED";
+        if (sesPaused)
+            contactLost->setPausedState(false);
+        emit contactWarning();
         if (sesActive && !sesPaused)
         {
             pauseSession();
         }
-        emit contactWarning();
     }
 }
 
