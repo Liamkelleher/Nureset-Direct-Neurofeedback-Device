@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QThread>
 #include <QtDebug>
+#include "defs.h"
 
 class ContactLost: public QObject
 {

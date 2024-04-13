@@ -18,7 +18,7 @@ void ContactLost::contactWarning()
         QThread::msleep(500);
         counter++;
 
-        if (counter >= 30)
+        if (counter >= EXPIRE_TIME)
         {
             contactState = false;
             emit sessionExpired();
@@ -37,7 +37,7 @@ void ContactLost::pausedWarning()
         QThread::msleep(1000);
         counter++;
 
-        if (counter >= 30)
+        if (counter >= EXPIRE_TIME)
         {
             pausedState = false;
             emit sessionExpired();
