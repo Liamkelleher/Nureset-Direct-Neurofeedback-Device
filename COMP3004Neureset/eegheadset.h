@@ -15,7 +15,6 @@ public:
     ~EEGHeadset();
 
     void captureAllWaves();
-    void forwardFeedback(double feedbackFreq);
     EEGNode& operator[](int index);
     QVector<EEGNode *> getNodes();
     void clearNodes();

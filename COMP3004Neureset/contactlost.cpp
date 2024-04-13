@@ -12,7 +12,7 @@ void ContactLost::contactWarning()
     while(contactState)
     {
         emit toggleContactLostLight(false);
-        qDebug() << "BEEP";
+        qDebug() << "AUDIO: BEEP";
         QThread::msleep(500);
         emit toggleContactLostLight(true);
         QThread::msleep(500);

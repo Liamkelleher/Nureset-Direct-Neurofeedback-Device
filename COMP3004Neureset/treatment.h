@@ -24,7 +24,7 @@ public slots:
 signals:
     void beforeDominantFreq(double beforeDominantFreq);
     void afterDominantFreq(double afterDominantFreq);
-    void sendFeedback(double feedbackFreq);
+    void sendFeedback();
     void captureAllWaves();
     void endAnalysis();
     void toggleTreatmentLight(bool on);
