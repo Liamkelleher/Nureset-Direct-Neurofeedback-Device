@@ -12,8 +12,14 @@ Use Case Diagrams,
 PCDevice,
 EEGHeadset,
 EEGNode,
+Session,
+SessionLog,
+SessionManager,
+Waveform,
+Treatment,
 NeuroDeviceController,
-MainWindow
+MainWindow,
+Wave Graph Display
 
 ### Aleksey:
 UML Class Diagrams,
