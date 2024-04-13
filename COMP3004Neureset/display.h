@@ -24,7 +24,7 @@ public:
 public slots:
     void upArrowButton();
     void downArrowButton();
-    void startButton();
+    void startButton(bool connection);
     void stopButton();
     void powerOnDisplay();
     void powerOffDisplay();
