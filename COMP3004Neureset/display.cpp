@@ -137,7 +137,7 @@ void Display::menuButton()
     int currentIndex = stackedWidget->currentIndex();
     if (currentIndex != 0)
     {
-        QMetaObject::invokeMethod(stackedWidget, "setCurrentIndex", Qt::QueuedConnection, Q_ARG(int, 0));
+        stackedWidget->setCurrentIndex(0);
     }
 }
 

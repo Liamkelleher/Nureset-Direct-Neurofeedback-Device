@@ -90,6 +90,17 @@ NeuroDeviceController::~NeuroDeviceController()
 
     _CLThread.exit();
     _CLThread.wait();
+
+    delete contactLightIndicator;
+    delete contactLostLightIndicator;
+    delete treatmentLightIndicator;
+    delete manager;
+    delete display;
+    delete headset;
+    delete timer;
+    delete elTimer;
+    delete treatment;
+    delete contactLost;
 }
 
 void NeuroDeviceController::upArrowButtonPressed() { if (deviceOn) { emit upArrowButton(); } }
@@ -108,10 +119,13 @@ void NeuroDeviceController::startButtonPressed()
                 qDebug() << "\n\nINFO: Cannot start session. Please re-establish connection.\n\n";
                 emit menuButton();
             }
-            if (!sesActive && connection)
+            else
             {
-                contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
-                startSession();
+                if (!sesActive && connection)
+                {
+                    contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
+                    startSession();
+                }
             }
         }
 
@@ -292,7 +306,6 @@ void NeuroDeviceController::powerButtonPressed()
     {
         powerOff();
     }
-
     else
     {
         emit powerOnDisplay();
@@ -314,6 +327,7 @@ void NeuroDeviceController::powerOff()
     treatmentLightIndicator->updateState(LightIndicatorState::Off);
 
     treatment->cancelTreatment();
+    contactLost->setContactState(false);
 
     emit powerOffDisplay();
 
@@ -498,7 +512,7 @@ void NeuroDeviceController::terminateConnection()
     {
         connection = false;
         contactLost->setContactState(true);
-        qDebug() << "CONNECTION TERMINATED";
+        qDebug() << "\nINFO: Contact Lost\n";
         if (sesPaused)
             contactLost->setPausedState(false);
         emit contactWarning();
@@ -515,6 +529,7 @@ void NeuroDeviceController::establishConnection()
     {
         connection = true;
         contactLost->setContactState(false);
+        qDebug() << "\nINFO: Contact Re-established\n";
         if (sesActive && sesPaused)
             resumeSession();
     }

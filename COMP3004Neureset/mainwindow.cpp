@@ -63,6 +63,8 @@ MainWindow::~MainWindow()
     _NDCthread.exit();
     _NDCthread.wait();
     delete ui;
+    delete pcdevice;
+    delete nDC;
 }
 
 void MainWindow::on_upArrowButton_clicked() { emit upArrowButtonPressed(); }
