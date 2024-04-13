@@ -1,6 +1,6 @@
 #include "treatment.h"
 
-Treatment::Treatment() : cancelled(false) {}
+Treatment::Treatment() : cancelled(false), paused(false), domFreq(0) {}
 
 double Treatment::calculateDominantFrequency(Waveform* waveform)
 {
@@ -21,9 +21,12 @@ double Treatment::calculateDominantFrequency(Waveform* waveform)
     return totalWeighted / totalAmplitude;
 }
 
-void Treatment::applyTreatment(EEGHeadset* nodes)
+void Treatment::applyTreatment(EEGHeadset* headset)
 {
+    nodes = headset;
     cancelled = false;
+    domFreq = 0;
+    paused = false;
     emit captureAllWaves();
 
     QVector<double> dominantFreq;
@@ -35,30 +38,19 @@ void Treatment::applyTreatment(EEGHeadset* nodes)
     }
     // calculate baseline
     double beforeBaseline = calculateBasline(dominantFreq);
+    domFreq = beforeBaseline;
     emit beforeDominantFreq(beforeBaseline);
 
     // sim therapy - signal emitting to send feedback params: feedback freq
-    simulateTherapy(beforeBaseline);
+    simulateTherapy(beforeBaseline, 1);
 
+    if (cancelled || paused)
+        return;
     for (EEGNode *node : nodes->getNodes())
     {
         captureNewWave(node->getWaveSignal());
     }
-    qDebug() << "Analyzing Response Wave ";
-    // ADD 5 SECOND DELAY FOR ANALYSIS
-    QThread::msleep(5000);
-    if (!cancelled) {
-        dominantFreq.clear();
-        for (EEGNode *node : nodes->getNodes())
-        {
-            double dominant = calculateDominantFrequency(node->getWaveSignal());
-            dominantFreq.push_back(dominant); // before dominant
-            qDebug() << "After Dominant Frequency: " << dominant << " Hz";
-        }
-        double afterBaseline = calculateBasline(dominantFreq);
-        emit afterDominantFreq(afterBaseline);
-        emit endAnalysis();
-    }
+    calculateAfter();
 }
 
 void Treatment::captureNewWave(Waveform* waveform)
@@ -88,20 +80,23 @@ void Treatment::captureNewWave(Waveform* waveform)
     waveform->generateWave();
 }
 
-void Treatment::simulateTherapy(double dominantFrequency)
+void Treatment::simulateTherapy(double dominantFrequency, int round)
 {
-    if (cancelled)
-        return;
-    double offset = 5;
-    for (int round = 1; round <= 4; ++round)
+    if (cancelled || paused)
     {
-        if (cancelled)
+        emit toggleTreatmentLight(false);
+        return;
+    }
+    double offset = 5;
+    for (int i = round; i <= 4; ++i)
+    {
+        if (cancelled || paused)
         {
             emit toggleTreatmentLight(false);
             return;
         }
 
-        qDebug() << "Round "<< round << " of therapy";
+        qDebug() << "Round "<< i << " of therapy";
         qDebug() << "Re-Analyzing Wave";
         // ADD 5 SECOND DELAY HERE FOR RE-ANALYSIS
         for (int i = 0; i < 5; i++)
@@ -111,7 +106,7 @@ void Treatment::simulateTherapy(double dominantFrequency)
             emit toggleTreatmentLight(true);
             QThread::msleep(500);
         }
-        if (cancelled)
+        if (cancelled || paused)
         {
             emit toggleTreatmentLight(false);
             return;
@@ -122,7 +117,7 @@ void Treatment::simulateTherapy(double dominantFrequency)
         emit toggleTreatmentLight(false);
         QThread::msleep(1000);
         emit toggleTreatmentLight(true);
-        if (cancelled)
+        if (cancelled || paused)
             return;
         emit sendFeedback((dominantFrequency + offset)/16);
         offset += 5;
@@ -132,6 +127,12 @@ void Treatment::simulateTherapy(double dominantFrequency)
 void Treatment::cancelTreatment()
 {
     cancelled = true;
+    domFreq = 0;
+}
+
+void Treatment::togglePauseTreatment(bool pause)
+{
+    paused = pause;
 }
 
 double Treatment::calculateBasline(QVector<double> dominantFreqs)
@@ -144,5 +145,46 @@ double Treatment::calculateBasline(QVector<double> dominantFreqs)
    }
 
    return sumOfNodes / NUM_NODES;
+}
+
+void Treatment::calculateAfter()
+{
+    qDebug() << "Analyzing Response Wave ";
+    // ADD 5 SECOND DELAY FOR ANALYSIS
+    QThread::msleep(5000);
+    if (cancelled || paused)
+        return;
+    QVector<double> dominantFreq;
+    for (EEGNode *node : nodes->getNodes())
+    {
+        double dominant = calculateDominantFrequency(node->getWaveSignal());
+        dominantFreq.push_back(dominant); // before dominant
+        qDebug() << "After Dominant Frequency: " << dominant << " Hz";
+    }
+    double afterBaseline = calculateBasline(dominantFreq);
+    emit afterDominantFreq(afterBaseline);
+    emit endAnalysis();
+}
+
+void Treatment::resumeTreatment(int step, int round)
+{
+
+    switch (step)
+    {
+        case 2:
+            simulateTherapy(domFreq, round);
+            for (EEGNode *node : nodes->getNodes())
+            {
+                captureNewWave(node->getWaveSignal());
+            }
+            calculateAfter();
+            break;
+        case 3:
+            calculateAfter();
+            break;
+        default:
+            break;
+    }
+
 }
 
