@@ -42,7 +42,7 @@ public slots:
     void nodeDisplayChanged(int index);
     void addBeforeDominant(double freqs);
     void addAfterDominant(double freqs);
-    void getFeedbackFreq(double feedbackFreq);
+    void getFeedbackFreq();
     void captureAllWaves();
     void startAnalysis();
     void endAnalysis();   

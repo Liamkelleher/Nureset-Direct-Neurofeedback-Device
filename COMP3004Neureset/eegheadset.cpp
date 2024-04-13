@@ -38,11 +38,6 @@ EEGNode& EEGHeadset::operator[](int index)
     return *nodes.at(index);
 }
 
-void EEGHeadset::forwardFeedback(double feedbackFreq)
-{
-    qDebug() << "Sending "<< feedbackFreq << " Hz feedback to all nodes ";
-}
-
 QVector<EEGNode *> EEGHeadset::getNodes()
 {
     return nodes;

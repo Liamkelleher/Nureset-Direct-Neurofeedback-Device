@@ -92,7 +92,6 @@ void Display::startButton()
         {
             QListWidget* sessionList = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
             if (!sessionList) {
-                qDebug() << "Error: Failed to find or cast to QListWidget for 'sessionList'";
                 return;
             }
 
@@ -157,14 +156,12 @@ int Display::getCurrentMenuSelect()
 void Display::populateSessionLogs(SessionLog *sessionLogs)
 {
     if (!sessionLogs) {
-        qDebug() << "Error: sessionLogs pointer is null";
         return;
     }
 
     // Attempt to retrieve the session list widget
     QListWidget* sessionList = dynamic_cast<QListWidget*>(stackedWidget->widget(2)->findChild<QListWidget*>("sessionList"));
     if (!sessionList) {
-        qDebug() << "Error: Failed to find or cast to QListWidget for 'sessionList'";
         return;
     }
 
@@ -172,7 +169,6 @@ void Display::populateSessionLogs(SessionLog *sessionLogs)
     // Check the count method and array access are safe
     int logCount = sessionLogs->count();
     if (logCount <= 0) {
-        qDebug() << "Warning: No logs to display";
         return;
     }
 
@@ -180,7 +176,6 @@ void Display::populateSessionLogs(SessionLog *sessionLogs)
     for (int i = 0; i < logCount; i++) {
         QString logEntry = (*sessionLogs)[i].toString();
         if (logEntry.isEmpty()) {
-            qDebug() << "Warning: Empty log entry at index" << i;
             continue;
         }
         QListWidgetItem* newItem = new QListWidgetItem(logEntry);
@@ -195,7 +190,6 @@ void Display::updateTimer(qint64 timeInMSecs)
     if (timerLabel)
     {
         QTime time = QTime(0,0).addMSecs(static_cast<int>(timeInMSecs));
-        // qDebug() << time;
         QString text = time.toString("mm:ss");
         timerLabel->setText(text);
     }

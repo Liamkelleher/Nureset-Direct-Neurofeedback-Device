@@ -77,7 +77,6 @@ void MainWindow::updateGraph(EEGNode* node)
 {
     if (node == nullptr)
     {
-        qDebug() << "clearing graph";
         ui->EEGGraph->graph()->setData({0}, {0});
         ui->EEGGraph->replot();
         return;
