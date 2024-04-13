@@ -4,7 +4,7 @@ Display::Display(QStackedWidget* stackedWidget)
     : stackedWidget(stackedWidget)
 {
     // init
-    QMetaObject::invokeMethod(stackedWidget, "setCurrentIndex", Qt::QueuedConnection, Q_ARG(int, 0));
+    stackedWidget->setCurrentIndex(0);
     stackedWidget->hide();
 
     dynamic_cast<QDateTimeEdit*>(stackedWidget->widget(3)->findChild<QDateTimeEdit*>("dateTimeEdit"))->setDateTime(QDateTime::currentDateTime());
@@ -121,7 +121,7 @@ void Display::stopButton()
 
 void Display::powerOnDisplay()
 {
-    QMetaObject::invokeMethod(stackedWidget, "setCurrentIndex", Qt::QueuedConnection, Q_ARG(int, 0)); // main menu
+    stackedWidget->setCurrentIndex(0); // main menu
     QListWidget* widget = dynamic_cast<QListWidget*>(stackedWidget->currentWidget()->findChild<QListWidget*>("menuList"));
     widget->setCurrentRow(0); // reset index
     QMetaObject::invokeMethod(stackedWidget, "show", Qt::QueuedConnection);
@@ -129,7 +129,7 @@ void Display::powerOnDisplay()
 
 void Display::powerOffDisplay()
 {
-    QMetaObject::invokeMethod(stackedWidget, "setCurrentIndex", Qt::QueuedConnection, Q_ARG(int, 0)); // main menu
+    stackedWidget->setCurrentIndex(0); // main menu
     stackedWidget->hide(); // hide to simulate 'shut off'
 }
 

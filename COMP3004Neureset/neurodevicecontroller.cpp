@@ -292,6 +292,7 @@ void NeuroDeviceController::stopButtonPressed()
         emit stopButton();
         treatment->cancelTreatment();
         treatmentLightIndicator->updateState(LightIndicatorState::Off);
+        contactLost->setPausedState(false);
     }
 }
 
@@ -325,6 +326,7 @@ void NeuroDeviceController::powerOff()
 
     treatment->cancelTreatment();
     contactLost->setContactState(false);
+    contactLost->setPausedState(false);
 
     emit powerOffDisplay();
 
@@ -472,10 +474,7 @@ void NeuroDeviceController::setDateTime(QDateTime newDateTime)
 
 void NeuroDeviceController::nodeDisplayChanged(int index)
 {
-    if (deviceOn)
-    {
-        emit updateGraph(&(*headset)[index]);
-    }
+    emit updateGraph(&(*headset)[index]);
 }
 
 void NeuroDeviceController::toggleTreatmentLight(bool on)
