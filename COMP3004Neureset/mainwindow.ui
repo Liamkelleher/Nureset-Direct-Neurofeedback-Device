@@ -45,12 +45,7 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">QPushButton {
-                         border: none;  // Remove the border
-                         &quot;background-image: url('./images/up-arrow.png');&quot;  // Set the background image
-                         &quot;background-position: center;&quot;  // Center the image on the button
-                         &quot;background-repeat: no-repeat;&quot;  // Do not repeat the image
-                         }</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>Up Arrow</string>
