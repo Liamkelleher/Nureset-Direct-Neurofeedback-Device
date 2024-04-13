@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1620</width>
+    <width>1656</width>
     <height>620</height>
    </rect>
   </property>
@@ -624,7 +624,7 @@
      <rect>
       <x>810</x>
       <y>10</y>
-      <width>800</width>
+      <width>841</width>
       <height>600</height>
      </rect>
     </property>
@@ -658,7 +658,7 @@
       <rect>
        <x>420</x>
        <y>300</y>
-       <width>381</width>
+       <width>411</width>
        <height>20</height>
       </rect>
      </property>
@@ -747,7 +747,7 @@
     <widget class="QComboBox" name="nodeDropDown">
      <property name="geometry">
       <rect>
-       <x>655</x>
+       <x>700</x>
        <y>10</y>
        <width>130</width>
        <height>20</height>
@@ -924,10 +924,10 @@
     <widget class="QCustomPlot" name="EEGGraph" native="true">
      <property name="geometry">
       <rect>
-       <x>440</x>
+       <x>430</x>
        <y>40</y>
-       <width>341</width>
-       <height>251</height>
+       <width>401</width>
+       <height>261</height>
       </rect>
      </property>
     </widget>
