@@ -15,8 +15,8 @@ public:
     PCDevice(QWidget *parentWidget);
 
     void toggleComponents(bool);
-    void inputDataIntoLabels(const QString&, const QString&, const QString&, const QString&, const QString&);
     void uploadToPC(Session *);
+    void clear();
 
 private:
     QWidget* m_parentWidget;
@@ -26,8 +26,8 @@ private:
     QLabel* m_pcBeforeValue;
     QLabel* m_pcAfterValue;
 
-
     void initializeComponents();
+    void inputDataIntoLabels(const QString&, const QString&, const QString&, const QString&, const QString&);
     QMap<QString, QString> parseDataToString(Session *);
 };
 

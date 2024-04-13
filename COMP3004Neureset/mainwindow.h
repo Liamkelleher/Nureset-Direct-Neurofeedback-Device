@@ -35,6 +35,7 @@ private slots:
     void on_nodeDropDown_currentIndexChanged(int index);  
     void on_terminateConnection_clicked();
     void on_establishConnection_clicked();
+    void on_pcClearData_clicked();
 
 signals:
     void upArrowButtonPressed();

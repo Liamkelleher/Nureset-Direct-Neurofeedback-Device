@@ -109,4 +109,8 @@ void MainWindow::updateGraph(EEGNode* node)
     }
 }
 
+void MainWindow::on_pcClearData_clicked()
+{
+    pcdevice->clear();
+}
 

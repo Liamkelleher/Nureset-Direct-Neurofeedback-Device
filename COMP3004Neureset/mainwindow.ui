@@ -945,6 +945,19 @@
        </item>
       </layout>
      </widget>
+     <widget class="QPushButton" name="pcClearData">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>500</y>
+        <width>91</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Clear History</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QCustomPlot" name="EEGGraph" native="true">
      <property name="geometry">

@@ -57,3 +57,13 @@ QMap<QString, QString> PCDevice::parseDataToString(Session * session)
     dataMap["Elapsed"] = session->getTimeElapsed().toString();
     return dataMap;
 }
+
+void PCDevice::clear()
+{
+    m_pcDateValue->setText("N/A");
+    m_pcElapsedValue->setText("00:00");
+    m_pcBeforeValue->setText("0 Hz");
+    m_pcAfterValue->setText("0 Hz");
+
+    toggleComponents(false);
+}
