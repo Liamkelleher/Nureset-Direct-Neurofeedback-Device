@@ -8,9 +8,8 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     sesPaused = false;
     connection = true;
     sessionCreated = false;
-
-    numNodesTreated = 0;
-    curStep = 0;
+    roundsCompleted = 0;
+    currStep = 0;
 
     contactLightIndicator = new LightIndicator(contactInd);
     treatmentLightIndicator = new LightIndicator(treatmentInd);
@@ -38,6 +37,9 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
 
     contactLost = new ContactLost();
 
+    connect(this, &NeuroDeviceController::setValueBat, batCharge, &QProgressBar::setValue);
+    connect(this, &NeuroDeviceController::setValueProg, progBar, &QProgressBar::setValue);
+
     connect(this, &NeuroDeviceController::upArrowButton, display, &Display::upArrowButton);
     connect(this, &NeuroDeviceController::downArrowButton, display, &Display::downArrowButton);
     connect(this, &NeuroDeviceController::startButton, display, &Display::startButton);
@@ -49,6 +51,8 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(display, &Display::updateDateTime, this, &NeuroDeviceController::setDateTime);
 
     connect(this, &NeuroDeviceController::applyTreatment, treatment, &Treatment::applyTreatment);
+    connect(this, &NeuroDeviceController::togglePause, treatment, &Treatment::togglePauseTreatment);
+    connect(this, &NeuroDeviceController::resumeTreatment, treatment, &Treatment::resumeTreatment);
     connect(treatment, &Treatment::beforeDominantFreq, this, &NeuroDeviceController::addBeforeDominant);
     connect(treatment, &Treatment::afterDominantFreq, this, &NeuroDeviceController::addAfterDominant);
     connect(treatment, &Treatment::sendFeedback, this, &NeuroDeviceController::getFeedbackFreq);
@@ -60,6 +64,7 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(headset, &EEGHeadset::startAnalysis, this, &NeuroDeviceController::startAnalysis);
 
     connect(this, &NeuroDeviceController::pausedWarning, contactLost, &ContactLost::pausedWarning);
+
     connect(this, &NeuroDeviceController::contactWarning, contactLost, &ContactLost::contactWarning);
     connect(contactLost, &ContactLost::toggleContactLostLight, this, &NeuroDeviceController::toggleContactLostLight);
     connect(contactLost, &ContactLost::sessionExpired, this, &NeuroDeviceController::sessionExpired);
@@ -106,17 +111,16 @@ void NeuroDeviceController::startButtonPressed()
                 contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
                 startSession();
             }
-
-            if (sesActive && sesPaused)
-            {
-                resumeSession();
-            }
         }
 
         if (display->getCurrentMenuSelect() == 1)
         {
-            qDebug() << "Selected Log Menu";
             display->populateSessionLogs(manager->getSessionLog());
+        }
+
+        if (sesActive && sesPaused && connection)
+        {
+            resumeSession();
         }
     }
 }
@@ -148,7 +152,7 @@ bool NeuroDeviceController::checkBatteryLevel(int btDrain)
 {
     if (batCharge->value() - btDrain <= 0)
     {
-        batCharge->setValue(batCharge->minimum());
+        emit setValueBat(batCharge->minimum());
         powerOff();
         return false;
     }
@@ -163,10 +167,10 @@ void NeuroDeviceController::startAnalysis()
 {
     if (!sesActive || sesPaused) { return; }
 
-    progBar->setValue(progBar->value() + 30);
+    emit setValueProg(progBar->value() + 30);
     if (!checkBatteryLevel(15))
         return;
-    batCharge->setValue(batCharge->value() - 15);
+    emit setValueBat(batCharge->value() - 15);
 
     for (int i = 0; i < NUM_NODES; ++i)
     {
@@ -174,32 +178,36 @@ void NeuroDeviceController::startAnalysis()
     }
 
     emit updateGraph(&(*headset)[dropdown->currentIndex()]);
-
     emit applyTreatment(headset);
-    curStep = 1;
+    ++currStep;
 }
 
 void NeuroDeviceController::nodeTreated()
 {
     if (!sesActive || sesPaused) { return; }
 
-    numNodesTreated += 1;
+    roundsCompleted += 1;
 
-    progBar->setValue(progBar->value() + 10);
+    emit setValueProg(progBar->value() + 10);
     if (!checkBatteryLevel(5))
         return;
-    batCharge->setValue(batCharge->value() - 5);
+    emit setValueBat(batCharge->value() - 5);
     emit updateGraph(&(*headset)[dropdown->currentIndex()]);
+
+    if (roundsCompleted == 4)
+    {
+        ++currStep;
+    }
 }
 
 void NeuroDeviceController::endAnalysis()
 {
     if (!sesActive || sesPaused) { return; }
 
-    progBar->setValue(progBar->value() + 30);
+    emit setValueProg(progBar->value() + 30);
     if (!checkBatteryLevel(15))
         return;
-    batCharge->setValue(batCharge->value() - 15);
+    emit setValueBat(batCharge->value() - 15);
 
     endSession();
 }
@@ -274,6 +282,8 @@ void NeuroDeviceController::startSession()
 {
     sesActive = true;
     sesPaused = false;
+    currStep = 0;
+    roundsCompleted = 0;
     emit updateGraph(nullptr);
     headset->clearNodes();
     resetTimer();
@@ -281,14 +291,14 @@ void NeuroDeviceController::startSession()
     sessionCreated = true;
     QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 1000));
     elTimer->start();
+    ++currStep;
     emit getInitialBaseline();
 }
 
 void NeuroDeviceController::endSession()
 {
-    curStep = 0;
-    numNodesTreated = 0;
-
+    roundsCompleted = 0;
+    currStep = 0;
     qint64 finalTime = savedTime;
     if (!sesPaused)
         finalTime += elTimer->elapsed();
@@ -299,7 +309,7 @@ void NeuroDeviceController::endSession()
     treatmentLightIndicator->updateState(LightIndicatorState::Off);
     contactLightIndicator->updateState(LightIndicatorState::Off);
     resetTimer();
-    progBar->setValue(progBar->minimum());
+    emit setValueProg(progBar->minimum());
     display->updateTimer(0);
     emit menuButton();
 }
@@ -311,7 +321,10 @@ void NeuroDeviceController::pauseSession()
         if (connection)
         {
             contactLost->setPausedState(true);
+            treatment->togglePauseTreatment(true);
             emit pausedWarning();
+        } else {
+            treatment->togglePauseTreatment(true);
         }
         sesPaused = true;
         savedTime += elTimer->elapsed();
@@ -323,7 +336,10 @@ void NeuroDeviceController::pauseSession()
 void NeuroDeviceController::resumeSession()
 {
     sesPaused = false;
+    qDebug() << "resuming" << "====================";
     contactLost->setPausedState(false);
+    treatment->togglePauseTreatment(false);
+    qDebug() << currStep << roundsCompleted << "====================";
 
     if (!elTimer->isValid())
     {
@@ -331,26 +347,37 @@ void NeuroDeviceController::resumeSession()
     }
     QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 1000));
 
-    switch(curStep)
-    {
-        case 0:
-            break;
-
+    switch (currStep){
         case 1:
-            if (numNodesTreated == NUM_NODES)
-            {
-                curStep = 2;
-            }
-
-            else
-            {
-                qDebug() << "Restart Treating Node:" << numNodesTreated + 1;
-            }
+        // restart analysis from begining
+            emit getInitialBaseline();
             break;
-
         case 2:
+        // resume to current round
+            switch(roundsCompleted)
+            {
+            case 0:
+                emit resumeTreatment(currStep, roundsCompleted + 1);
+                break;
+            case 1:
+                emit resumeTreatment(currStep, roundsCompleted + 1);
+                break;
+            case 2:
+                emit resumeTreatment(currStep, roundsCompleted + 1);
+                break;
+            case 3:
+                emit resumeTreatment(currStep, roundsCompleted + 1);
+                break;
+
+            }
             break;
-    }
+        case 3:
+        // restart after baseline calculation
+            emit resumeTreatment(currStep, -1);
+            break;
+        default:
+            break;
+        }
 
 }
 
@@ -413,17 +440,23 @@ void NeuroDeviceController::toggleContactLostLight(bool on)
 
 void NeuroDeviceController::terminateConnection()
 {
-    connection = false;
-    contactLost->setContactState(true);
-    pauseSession();
-    emit contactWarning();
+    if (connection == true)
+    {
+        connection = false;
+        contactLost->setContactState(true);
+        pauseSession();
+        emit contactWarning();
+    }
 }
 
 void NeuroDeviceController::establishConnection()
 {
-    connection = true;
-    contactLost->setContactState(false);
-    resumeSession();
+    if (connection == false)
+    {
+        connection = true;
+        contactLost->setContactState(false);
+        resumeSession();
+    }
 }
 
 void NeuroDeviceController::sessionExpired()

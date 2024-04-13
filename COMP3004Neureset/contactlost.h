@@ -23,6 +23,7 @@ signals:
     void sessionExpired();
     void toggleContactLostLight(bool on);
 
+
 private:
     bool contactState, pausedState;
 };

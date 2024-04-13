@@ -14,10 +14,12 @@ class Treatment: public QObject {
 
 public:
     Treatment();
+    void togglePauseTreatment(bool);
 
 public slots:
     void applyTreatment(EEGHeadset* nodes);
     void cancelTreatment();
+    void resumeTreatment(int, int);
 
 signals:
     void beforeDominantFreq(double beforeDominantFreq);
@@ -30,9 +32,12 @@ signals:
 private:
     double calculateDominantFrequency(Waveform* waveform);
     void captureNewWave(Waveform* waveform);
-    void simulateTherapy(double dominantFrequency);
+    void simulateTherapy(double dominantFrequency, int round);
     double calculateBasline(QVector<double> dominantFreqs);
-    bool cancelled;
+    void calculateAfter();
+    bool cancelled, paused;
+    EEGHeadset* nodes;
+    double domFreq;
 };
 
 #endif // TREATMENT_H

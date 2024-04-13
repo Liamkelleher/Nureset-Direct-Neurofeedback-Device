@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(this, &MainWindow::startButtonPressed, nDC, &NeuroDeviceController::startButtonPressed);
     connect(this, &MainWindow::stopButtonPressed, nDC, &NeuroDeviceController::stopButtonPressed);
-        connect(this, &MainWindow::pauseButtonPressed, nDC, &NeuroDeviceController::pauseSession);
+    connect(this, &MainWindow::pauseButtonPressed, nDC, &NeuroDeviceController::pauseSession);
 
     connect(this, &MainWindow::menuButtonPressed, nDC, &NeuroDeviceController::menuButtonPressed);
     connect(this, &MainWindow::powerButtonPressed, nDC, &NeuroDeviceController::powerButtonPressed);

@@ -26,7 +26,6 @@ public:
 
     void startSession();
     void endSession();
-    void resumeSession();
 
 public slots:
     void upArrowButtonPressed();
@@ -38,6 +37,7 @@ public slots:
     void uploadSession(int);
     void updateUiTimer();
     void pauseSession();
+    void resumeSession();
     void setDateTime(QDateTime);
     void nodeDisplayChanged(int index);
     void addBeforeDominant(double freqs);
@@ -66,12 +66,17 @@ signals:
     void getInitialBaseline();
     void contactWarning();
     void pausedWarning();
+    void togglePause(bool);
+    void resumeTreatment(int, int);
+    void setValueBat(int);
+    void setValueProg(int);
+
 
 private:
     Display *display;
     QThread _DISThread, _HeadSetThread, _TreatThread, _CLThread;
     bool deviceOn, sesActive, sesPaused, connection, sessionCreated;
-    int numNodesTreated, curStep;
+    int roundsCompleted, currStep;
 
     // Declare LightIndicator instances
     LightIndicator *contactLightIndicator;
