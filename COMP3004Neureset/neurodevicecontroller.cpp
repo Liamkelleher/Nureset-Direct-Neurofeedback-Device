@@ -97,8 +97,6 @@ NeuroDeviceController::~NeuroDeviceController()
     delete manager;
     delete display;
     delete headset;
-    delete timer;
-    delete elTimer;
     delete treatment;
     delete contactLost;
 }
@@ -110,14 +108,13 @@ void NeuroDeviceController::startButtonPressed()
 {
     if (deviceOn)
     {
-        emit startButton();
+        emit startButton(connection);
 
         if (display->getCurrentMenuSelect() == 0)
         {
             if (!connection)
             {
                 qDebug() << "\n\nINFO: Cannot start session. Please re-establish connection.\n\n";
-                emit menuButton();
             }
             else
             {

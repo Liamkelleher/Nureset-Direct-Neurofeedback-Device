@@ -56,7 +56,7 @@ public slots:
 signals:
     void upArrowButton();
     void downArrowButton();
-    void startButton();
+    void startButton(bool);
     void stopButton();
     void powerOnDisplay();
     void powerOffDisplay();

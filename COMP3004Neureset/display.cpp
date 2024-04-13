@@ -61,7 +61,7 @@ void Display::downArrowButton()
 }
 
 
-void Display::startButton()
+void Display::startButton(bool connection)
 {
     int currentIndex = stackedWidget->currentIndex();
 
@@ -77,7 +77,8 @@ void Display::startButton()
             switch (selected)
             {
                 case 0: // "New Session" is selected
-                    QMetaObject::invokeMethod(stackedWidget, "setCurrentIndex", Qt::QueuedConnection, Q_ARG(int, 1));
+                    if (connection)
+                        QMetaObject::invokeMethod(stackedWidget, "setCurrentIndex", Qt::QueuedConnection, Q_ARG(int, 1));
                     break;
                 case 1: // "Session Logs" is selected
                     QMetaObject::invokeMethod(stackedWidget, "setCurrentIndex", Qt::QueuedConnection, Q_ARG(int, 2));
