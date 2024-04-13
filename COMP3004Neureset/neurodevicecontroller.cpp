@@ -423,22 +423,7 @@ void NeuroDeviceController::resumeSession()
         case 2:
         // resume to current round
             qDebug() << "INFO: Resuming treatment at round " << roundsCompleted + 1 << "\n";
-            switch(roundsCompleted)
-            {
-            case 0:
-                emit resumeTreatment(currStep, roundsCompleted + 1);
-                break;
-            case 1:
-                emit resumeTreatment(currStep, roundsCompleted + 1);
-                break;
-            case 2:
-                emit resumeTreatment(currStep, roundsCompleted + 1);
-                break;
-            case 3:
-                emit resumeTreatment(currStep, roundsCompleted + 1);
-                break;
-
-            }
+            emit resumeTreatment(currStep, roundsCompleted + 1);
             break;
         case 3:
         // restart after baseline calculation
