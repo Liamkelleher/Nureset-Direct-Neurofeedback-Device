@@ -6,7 +6,7 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     deviceOn = false;
     sesActive = false;
     sesPaused = false;
-    connection = true;
+    connection = false;
     sessionCreated = false;
     roundsCompleted = 0;
     currStep = 0;
@@ -330,7 +330,6 @@ void NeuroDeviceController::powerOff()
 
     emit powerOffDisplay();
 
-    connection = true;
     sesPaused = false;
     deviceOn = false;
 }
