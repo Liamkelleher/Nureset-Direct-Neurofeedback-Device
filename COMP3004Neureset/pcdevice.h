@@ -27,7 +27,7 @@ private:
     QLabel* m_pcAfterValue;
 
     void initializeComponents();
-    void inputDataIntoLabels(const QString&, const QString&, const QString&, const QString&, const QString&);
+    void inputDataIntoLabels(QMap<QString, QString>);
     QMap<QString, QString> parseDataToString(Session *);
 };
 

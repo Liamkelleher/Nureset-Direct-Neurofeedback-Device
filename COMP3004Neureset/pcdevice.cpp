@@ -26,15 +26,15 @@ void PCDevice::toggleComponents(bool isVisible)
     m_pcNoDataLabel->setVisible(!isVisible);
 }
 
-void PCDevice::inputDataIntoLabels(const QString& dateValue, const QString& timeValue, const QString& elapsedValue, const QString& beforeValue, const QString& afterValue)
+void PCDevice::inputDataIntoLabels(QMap<QString, QString> parsedData)
 {
     QFont font = m_pcBeforeValue->font();
     font.setPointSize(24);
-    m_pcDateValue->setText(dateValue + " at " + timeValue);
-    m_pcElapsedValue->setText(elapsedValue);
-    m_pcBeforeValue->setText(beforeValue + " Hz");
+    m_pcDateValue->setText(parsedData["Date"] + " at " + parsedData["Time"]);
+    m_pcElapsedValue->setText(parsedData["Elapsed"]);
+    m_pcBeforeValue->setText(parsedData["Before"] + " Hz");
     m_pcBeforeValue->setFont(font);
-    m_pcAfterValue->setText(afterValue + " Hz");
+    m_pcAfterValue->setText(parsedData["After"] + " Hz");
     m_pcAfterValue->setFont(font);
 }
 
@@ -44,7 +44,7 @@ void PCDevice::uploadToPC(Session* session)
         return;
 
     QMap<QString, QString> parsedData = parseDataToString(session);
-    inputDataIntoLabels(parsedData["Date"], parsedData["Time"], parsedData["Elapsed"], QString::number(session->getBeforeBaseline()), QString::number(session->getAfterBaseline()));
+    inputDataIntoLabels(parsedData);
 
     toggleComponents(true);
 }
@@ -55,6 +55,8 @@ QMap<QString, QString> PCDevice::parseDataToString(Session * session)
     dataMap["Date"] = session->getDateTime().date().toString();
     dataMap["Time"] = session->getDateTime().time().toString();
     dataMap["Elapsed"] = session->getTimeElapsed().toString();
+    dataMap["Before"] = QString::number(session->getBeforeBaseline());
+    dataMap["After"] = QString::number(session->getAfterBaseline());
     return dataMap;
 }
 
