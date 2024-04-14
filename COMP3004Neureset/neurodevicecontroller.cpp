@@ -120,8 +120,7 @@ void NeuroDeviceController::startButtonPressed()
             {
                 if (!sesActive && connection)
                 {
-                    checkBatteryLevel(0);
-                    contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
+                    checkBatteryLevel(0);     
                     startSession();
                 }
             }
@@ -292,7 +291,6 @@ void NeuroDeviceController::stopButtonPressed()
         sesActive = false;
         emit stopButton();
         treatment->cancelTreatment();
-        treatmentLightIndicator->updateState(LightIndicatorState::Off);
         contactLost->setPausedState(false);
     }
 }
@@ -308,7 +306,8 @@ void NeuroDeviceController::powerButtonPressed()
     else
     {
         emit powerOnDisplay();
-
+        if (connection)
+            contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
         deviceOn = true;
     }
 }
@@ -362,6 +361,8 @@ void NeuroDeviceController::startSession()
     emit updateGraph(nullptr);
     headset->clearNodes();
     resetTimer();
+    if (connection)
+        contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
     manager->createSession(deviceTime);
     isExpired = false;
     QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 1000));
@@ -384,7 +385,6 @@ void NeuroDeviceController::endSession()
     sesActive = false;
     sesPaused = true;
     treatmentLightIndicator->updateState(LightIndicatorState::Off);
-    contactLightIndicator->updateState(LightIndicatorState::Off);
     resetTimer();
     emit setValueProg(progBar->minimum());
     display->updateTimer(0);
@@ -509,6 +509,7 @@ void NeuroDeviceController::terminateConnection()
     {
         connection = false;
         contactLost->setContactState(true);
+        contactLightIndicator->updateState(LightIndicatorState::Off);
         qDebug() << "\nINFO: Contact Lost\n";
         if (sesPaused)
             contactLost->setPausedState(false);
@@ -526,6 +527,7 @@ void NeuroDeviceController::establishConnection()
     {
         connection = true;
         contactLost->setContactState(false);
+        contactLightIndicator->updateState(LightIndicatorState::ContactEstablished);
         qDebug() << "\nINFO: Contact Re-established\n";
         if (sesActive && sesPaused)
             resumeSession();
