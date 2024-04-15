@@ -122,6 +122,11 @@ void Treatment::simulateTherapy(double dominantFrequency, int round)
         {
             emit toggleTreatmentLight(false);
             QThread::msleep(500);
+            if (cancelled || paused)
+            {
+                emit toggleTreatmentLight(false);
+                return;
+            }
             emit toggleTreatmentLight(true);
             QThread::msleep(500);
             emit toggleTreatmentLight(false);

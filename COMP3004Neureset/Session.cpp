@@ -104,13 +104,13 @@ QString Session::toString() const
 }
 
 QDataStream &operator<<(QDataStream &out, const Session &session) {
-        out << session.dateTime;
-        out << QString::number(session.beforeBaseline);
-        out << QString::number(session.afterBaseline);
-        out << session.elapsedTime.toString("mm:ss");
-        out << session.beforeDFs;
-        out << session.afterDFs;
-        out << session.avgAmplitude;
+    out << session.dateTime;
+    out << QString::number(session.beforeBaseline);
+    out << QString::number(session.afterBaseline);
+    out << session.elapsedTime.toString("mm:ss");
+    out << session.beforeDFs;
+    out << session.afterDFs;
+    out << session.avgAmplitude;
     return out;
 }
 
