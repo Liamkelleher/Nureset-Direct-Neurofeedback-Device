@@ -17,22 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     pcdevice->toggleComponents(false);
 
-    ui->EEGGraph->addGraph();
-    ui->EEGGraph->xAxis->setRange(0, 5);
+    initializeGraph(ui->EEGGraph);
     ui->EEGGraph->yAxis->setRange(-500, 500);
-    ui->EEGGraph->xAxis->setLabel("Time (seconds)");
-    ui->EEGGraph->yAxis->setLabel("Voltage (μV)");
-    ui->EEGGraph->axisRect()->setupFullAxesBox(false);
-    ui->EEGGraph->setBackground(Qt::NoBrush); // Makes the plot's background transparent
-    ui->EEGGraph->axisRect()->setBackground(Qt::NoBrush); // Makes the canvas background transparent
-    QPen plotPen(QColor(0, 0, 255));
-    plotPen.setWidthF(1.5);
-    ui->EEGGraph->graph()->setPen(plotPen);
-    ui->EEGGraph->xAxis->setLabelFont(QFont("sans", 12));
-    ui->EEGGraph->yAxis->setLabelFont(QFont("sans", 12));
-    QPen gridPen(QColor(200, 200, 200), 0, Qt::DashLine);
-    ui->EEGGraph->xAxis->grid()->setPen(gridPen);
-    ui->EEGGraph->yAxis->grid()->setPen(gridPen);
+    initializeGraph(ui->baselineGraph);
+    ui->baselineGraph->yAxis->setRange(-150, 150);
 
     connect(this, &MainWindow::upArrowButtonPressed, nDC, &NeuroDeviceController::upArrowButtonPressed);
     connect(this, &MainWindow::downArrowButtonPressed, nDC, &NeuroDeviceController::downArrowButtonPressed);
@@ -113,3 +101,21 @@ void MainWindow::on_pcClearData_clicked()
     pcdevice->clear();
 }
 
+void MainWindow::initializeGraph(QCustomPlot *graph)
+{
+    graph->addGraph();
+    graph->xAxis->setRange(0, 5);
+    graph->xAxis->setLabel("Time (seconds)");
+    graph->yAxis->setLabel("Voltage (μV)");
+    graph->axisRect()->setupFullAxesBox(false);
+    graph->setBackground(Qt::NoBrush); // Makes the plot's background transparent
+    graph->axisRect()->setBackground(Qt::NoBrush); // Makes the canvas background transparent
+    QPen plotPen(QColor(0, 0, 255));
+    plotPen.setWidthF(1.5);
+    graph->graph()->setPen(plotPen);
+    graph->xAxis->setLabelFont(QFont("sans", 12));
+    graph->yAxis->setLabelFont(QFont("sans", 12));
+    QPen gridPen(QColor(200, 200, 200), 0, Qt::DashLine);
+    graph->xAxis->grid()->setPen(gridPen);
+    graph->yAxis->grid()->setPen(gridPen);
+}

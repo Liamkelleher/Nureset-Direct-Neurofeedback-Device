@@ -29,6 +29,17 @@ void Treatment::applyTreatment(EEGHeadset* headset)
     paused = false;
     emit captureAllWaves();
 
+    double avgAmplitude  = 0;
+    for (EEGNode *node : nodes->getNodes())
+    {
+        avgAmplitude += (node->getWaveSignal()->getBand(BandType::ALPHA)->amplitude +
+        node->getWaveSignal()->getBand(BandType::BETA)->amplitude  +
+        node->getWaveSignal()->getBand(BandType::DELTA)->amplitude +
+        node->getWaveSignal()->getBand(BandType::THETA)->amplitude)/4;
+    }
+    avgAmplitude = avgAmplitude / NUM_NODES;
+    emit avgAmp(avgAmplitude);
+
     QVector<double> dominantFreq;
     for (EEGNode *node : nodes->getNodes())
     {
@@ -37,9 +48,10 @@ void Treatment::applyTreatment(EEGHeadset* headset)
     }
     qDebug() << "TREATMENT: Calculating dominant frequency before therapy\n";
     // calculate baseline
+    emit beforeDominantFreq(dominantFreq);
     double beforeBaseline = calculateBasline(dominantFreq);
     domFreq = beforeBaseline;
-    emit beforeDominantFreq(beforeBaseline);
+    emit beforeBase(beforeBaseline);
 
     // sim therapy - signal emitting to send feedback params: feedback freq
     simulateTherapy(beforeBaseline, 1);
@@ -62,20 +74,18 @@ void Treatment::captureNewWave(Waveform* waveform)
 
     // Change these band's frequencies
     bool shouldAdd = QRandomGenerator::global()->bounded(2);
-    double randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.3;
-    alphaBand->frequency +=  0.3 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    double randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.1 * 4;
+    alphaBand->frequency += (shouldAdd ? 1 : -1) * (randomAdjustment);
 
-    shouldAdd = QRandomGenerator::global()->bounded(2);
-    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.3;
-    betaBand->frequency +=  0.3 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.1 * 18;
+    betaBand->frequency += (shouldAdd ? 1 : -1) * (randomAdjustment);
 
-    shouldAdd = QRandomGenerator::global()->bounded(2);
-    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.3;
-    deltaBand->frequency +=  0.3 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.1 * 3;
+    deltaBand->frequency += (shouldAdd ? 1 : -1) * (randomAdjustment);
 
-    shouldAdd = QRandomGenerator::global()->bounded(2);
-    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.3;
-    thetaBand->frequency +=  0.3 + (shouldAdd ? -randomAdjustment : randomAdjustment);
+    randomAdjustment = QRandomGenerator::global()->generateDouble() * 0.1 * 4;
+    thetaBand->frequency += (shouldAdd ? 1 : -1) * (randomAdjustment);
+
 
     waveform->generateWave();
 }
@@ -87,7 +97,7 @@ void Treatment::simulateTherapy(double dominantFrequency, int round)
         emit toggleTreatmentLight(false);
         return;
     }
-    double offset = 5;
+    double offset = 5 * round;
     for (int i = round; i <= 4; ++i)
     {
         if (cancelled || paused)
@@ -168,8 +178,9 @@ void Treatment::calculateAfter()
         double dominant = calculateDominantFrequency(node->getWaveSignal());
         dominantFreq.push_back(dominant); // before dominant
     }
+    emit afterDominantFreq(dominantFreq);
     double afterBaseline = calculateBasline(dominantFreq);
-    emit afterDominantFreq(afterBaseline);
+    emit afterBase(afterBaseline);
     emit endAnalysis();
 }
 
