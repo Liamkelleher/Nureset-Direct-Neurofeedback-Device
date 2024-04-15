@@ -19,6 +19,9 @@ public:
     QTime getCurrentSessionElapsedTime() const;
     void updateBeforeBaseline(double);
     void updateAfterBaseline(double);
+    void updateAvgAmp(double);
+    void addBeforeDF(QVector<double>);
+    void addAfterDF(QVector<double>);
     SessionLog* getSessionLog() const;
 };
 

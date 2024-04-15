@@ -55,6 +55,9 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(this, &NeuroDeviceController::resumeTreatment, treatment, &Treatment::resumeTreatment);
     connect(treatment, &Treatment::beforeDominantFreq, this, &NeuroDeviceController::addBeforeDominant);
     connect(treatment, &Treatment::afterDominantFreq, this, &NeuroDeviceController::addAfterDominant);
+    connect(treatment, &Treatment::beforeBase, this, &NeuroDeviceController::addBeforeBase);
+    connect(treatment, &Treatment::afterBase, this, &NeuroDeviceController::addAfterBase);
+    connect(treatment, &Treatment::avgAmp, this, &NeuroDeviceController::addAvgAmp);
     connect(treatment, &Treatment::sendFeedback, this, &NeuroDeviceController::getFeedbackFreq);
     connect(treatment, &Treatment::captureAllWaves, this, &NeuroDeviceController::captureAllWaves);
     connect(treatment, &Treatment::endAnalysis, this, &NeuroDeviceController::endAnalysis);
@@ -138,18 +141,6 @@ void NeuroDeviceController::startButtonPressed()
     }
 }
 
-double NeuroDeviceController::calculateBasline(QVector<double>* dominantFreqs)
-{
-    double sumOfNodes = 0;
-
-   for (int i = 0; i < NUM_NODES; ++i)
-   {
-       sumOfNodes += dominantFreqs->at(i);
-   }
-
-   return sumOfNodes / NUM_NODES;
-}
-
 void NeuroDeviceController::getFeedbackFreq()
 {
     nodeTreated();
@@ -157,8 +148,11 @@ void NeuroDeviceController::getFeedbackFreq()
 
 void NeuroDeviceController::captureAllWaves() { headset->captureAllWaves(); }
 
-void NeuroDeviceController::addBeforeDominant(double freq) { manager->updateBeforeBaseline(freq); }
-void NeuroDeviceController::addAfterDominant(double freq) { manager->updateAfterBaseline(freq); }
+void NeuroDeviceController::addBeforeDominant(QVector<double> freq) { manager->addBeforeDF(freq); }
+void NeuroDeviceController::addAfterDominant(QVector<double> freq) { manager->addAfterDF(freq); }
+void NeuroDeviceController::addBeforeBase(double freq) { manager->updateBeforeBaseline(freq); }
+void NeuroDeviceController::addAfterBase(double freq) { manager->updateAfterBaseline(freq); }
+void NeuroDeviceController::addAvgAmp(double amp) { manager->updateAvgAmp(amp); }
 
 bool NeuroDeviceController::checkBatteryLevel(int btDrain)
 {
@@ -279,7 +273,7 @@ void NeuroDeviceController::endAnalysis()
     if (!checkBatteryLevel(15))
         return;
     updateBattery(batCharge->value() - 15);
-    QTimer::singleShot(3000, this, SLOT(endSession()));
+    QTimer::singleShot(1500, this, SLOT(endSession()));
 }
 
 void NeuroDeviceController::stopButtonPressed()
@@ -379,7 +373,7 @@ void NeuroDeviceController::endSession()
     qint64 finalTime = savedTime;
     if (!sesPaused)
         finalTime += elTimer->elapsed();
-    manager->endSession(QTime(0,0).addMSecs(static_cast<int>(finalTime)), !isExpired);
+    manager->endSession(QTime(0,0).addMSecs(static_cast<int>(finalTime - 1500)), !isExpired);
     isExpired = false;
     sesActive = false;
     sesPaused = true;

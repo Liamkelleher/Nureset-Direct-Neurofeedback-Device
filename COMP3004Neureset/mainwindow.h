@@ -5,6 +5,7 @@
 #include <QtDebug>
 #include "neurodevicecontroller.h"
 #include "pcdevice.h"
+#include "qcustomplot.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -53,6 +54,8 @@ private:
     NeuroDeviceController *nDC;
     PCDevice *pcdevice;
     QThread _NDCthread;
+
+    void initializeGraph(QCustomPlot*);
 
 };
 #endif // MAINWINDOW_H

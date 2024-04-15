@@ -40,8 +40,11 @@ public slots:
     void pauseSession();
     void setDateTime(QDateTime);
     void nodeDisplayChanged(int index);
-    void addBeforeDominant(double freqs);
-    void addAfterDominant(double freqs);
+    void addBeforeDominant(QVector<double> freqs);
+    void addAfterDominant(QVector<double> freqs);
+    void addAvgAmp(double);
+    void addBeforeBase(double);
+    void addAfterBase(double);
     void getFeedbackFreq();
     void captureAllWaves();
     void startAnalysis();
@@ -101,7 +104,6 @@ private:
 
     void resetTimer();
     void powerOff();
-    double calculateBasline(QVector<double>* dominantFreqs);
     void nodeTreated();
     bool checkBatteryLevel(int);
     void updateProgressBar(int value);

@@ -4,17 +4,21 @@
 #include <QDateTime>
 #include <QString>
 #include <QTime>
-#include <array>
+#include <QDataStream>
 #include <QVector>
+#include <QDebug>
 #include <QElapsedTimer>
-#include <defs.h>
+#include "defs.h"
 
 class Session {
 private:
     QDateTime dateTime;
     double beforeBaseline;
     double afterBaseline;
+    double avgAmplitude;
     QTime elapsedTime;
+    QVector<double> beforeDFs;
+    QVector<double> afterDFs;
 
 public:
     Session(QDateTime);
@@ -25,8 +29,13 @@ public:
     void endSession(QTime);
     void updateBeforeBaseline(double value);
     void updateAfterBaseline(double value);
+    void updateAvgAmp(double);
+    void addToDF(bool, QVector<double>);
     double getBeforeBaseline();
     double getAfterBaseline();
+    double getAvgAmpl();
+    QVector<double> getBeforeDFs();
+    QVector<double> getAfterDFs();
     QTime getTimeElapsed();
     void setTimeElapsed(QTime);
     QDateTime getDateTime();

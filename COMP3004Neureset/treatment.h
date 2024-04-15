@@ -22,8 +22,11 @@ public slots:
     void resumeTreatment(int, int);
 
 signals:
-    void beforeDominantFreq(double beforeDominantFreq);
-    void afterDominantFreq(double afterDominantFreq);
+    void beforeDominantFreq(QVector<double> beforeDominantFreq);
+    void afterDominantFreq(QVector<double> afterDominantFreq);
+    void beforeBase(double);
+    void afterBase(double);
+    void avgAmp(double);
     void sendFeedback();
     void captureAllWaves();
     void endAnalysis();
