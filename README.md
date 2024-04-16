@@ -31,7 +31,8 @@ NeuroDeviceController,
 MainWindow
 
 ### Liam:
-Use Case Diagrams,
+Use Case Diagrams, 
+Sequence Diagram (Contact Lost),
 Session,
 SessionLog,
 SessionManager,
