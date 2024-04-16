@@ -8,7 +8,8 @@ Neurset is a direct neurofeedback EEG device designed and developed by Josh, Ale
 
 ## Contributions
 ### Josh:
-Use Case Diagrams,
+Use Case and Use Case Diagram,
+Sequence Diagrams (Low Battery and PC viewing),
 PCDevice,
 EEGHeadset,
 EEGNode,
@@ -19,7 +20,8 @@ Waveform,
 Treatment,
 NeuroDeviceController,
 MainWindow,
-Wave Graph Display
+Wave Graph Display,
+Wave Generation
 
 ### Aleksey:
 UML Class Diagrams,
@@ -41,15 +43,13 @@ MainWindow
 
 ### Ryan:
 State Diagrams,
-Session,
-NeuroDeviceController,
-MainWindow
+Session
 
 ## MainWindow:
 Handles user input and all UI components outside the main device
 
 ## PCDevice:
-External UI that shows detailed information of uploaded session logs
+External UI that shows detailed information on uploaded session logs
 
 ## NeuroDeviceController:
 Contains the main communication paths between all other components
