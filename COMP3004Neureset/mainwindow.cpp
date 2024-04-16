@@ -91,6 +91,11 @@ void MainWindow::updateGraph(EEGNode* node)
     QVector<double> wave = node->getWaveSignal()->getWaveSignal();
     if (!wave.isEmpty())
     {
+        if (wave.size() < 501)
+        {
+            updateGraph(node);
+            return;
+        }
         ui->EEGGraph->graph()->setData(x, wave);
         ui->EEGGraph->replot();
     }
