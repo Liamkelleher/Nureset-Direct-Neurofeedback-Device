@@ -26,6 +26,7 @@ void LightIndicator::updateState(LightIndicatorState newState) {
 
 void LightIndicator::updateColour(LightIndicatorState state)
 {
+    QMutex mutex;
     if (state == LightIndicatorState::Off) {
         QString styleSheet = QString(
             "QPushButton {"
@@ -34,8 +35,9 @@ void LightIndicator::updateColour(LightIndicatorState state)
             "   border: 1px solid #555;"
             "}"
         ).arg(LightIndicatorColors::OFF_COLOUR);
-
+        mutex.lock();
         button->setStyleSheet(styleSheet);
+        mutex.unlock();
     } else {
         QString styleTemplate = QString(
             "QPushButton {"

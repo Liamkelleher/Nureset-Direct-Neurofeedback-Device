@@ -8,6 +8,7 @@
 #define LIGHTINDICATOR_H
 
 #include <QPushButton>
+#include <QMutex>
 #include "defs.h"
 
 class LightIndicator {
