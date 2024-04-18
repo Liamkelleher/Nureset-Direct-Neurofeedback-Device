@@ -25,6 +25,8 @@ Wave Generation
 
 ### Aleksey:
 UML Class Diagrams,
+Scenario Demo Video,
+Traceability Matrix,
 Display,
 ContactLost,
 NeuroDeviceController,
