@@ -5,6 +5,7 @@ ContactLost::ContactLost() {}
 void ContactLost::setContactState(bool state) { contactState = state; }
 void ContactLost::setPausedState(bool state) { pausedState = state; }
 
+//Determins when the session has expired after contact with the EEG headset is lost
 void ContactLost::contactWarning()
 {
     int counter = 0;
@@ -28,6 +29,7 @@ void ContactLost::contactWarning()
     emit toggleContactLostLight(false);
 }
 
+//Determins when the session has expired after a session is paused
 void ContactLost::pausedWarning()
 {
     int counter = 0;
