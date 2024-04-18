@@ -55,6 +55,7 @@ MainWindow::~MainWindow()
     delete nDC;
 }
 
+//Button event-handlers for all ui components
 void MainWindow::on_upArrowButton_clicked() { emit upArrowButtonPressed(); }
 void MainWindow::on_downArrowButton_clicked() { emit downArrowButtonPressed(); }
 
@@ -73,21 +74,28 @@ void MainWindow::on_establishConnection_clicked() { emit establishConnection(); 
 void MainWindow::on_batteryUseButton_clicked() { ui->batteryCharge->setValue(ui->batteryCharge->value() - 20); }
 void MainWindow::on_batteryFullButton_clicked() { ui->batteryCharge->setValue(ui->batteryCharge->maximum()); }
 
+void MainWindow::on_pcClearData_clicked() { pcdevice->clear(); }
+
+//Communication between the NDC and the PCDevice
 void MainWindow::uploadSession(Session* session) { pcdevice->uploadToPC(session); }
 
+//Communication between the NDC and the EEGGraph
 void MainWindow::updateGraph(EEGNode* node)
 {
+    //Sets graph to an empty state
     if (node == nullptr)
     {
         ui->EEGGraph->graph()->setData({}, {});  // Clear the data
         ui->EEGGraph->replot();
         return;
     }
+
     QVector<double> x(GRAPH_STEPS + 1);
     for (int i = 0; i < GRAPH_STEPS + 1; ++i)
     {
         x[i] = STEP * i;
     }
+
     QVector<double> wave = node->getWaveSignal()->getWaveSignal();
     if (!wave.isEmpty())
     {
@@ -101,11 +109,7 @@ void MainWindow::updateGraph(EEGNode* node)
     }
 }
 
-void MainWindow::on_pcClearData_clicked()
-{
-    pcdevice->clear();
-}
-
+//Default Settings for EEGGraph
 void MainWindow::initializeGraph(QCustomPlot *graph)
 {
     graph->addGraph();

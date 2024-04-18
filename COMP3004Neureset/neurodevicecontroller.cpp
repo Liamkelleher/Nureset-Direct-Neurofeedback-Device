@@ -69,6 +69,7 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     connect(contactLost, &ContactLost::toggleContactLostLight, this, &NeuroDeviceController::toggleContactLostLight);
     connect(contactLost, &ContactLost::sessionExpired, this, &NeuroDeviceController::sessionExpired);
 
+    //moves the display, headset, treatment, and contact lost classes to new threads
     display->moveToThread(&_DISThread);
     headset->moveToThread(&_HeadSetThread);
     treatment->moveToThread(&_TreatThread);
@@ -104,9 +105,11 @@ NeuroDeviceController::~NeuroDeviceController()
     delete contactLost;
 }
 
+//Extends button handlers from MainWindow
 void NeuroDeviceController::upArrowButtonPressed() { if (deviceOn) { emit upArrowButton(); } }
 void NeuroDeviceController::downArrowButtonPressed() { if (deviceOn) { emit downArrowButton(); } }
 
+//Communicates to the necessary components when the start button is pressed in a specific menu
 void NeuroDeviceController::startButtonPressed()
 {
     if (deviceOn)
@@ -141,10 +144,8 @@ void NeuroDeviceController::startButtonPressed()
     }
 }
 
-void NeuroDeviceController::getFeedbackFreq()
-{
-    nodeTreated();
-}
+//Handle communicating information between the headset and the session manager
+void NeuroDeviceController::getFeedbackFreq() { nodeTreated(); }
 
 void NeuroDeviceController::captureAllWaves() { headset->captureAllWaves(); }
 
@@ -230,6 +231,18 @@ void NeuroDeviceController::updateBattery(int value)
     });
 }
 
+/*
+ * Description:
+ * After retrieving the initial baseline, the device begins
+ * its analasis by capturing every individual node and applying
+ * the treatment based on the baseline in the treatment calss
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::startAnalysis()
 {
     if (!sesActive || sesPaused) { return; }
@@ -248,6 +261,18 @@ void NeuroDeviceController::startAnalysis()
     ++currStep;
 }
 
+/*
+ * Description:
+ * After treating a node during a round of treatment,
+ * the NDC updates the graph of the treated node and
+ * and progresses the next round of treatment
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::nodeTreated()
 {
     if (!sesActive || sesPaused) { return; }
@@ -265,6 +290,18 @@ void NeuroDeviceController::nodeTreated()
     }
 }
 
+/*
+ * Description:
+ * After all nodes have undergone all 4 rounds of treatment
+ * and the final baseline is documented, the NDC stops the
+ * internal timer and concludes the session
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::endAnalysis()
 {
     if (!sesActive || sesPaused) { return; }
@@ -276,6 +313,7 @@ void NeuroDeviceController::endAnalysis()
     QTimer::singleShot(1500, this, SLOT(endSession()));
 }
 
+//Communicates to the necessary components when the stop button is pressed in a specific menu
 void NeuroDeviceController::stopButtonPressed()
 {
     if (deviceOn && sesActive)
@@ -289,6 +327,7 @@ void NeuroDeviceController::stopButtonPressed()
     }
 }
 
+//Communicates to the necessary components when the power button is pressed
 void NeuroDeviceController::powerButtonPressed()
 {
     if (batCharge->value() <= 0) { return; }
@@ -306,6 +345,19 @@ void NeuroDeviceController::powerButtonPressed()
     }
 }
 
+/*
+ * Description:
+ * If any sessions are active, the device ends the sessions,
+ * after which the device updates the light indicators, informs
+ * the treatment class to cancel any ongoing treatments, and
+ * powers off the dispaly
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::powerOff()
 {
     if(sesActive)
@@ -328,14 +380,10 @@ void NeuroDeviceController::powerOff()
     deviceOn = false;
 }
 
-void NeuroDeviceController::menuButtonPressed()
-{
-    if (deviceOn && !sesActive)
-    {
-        emit menuButton();
-    }
-}
+//Extends button handlers from MainWindow
+void NeuroDeviceController::menuButtonPressed() { if (deviceOn && !sesActive) { emit menuButton(); } }
 
+//Comunicates necessary info to the PCDevice through MainWindow
 void NeuroDeviceController::uploadSession(int index)
 {
     SessionLog *log = manager->getSessionLog();
@@ -343,6 +391,20 @@ void NeuroDeviceController::uploadSession(int index)
     emit uploadToPC(session);
 }
 
+/*
+ * Description:
+ * The NDC sets the session active status to true, resets the
+ * current step in the LENS process, resets the treatment and
+ * graphs and timer to their defaults, checks for the contact
+ * between the NDC and the nodes, creates a new session, and
+ * initialises the LENS protocol
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::startSession()
 {
     sesActive = true;
@@ -366,6 +428,18 @@ void NeuroDeviceController::startSession()
     emit getInitialBaseline();
 }
 
+/*
+ * Description:
+ * Similar to start session, resets the current step in the LENS
+ * process, resets the timer to its default, informs the session
+ * manager to end the session and returns the display to the menu
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::endSession()
 {
     roundsCompleted = 0;
@@ -384,6 +458,7 @@ void NeuroDeviceController::endSession()
     emit menuButton();
 }
 
+//Puts the NDC into a paused state and infroms all other components to halt procedurs
 void NeuroDeviceController::pauseSession()
 {
     if (sesPaused)
@@ -406,6 +481,7 @@ void NeuroDeviceController::pauseSession()
     }
 }
 
+//Returns the NDC and all other components into their previous states
 void NeuroDeviceController::resumeSession()
 {
     if (!sesPaused)
@@ -443,6 +519,7 @@ void NeuroDeviceController::resumeSession()
 
 }
 
+//Resets internal device timer
 void NeuroDeviceController::resetTimer()
 {
     if (timer->isActive()) {
@@ -454,22 +531,16 @@ void NeuroDeviceController::resetTimer()
     pausedTime = 0;
 }
 
-
+//Updates ui timer based on the timeout() signal from QTimer
 void NeuroDeviceController::updateUiTimer()
 {
     qint64 msecsElapsed = savedTime + elTimer->elapsed();
     display->updateTimer(msecsElapsed);
 }
 
-void NeuroDeviceController::setDateTime(QDateTime newDateTime)
-{
-    this->deviceTime = newDateTime;
-}
+void NeuroDeviceController::setDateTime(QDateTime newDateTime) { this->deviceTime = newDateTime; }
 
-void NeuroDeviceController::nodeDisplayChanged(int index)
-{
-    emit updateGraph(&(*headset)[index]);
-}
+void NeuroDeviceController::nodeDisplayChanged(int index) { emit updateGraph(&(*headset)[index]); }
 
 void NeuroDeviceController::toggleTreatmentLight(bool on)
 {

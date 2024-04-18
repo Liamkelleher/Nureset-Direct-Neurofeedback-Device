@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../COMP3004Neureset/display.h"
+#include "../../COMP3004/FinalProject/COMP3004Neureset/display.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Display_t {
-    QByteArrayData data[11];
-    char stringdata0[133];
+    QByteArrayData data[13];
+    char stringdata0[160];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -39,16 +39,18 @@ QT_MOC_LITERAL(3, 23, 14), // "updateDateTime"
 QT_MOC_LITERAL(4, 38, 13), // "upArrowButton"
 QT_MOC_LITERAL(5, 52, 15), // "downArrowButton"
 QT_MOC_LITERAL(6, 68, 11), // "startButton"
-QT_MOC_LITERAL(7, 80, 10), // "stopButton"
-QT_MOC_LITERAL(8, 91, 14), // "powerOnDisplay"
-QT_MOC_LITERAL(9, 106, 15), // "powerOffDisplay"
-QT_MOC_LITERAL(10, 122, 10) // "menuButton"
+QT_MOC_LITERAL(7, 80, 10), // "connection"
+QT_MOC_LITERAL(8, 91, 10), // "stopButton"
+QT_MOC_LITERAL(9, 102, 14), // "powerOnDisplay"
+QT_MOC_LITERAL(10, 117, 15), // "powerOffDisplay"
+QT_MOC_LITERAL(11, 133, 10), // "menuButton"
+QT_MOC_LITERAL(12, 144, 15) // "sessionComplete"
 
     },
     "Display\0uploadSession\0\0updateDateTime\0"
     "upArrowButton\0downArrowButton\0startButton\0"
-    "stopButton\0powerOnDisplay\0powerOffDisplay\0"
-    "menuButton"
+    "connection\0stopButton\0powerOnDisplay\0"
+    "powerOffDisplay\0menuButton\0sessionComplete"
 };
 #undef QT_MOC_LITERAL
 
@@ -58,7 +60,7 @@ static const uint qt_meta_data_Display[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      10,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -66,17 +68,18 @@ static const uint qt_meta_data_Display[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   59,    2, 0x06 /* Public */,
-       3,    1,   62,    2, 0x06 /* Public */,
+       1,    1,   64,    2, 0x06 /* Public */,
+       3,    1,   67,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       4,    0,   65,    2, 0x0a /* Public */,
-       5,    0,   66,    2, 0x0a /* Public */,
-       6,    0,   67,    2, 0x0a /* Public */,
-       7,    0,   68,    2, 0x0a /* Public */,
-       8,    0,   69,    2, 0x0a /* Public */,
-       9,    0,   70,    2, 0x0a /* Public */,
-      10,    0,   71,    2, 0x0a /* Public */,
+       4,    0,   70,    2, 0x0a /* Public */,
+       5,    0,   71,    2, 0x0a /* Public */,
+       6,    1,   72,    2, 0x0a /* Public */,
+       8,    0,   75,    2, 0x0a /* Public */,
+       9,    0,   76,    2, 0x0a /* Public */,
+      10,    0,   77,    2, 0x0a /* Public */,
+      11,    0,   78,    2, 0x0a /* Public */,
+      12,    0,   79,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Int,    2,
@@ -85,6 +88,7 @@ static const uint qt_meta_data_Display[] = {
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::Bool,    7,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -104,11 +108,12 @@ void Display::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 1: _t->updateDateTime((*reinterpret_cast< QDateTime(*)>(_a[1]))); break;
         case 2: _t->upArrowButton(); break;
         case 3: _t->downArrowButton(); break;
-        case 4: _t->startButton(); break;
+        case 4: _t->startButton((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 5: _t->stopButton(); break;
         case 6: _t->powerOnDisplay(); break;
         case 7: _t->powerOffDisplay(); break;
         case 8: _t->menuButton(); break;
+        case 9: _t->sessionComplete(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -159,13 +164,13 @@ int Display::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 10;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
+        if (_id < 10)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 9;
+        _id -= 10;
     }
     return _id;
 }
