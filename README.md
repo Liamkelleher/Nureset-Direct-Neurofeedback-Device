@@ -1,5 +1,8 @@
 # Neurset
 Neurset is a direct neurofeedback EEG device designed and developed by Josh, Aleksey, Liam, and Ryan
+
+Demo Video - [Watch on YouTube](https://www.youtube.com/watch?v=EnQjXWVbXbM)
+
 ## Contributors
 - **Josh Saikali**
 - **Aleksey Dosov**
@@ -7,6 +10,7 @@ Neurset is a direct neurofeedback EEG device designed and developed by Josh, Ale
 - **Ryan McDonald**
 
 ## Contributions
+
 ### Josh:
 Use Case and Use Case Diagram,
 Sequence Diagrams (Low Battery and PC viewing),
