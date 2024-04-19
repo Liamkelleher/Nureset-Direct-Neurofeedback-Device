@@ -31,7 +31,9 @@ Wave Generation
 UML Class Diagrams,
 Scenario Demo Video,
 Traceability Matrix,
+Sequence Diagrams (Normal Operation),
 Display,
+Treatment,
 ContactLost,
 NeuroDeviceController,
 MainWindow
