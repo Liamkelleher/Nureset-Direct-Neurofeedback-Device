@@ -9,7 +9,7 @@ Demo Video - [Watch on YouTube](https://www.youtube.com/watch?v=EnQjXWVbXbM)
 - **Liam Kelleher**
 - **Ryan McDonald**
 
-##Launching and Building Instructions
+## Launching and Building Instructions
 The .pro file is located in the COMP3004Neureset folder.
 Execute the COMP3004Neureset.pro file and Qt creator will open with all components loaded.
 
