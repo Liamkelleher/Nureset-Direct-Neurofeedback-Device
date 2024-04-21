@@ -51,7 +51,9 @@ NeuroDeviceController,
 MainWindow
 
 ### Ryan:
-State Diagrams,
+State Diagram (NeuroDeviceController),
+State Diagram (Session Manager),
+Session Mangager,
 Session
 
 ## MainWindow:
