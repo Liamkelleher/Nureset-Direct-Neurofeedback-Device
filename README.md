@@ -10,16 +10,16 @@ Demo Video - [Watch on YouTube](https://www.youtube.com/watch?v=EnQjXWVbXbM)
 - **Ryan McDonald**
 
 ## Launching and Building Instructions
-The .pro file is located in the COMP3004Neureset folder.
-Execute the COMP3004Neureset.pro file and Qt creator will open with all components loaded.
+- The .pro file is located in the COMP3004Neureset folder.
+- Execute the COMP3004Neureset.pro file and Qt creator will open with all components loaded.
 
-If you want to launch the executable file outside Qt creator, navigate to the build-COMP3004Neureset-Desktop-Debug folder.
-Execute the COMP3004Neureset file and the program will launch outside of Qt creator.
+- If you want to launch the executable file outside Qt creator, navigate to the build-COMP3004Neureset-Desktop-Debug folder.
+- Execute the COMP3004Neureset file and the program will launch outside of Qt creator.
 
-Ensure that the build-COMP3004Neureset-Desktop-Debug folder and the COMP3004Neureset folder are in the same directory just as presented in compressed folder.
+- Ensure that the build-COMP3004Neureset-Desktop-Debug folder and the COMP3004Neureset folder are in the same directory just as presented in compressed folder.
 
-Note: Running the program outside the Qt creator will remove access to the console output provided by QtDebug.
-Most NDC information is printed to the console output.
+- Note: Running the program outside the Qt creator will remove access to the console output provided by QtDebug.
+- Most NDC information is printed to the console output.
 
 ## Contributions
 
