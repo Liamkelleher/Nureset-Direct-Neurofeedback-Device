@@ -14,11 +14,7 @@ The .pro file is located in the COMP3004Neureset folder.
 
 Execute the COMP3004Neureset.pro file and Qt creator will open with all components loaded.
 
-If you want to launch the executable file outside Qt creator, navigate to the build-COMP3004Neureset-Desktop-Debug folder.
-
-Execute the COMP3004Neureset file and the program will launch outside of Qt creator.
-
-Ensure that the build-COMP3004Neureset-Desktop-Debug folder and the COMP3004Neureset folder are in the same directory just as presented in compressed folder.
+Build and Run the project inside of Qt creator.
 
 Note: Running the program outside the Qt creator will remove access to the console output provided by QtDebug.
 
@@ -54,7 +50,7 @@ NeuroDeviceController,
 MainWindow
 
 ### Liam:
-Use Case Diagrams, 
+Use Case Diagrams,
 Sequence Diagram (Contact Lost),
 Session,
 SessionLog,
@@ -67,8 +63,7 @@ MainWindow
 
 ### Ryan:
 State Diagram (NeuroDeviceController),
-State Diagram (Session Manager),
-Session Mangager,
+State Diagram (Session Manager)
 Session
 
 ## MainWindow:
