@@ -88,7 +88,7 @@ void MainWindow::uploadSession(Session* session) { pcdevice->uploadToPC(session)
 
 /*
  *
- * Discription:
+ * Description:
  * This Function takes in a EEG node and sends a array of new data points to plot to the display Graph
  * Also handles Communication between the NDC and the EEGGraph
  *
@@ -133,7 +133,7 @@ void MainWindow::updateGraph(EEGNode* node)
 
 /*
  *
- * Discription:
+ * Description:
  * Initializes all the Default Settings for EEGGraph
  *
  * Given:

@@ -4,7 +4,7 @@
 
 /*
  *
- * Discription:
+ * Description:
  * This is the initialization for the Main Controler for the EEG Device
  *
 */
@@ -124,7 +124,7 @@ void NeuroDeviceController::downArrowButtonPressed() { if (deviceOn) { emit down
 
 /*
  *
- * Discription:
+ * Description:
  * Communicates to the necessary components when the start button is pressed in the Main Menu
  *
  * Given:
@@ -185,7 +185,7 @@ void NeuroDeviceController::addAvgAmp(double amp) { manager->updateAvgAmp(amp); 
 
 /*
  *
- * Discription:
+ * Description:
  *  Checks if usage would NOT drain the battery. I
  *  If the battery would be drained calls powerOFF to shut off device.
  *
@@ -217,7 +217,7 @@ bool NeuroDeviceController::checkBatteryLevel(int btDrain)
 
 /*
  *
- * Discription:
+ * Description:
  * Updates Proress bar to a new level, Splits the change into smaller increments over time
  *
  * Given:
@@ -263,7 +263,7 @@ void NeuroDeviceController::updateProgressBar(int value)
 }
 /*
  *
- * Discription:
+ * Description:
  * Updates battery to a new level, Splits the change into smaller increments over time
  *
  * Given:
