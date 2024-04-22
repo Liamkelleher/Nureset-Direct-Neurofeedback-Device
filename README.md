@@ -64,7 +64,8 @@ MainWindow
 ### Ryan:
 State Diagram (NeuroDeviceController),
 State Diagram (Session Manager)
-Session
+Session,
+Commenting and Documentation of classes (m-w)
 
 ## MainWindow:
 Handles user input and all UI components outside the main device
