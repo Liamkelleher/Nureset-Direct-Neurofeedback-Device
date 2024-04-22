@@ -20,7 +20,7 @@ void PCDevice::initializeComponents()
 
 /*
  *
- * Discription:
+ * Description:
  * Updates the PC to turn the display on or off.
  *
  * Given:
@@ -43,7 +43,7 @@ void PCDevice::toggleComponents(bool isVisible)
 
 /*
  *
- * Discription:
+ * Description:
  * Takes parsed and displays it adding simple context for user.
  *
  * Given:
@@ -75,7 +75,7 @@ void PCDevice::uploadToPC(Session* session)
 
 /*
  *
- * Discription:
+ * Description:
  * Turns the Session info into a string and displays it
  *
  * Given:
@@ -98,7 +98,7 @@ QMap<QString, QString> PCDevice::parseDataToString(Session * session)
 
 /*
  *
- * Discription:
+ * Description:
  * Handles filling the display table with data from a session
  *
  * Given:
@@ -118,7 +118,7 @@ void PCDevice::inputDataIntoTable(QVector<double> beforeDFs, QVector<double> aft
 
 /*
  *
- * Discription:
+ * Description:
  * Filles a table Column with data from a treatment
  *
  * Given:
@@ -140,7 +140,7 @@ void PCDevice::fillTableColumn(int column, QVector<double> domFreq)
 
 /*
  *
- * Discription:
+ * Description:
  * Updates the Graph with the new treatment from a session
  *
  * Given:
@@ -174,7 +174,7 @@ void PCDevice::updateGraph(Session *session)
 
 /*
  *
- * Discription:
+ * Description:
  * Clears the Display of the PC Divice
  *
  * Given:

@@ -4,7 +4,7 @@ Treatment::Treatment() : cancelled(false), paused(false), domFreq(0) {}
 
 /*
  *
- * Discription:
+ * Description:
  * Calculates the Dominant frequency from a waveform
  *
  * Given:
@@ -35,7 +35,7 @@ double Treatment::calculateDominantFrequency(Waveform* waveform)
 
 /*
  *
- * Discription:
+ * Description:
  * Main treatment function that gets all the calulated waveinformation from a headset and
  * calculates and applys a treatment.
  *
@@ -92,7 +92,7 @@ void Treatment::applyTreatment(EEGHeadset* headset)
 
 /*
  *
- * Discription:
+ * Description:
  * Captures a wave from a EEG node
  *
  * Given:
@@ -129,7 +129,7 @@ void Treatment::captureNewWave(Waveform* waveform)
 
 /*
  *
- * Discription:
+ * Description:
  * Calculates and simulates therapy on a patient. Also handles the session light and console output for treatment
  *
  * Given:
@@ -197,7 +197,7 @@ void Treatment::simulateTherapy(double dominantFrequency, int round)
 }
 /*
  *
- * Discription:
+ * Description:
  * Cancels treatment
  *
  * Given:
@@ -214,7 +214,7 @@ void Treatment::cancelTreatment()
 }
 /*
  *
- * Discription:
+ * Description:
  * Pauses treatment
  *
  * Given:
@@ -230,7 +230,7 @@ void Treatment::togglePauseTreatment(bool pause)
 }
 /*
  *
- * Discription:
+ * Description:
  * Calculates treatment baseline for each node
  *
  * Given:
@@ -254,7 +254,7 @@ double Treatment::calculateBasline(QVector<double> dominantFreqs)
 
 /*
  *
- * Discription:
+ * Description:
  * Calculates post-treatment dominante frequency for each node and overall baseline.
  * Gets the node waves after treatment and calulates new dominant and baselines.
  *
@@ -287,7 +287,7 @@ void Treatment::calculateAfter()
 
 /*
  *
- * Discription:
+ * Description:
  * starts therepy back after pause based on where it was paused.
  *
  * Given:

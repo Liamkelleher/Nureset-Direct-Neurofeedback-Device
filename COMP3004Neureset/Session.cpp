@@ -23,7 +23,7 @@ Session::~Session() {}
 
 /*
  *
- * Discription:
+ * Description:
  * This starts a session and initializes elapsed time to 0
  *
 */
@@ -34,7 +34,7 @@ void Session::startSession()
 
 /*
  *
- * Discription:
+ * Description:
  * This updates elapesd time to given value
  *
  * Given:
@@ -51,7 +51,7 @@ void Session::endSession(QTime elapsed)
 
 /*
  *
- * Discription:
+ * Description:
  * This sets pre-treatement baseline
  *
  * Given:
@@ -68,7 +68,7 @@ void Session::updateBeforeBaseline(double value)
 
 /*
  *
- * Discription:
+ * Description:
  * This sets post-treatement baseline
  *
  * Given:
@@ -85,7 +85,7 @@ void Session::updateAfterBaseline(double value)
 
 /*
  *
- * Discription:
+ * Description:
  * This sets/saves treatement Dominant Frequency
  *
  * Given:
@@ -110,7 +110,7 @@ void Session::addToDF(bool isBefore, QVector<double> domFreq)
 
 /*
  *
- * Discription:
+ * Description:
  * Returns elapesed time
  *
  * Given:
@@ -127,7 +127,7 @@ QTime Session::getTimeElapsed()
 
 /*
  *
- * Discription:
+ * Description:
  * Updates elapesed time
  *
  * Given:
@@ -144,7 +144,7 @@ void Session::setTimeElapsed(QTime newTime)
 
 /*
  *
- * Discription:
+ * Description:
  * returns pre-treatment baseline
  *
  * Given:
@@ -161,7 +161,7 @@ double Session::getBeforeBaseline()
 
 /*
  *
- * Discription:
+ * Description:
  * returns post-treatment baseline
  *
  * Given:
@@ -178,7 +178,7 @@ double Session::getAfterBaseline()
 
 /*
  *
- * Discription:
+ * Description:
  * returns pre-treatment dominant frequency for all EEG nodes
  *
  * Given:
@@ -194,7 +194,7 @@ QVector<double> Session::getBeforeDFs()
 }
 /*
  *
- * Discription:
+ * Description:
  * returns post-treatment dominant frequency for all EEG nodes
  *
  * Given:
@@ -210,7 +210,7 @@ QVector<double> Session::getAfterDFs()
 }
 /*
  *
- * Discription:
+ * Description:
  * sets the avrage amplitude
  *
  * Given:
@@ -227,7 +227,7 @@ void Session::updateAvgAmp(double amp)
 
 /*
  *
- * Discription:
+ * Description:
  * returns amplitude of this session
  *
  * Given:
@@ -244,7 +244,7 @@ double Session::getAvgAmpl()
 
 /*
  *
- * Discription:
+ * Description:
  * returns date and time that the session started
  *
  * Given:
@@ -261,7 +261,7 @@ QDateTime Session::getDateTime()
 
 /*
  *
- * Discription:
+ * Description:
  * returns a string of the start date and time of the session
  *
  * Given:
@@ -278,7 +278,7 @@ QString Session::toString() const
 
 /*
  *
- * Discription:
+ * Description:
  * formats and returns session info for the session logger to write it to a file
  *
  * Given:
@@ -302,7 +302,7 @@ QDataStream &operator<<(QDataStream &out, const Session &session) {
 
 /*
  *
- * Discription:
+ * Description:
  * Creates sessions from the inputed info for the session logger as it reads in a file.
  *
  * Given:

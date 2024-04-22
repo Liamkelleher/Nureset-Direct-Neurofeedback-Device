@@ -10,7 +10,7 @@ SessionManager::~SessionManager() {
 }
 /*
  *
- * Discription:
+ * Description:
  * Starts recording a session at given time
  *
  * Given:
@@ -27,7 +27,7 @@ void SessionManager::createSession(QDateTime dateTime) {
 
 /*
  *
- * Discription:
+ * Description:
  * Ends a Session amd saves it to the log
  *
  * Given:
@@ -47,7 +47,7 @@ void SessionManager::endSession(QTime elapsed, bool save) {
 }
 /*
  *
- * Discription:
+ * Description:
  * If a session is active returns the Elapsed time otherwise returns 0
  *
  * Given:
@@ -66,7 +66,7 @@ QTime SessionManager::getCurrentSessionElapsedTime() const {
 
 /*
  *
- * Discription:
+ * Description:
  * Saves the given reading to an active session as the pre-treatment baseline
  *
  * Given:
@@ -84,7 +84,7 @@ void SessionManager::updateBeforeBaseline(double beforeValue) {
 
 /*
  *
- * Discription:
+ * Description:
  * Saves the given reading to an active session as the post-treatment baseline.
  *
  * Given:
@@ -103,7 +103,7 @@ void SessionManager::updateAfterBaseline(double afterValue) {
 
 /*
  *
- * Discription:
+ * Description:
  * Saves average amplitued to the session log
  *
  * Given:
@@ -123,7 +123,7 @@ void SessionManager::updateAvgAmp(double amp)
 
 /*
  *
- * Discription:
+ * Description:
  * Saves the given reading to an active session as the pre-treatment dominent frequency
  *
  * Given:
@@ -143,7 +143,7 @@ void SessionManager::addBeforeDF(QVector<double> df)
 
 /*
  *
- * Discription:
+ * Description:
  * Saves the given reading to an active session as the post-treatment dominent frequency
  *
  * Given:
@@ -163,7 +163,7 @@ void SessionManager::addAfterDF(QVector<double> df)
 
 /*
  *
- * Discription:
+ * Description:
  * Returns the session logs of all recorded sessions
  *
  * Given:
@@ -180,7 +180,7 @@ SessionLog* SessionManager::getSessionLog() const {
 
 /*
  *
- * Discription:
+ * Description:
  * When a session complets saves it to the logs
  *
  * Given:

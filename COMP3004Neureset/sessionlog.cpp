@@ -11,7 +11,7 @@ SessionLog::~SessionLog() {
 }
 /*
  *
- * Discription:
+ * Description:
  * This adds a session to the current sessions and calls the Write function to save it persistantly
  *
  * Given:
@@ -36,7 +36,7 @@ int SessionLog::count() const {
 
 /*
  *
- * Discription:
+ * Description:
  * This saves session to a log for persistance
  *
  * Given:
@@ -61,7 +61,7 @@ void SessionLog::writeToFile(Session *session)
 
 /*
  *
- * Discription:
+ * Description:
  * On startup this loads past session from a log and saves them to current history
  *
  * Given:
