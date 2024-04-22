@@ -65,6 +65,8 @@ MainWindow
 State Diagram (NeuroDeviceController),
 State Diagram (Session Manager)
 Session,
+SessionLog,
+SessionManager,
 Commenting and Documentation of classes
 
 ## MainWindow:
