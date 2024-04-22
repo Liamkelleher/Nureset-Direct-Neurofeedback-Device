@@ -2,6 +2,18 @@
 
 Treatment::Treatment() : cancelled(false), paused(false), domFreq(0) {}
 
+/*
+ *
+ * Discription:
+ * Calculates the Dominant frequency from a waveform
+ *
+ * Given:
+ * Waveform - a wave to be analyzed
+ *
+ * Returns:
+ * Double - the Dominant frequency from a wave
+ *
+*/
 double Treatment::calculateDominantFrequency(Waveform* waveform)
 {
     function* alphaBand = waveform->getBand(BandType::ALPHA);
@@ -21,6 +33,19 @@ double Treatment::calculateDominantFrequency(Waveform* waveform)
     return totalWeighted / totalAmplitude;
 }
 
+/*
+ *
+ * Discription:
+ * Main treatment function that gets all the calulated waveinformation from a headset and
+ * calculates and applys a treatment.
+ *
+ * Given:
+ * EEGHeadset - headset to treat/get info
+ *
+ * Returns:
+ * None
+ *
+*/
 void Treatment::applyTreatment(EEGHeadset* headset)
 {
     nodes = headset;
@@ -65,6 +90,18 @@ void Treatment::applyTreatment(EEGHeadset* headset)
     calculateAfter();
 }
 
+/*
+ *
+ * Discription:
+ * Captures a wave from a EEG node
+ *
+ * Given:
+ * Waveform - pointer to a waveform from a EEG node
+ *
+ * Returns:
+ * None
+ *
+*/
 void Treatment::captureNewWave(Waveform* waveform)
 {
     function* alphaBand = waveform->getBand(BandType::ALPHA);
@@ -90,6 +127,19 @@ void Treatment::captureNewWave(Waveform* waveform)
     waveform->generateWave();
 }
 
+/*
+ *
+ * Discription:
+ * Calculates and simulates therapy on a patient. Also handles the session light and console output for treatment
+ *
+ * Given:
+ * double - dominant Frequency from a EEG node
+ * int - the round of therapy
+ *
+ * Returns:
+ * None
+ *
+*/
 void Treatment::simulateTherapy(double dominantFrequency, int round)
 {
     if (cancelled || paused)
@@ -145,18 +195,51 @@ void Treatment::simulateTherapy(double dominantFrequency, int round)
         offset += 5;
     }
 }
-
+/*
+ *
+ * Discription:
+ * Cancels treatment
+ *
+ * Given:
+ * None
+ *
+ * Returns:
+ * None
+ *
+*/
 void Treatment::cancelTreatment()
 {
     cancelled = true;
     domFreq = 0;
 }
-
+/*
+ *
+ * Discription:
+ * Pauses treatment
+ *
+ * Given:
+ * None
+ *
+ * Returns:
+ * None
+ *
+*/
 void Treatment::togglePauseTreatment(bool pause)
 {
     paused = pause;
 }
-
+/*
+ *
+ * Discription:
+ * Calculates treatment baseline for each node
+ *
+ * Given:
+ * QVector<double> - an array of dominant frequency for each node
+ *
+ * Returns:
+ * double - the baseline: sum of all dominante frequencys avraged out.
+ *
+*/
 double Treatment::calculateBasline(QVector<double> dominantFreqs)
 {
     double sumOfNodes = 0;
@@ -169,6 +252,19 @@ double Treatment::calculateBasline(QVector<double> dominantFreqs)
    return sumOfNodes / NUM_NODES;
 }
 
+/*
+ *
+ * Discription:
+ * Calculates post-treatment dominante frequency for each node and overall baseline.
+ * Gets the node waves after treatment and calulates new dominant and baselines.
+ *
+ * Given:
+ * None
+ *
+ * Returns:
+ * None
+ *
+*/
 void Treatment::calculateAfter()
 {
     qDebug() << "TREATMENT: Processing input wave signals";
@@ -189,6 +285,19 @@ void Treatment::calculateAfter()
     emit endAnalysis();
 }
 
+/*
+ *
+ * Discription:
+ * starts therepy back after pause based on where it was paused.
+ *
+ * Given:
+ * int - the treatment step that was paused
+ * int - the round in that step that was paused (indicates which node treatment stoped at)
+ *
+ * Returns:
+ * None
+ *
+*/
 void Treatment::resumeTreatment(int step, int round)
 {
 

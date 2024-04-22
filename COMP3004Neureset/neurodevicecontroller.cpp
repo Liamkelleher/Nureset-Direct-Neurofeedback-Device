@@ -1,8 +1,17 @@
 #include "neurodevicecontroller.h"
 #include <QDebug>
 
+
+/*
+ *
+ * Discription:
+ * This is the initialization for the Main Controler for the EEG Device
+ *
+*/
+
 NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPushButton* contactInd, QPushButton* treatmentInd, QPushButton* contactLostInd, QProgressBar* progressBar, QProgressBar* batteryCharge, QComboBox* dropdown)
 {
+    //Default Values
     deviceOn = false;
     sesActive = false;
     sesPaused = false;
@@ -12,9 +21,11 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
     currStep = 0;
     isExpired = false;
 
+    //Light indicatior initilization
     contactLightIndicator = new LightIndicator(contactInd);
     treatmentLightIndicator = new LightIndicator(treatmentInd);
     contactLostLightIndicator = new LightIndicator(contactLostInd);
+
 
     manager = new SessionManager();
 
@@ -24,8 +35,10 @@ NeuroDeviceController::NeuroDeviceController(QStackedWidget* stackedWidget, QPus
 
     this->dropdown = dropdown;
 
+    //Initilizes and sets time
     deviceTime = QDateTime::currentDateTime();
 
+    //Timer Setup
     timer = new QTimer(this);
     elTimer = new QElapsedTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(updateUiTimer()));
@@ -109,13 +122,27 @@ NeuroDeviceController::~NeuroDeviceController()
 void NeuroDeviceController::upArrowButtonPressed() { if (deviceOn) { emit upArrowButton(); } }
 void NeuroDeviceController::downArrowButtonPressed() { if (deviceOn) { emit downArrowButton(); } }
 
-//Communicates to the necessary components when the start button is pressed in a specific menu
+/*
+ *
+ * Discription:
+ * Communicates to the necessary components when the start button is pressed in the Main Menu
+ *
+ * Given:
+ * None
+ *
+ * Returns:
+ * None
+ *
+*/
+
 void NeuroDeviceController::startButtonPressed()
 {
     if (deviceOn)
     {
         emit startButton(connection);
 
+        //Checks which UI is being displayed to user
+        //Case 1 : Start Session
         if (display->getCurrentMenuSelect() == 0)
         {
             if (!connection)
@@ -131,12 +158,13 @@ void NeuroDeviceController::startButtonPressed()
                 }
             }
         }
-
+        //Case 2: Check session history
         if (display->getCurrentMenuSelect() == 1)
         {
             display->populateSessionLogs(manager->getSessionLog());
         }
 
+        //Check if session is in progress but paused and resume it.
         if (sesActive && sesPaused && connection)
         {
             resumeSession();
@@ -155,8 +183,23 @@ void NeuroDeviceController::addBeforeBase(double freq) { manager->updateBeforeBa
 void NeuroDeviceController::addAfterBase(double freq) { manager->updateAfterBaseline(freq); }
 void NeuroDeviceController::addAvgAmp(double amp) { manager->updateAvgAmp(amp); }
 
+/*
+ *
+ * Discription:
+ *  Checks if usage would NOT drain the battery. I
+ *  If the battery would be drained calls powerOFF to shut off device.
+ *
+ * Given:
+ * Takes in a intager representing power usage
+ *
+ * Returns:
+ * True if battery is not drained
+ * False if battery is drained
+ *
+*/
 bool NeuroDeviceController::checkBatteryLevel(int btDrain)
 {
+    //Handles the battery would fall to 0 or below
     if (batCharge->value() - btDrain <= 0)
     {
         qDebug() << "\nINFO: Device battery has died";
@@ -164,6 +207,7 @@ bool NeuroDeviceController::checkBatteryLevel(int btDrain)
         powerOff();
         return false;
     }
+    //Sends warning if battery below 30%
     if (batCharge->value() - 30 <= 0)
     {
         qDebug() << "WARNING: Battery is low";
@@ -171,8 +215,21 @@ bool NeuroDeviceController::checkBatteryLevel(int btDrain)
     return true;
 }
 
+/*
+ *
+ * Discription:
+ * Updates Proress bar to a new level, Splits the change into smaller increments over time
+ *
+ * Given:
+ * Takes in a intager value of the new progress level
+ *
+ * Returns:
+ * None
+ *
+*/
 void NeuroDeviceController::updateProgressBar(int value)
 {
+    //Calculates a 10th of the new difference between the new value and old
     int increment = (value - progBar->value()) / 10;
 
     // The QTimer's timeout signal will call the lambda function
@@ -204,22 +261,38 @@ void NeuroDeviceController::updateProgressBar(int value)
         }
     });
 }
+/*
+ *
+ * Discription:
+ * Updates battery to a new level, Splits the change into smaller increments over time
+ *
+ * Given:
+ * Takes in a intager value of the new battery level
+ *
+ * Returns:
+ * None
+ *
+*/
 
 void NeuroDeviceController::updateBattery(int value)
 {
     int currentValue = batCharge->value();
 
+    //Calculates a 10th of the Difference in new value to old
     int increment = (value - currentValue) / 10;
+    //Bounds check
     if (increment == 0) {
         increment = (value != currentValue) ? (value > currentValue ? 1 : -1) : 0;
     }
-
+    //Sets timer for process
     QTimer *timer = new QTimer(this);
     timer->start(50);
 
     connect(timer, &QTimer::timeout, this, [this, timer, value, increment]() mutable {
         int newValue = batCharge->value() + increment;
 
+        //Check if bounds of new battery level
+        //stops timer and sets to exatly given value if newValue would take it over target.
         if ((increment > 0 && newValue >= value) || (increment < 0 && newValue <= value)) {
             newValue = value;
             emit setValueBat(newValue);
@@ -247,6 +320,8 @@ void NeuroDeviceController::startAnalysis()
 {
     if (!sesActive || sesPaused) { return; }
     updateProgressBar(progBar->value() + 30);
+
+    //Check if battery has enough charge remaing exit if no
     if (!checkBatteryLevel(15))
         return;
     updateBattery(batCharge->value() - 15);
@@ -313,7 +388,18 @@ void NeuroDeviceController::endAnalysis()
     QTimer::singleShot(1500, this, SLOT(endSession()));
 }
 
-//Communicates to the necessary components when the stop button is pressed in a specific menu
+/*
+ * Description:
+ * Handles the when the stop button is pressed while in a session
+ * Ends the session and cancels the treatment
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
+
 void NeuroDeviceController::stopButtonPressed()
 {
     if (deviceOn && sesActive)
@@ -327,10 +413,22 @@ void NeuroDeviceController::stopButtonPressed()
     }
 }
 
-//Communicates to the necessary components when the power button is pressed
+/*
+ * Description:
+ * Handles the when the power button is pressed.
+ * Turning on if enough power or off if on
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
+
 void NeuroDeviceController::powerButtonPressed()
 {
     if (batCharge->value() <= 0) { return; }
+    //
 
     if(deviceOn)
     {
@@ -383,7 +481,16 @@ void NeuroDeviceController::powerOff()
 //Extends button handlers from MainWindow
 void NeuroDeviceController::menuButtonPressed() { if (deviceOn && !sesActive) { emit menuButton(); } }
 
-//Comunicates necessary info to the PCDevice through MainWindow
+/*
+ * Description:
+ * Sends selected session info to the PC for display
+ *
+ * Input:
+ * Intager representing a selection from the menu
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::uploadSession(int index)
 {
     SessionLog *log = manager->getSessionLog();
@@ -458,7 +565,16 @@ void NeuroDeviceController::endSession()
     emit menuButton();
 }
 
-//Puts the NDC into a paused state and infroms all other components to halt procedurs
+/*
+ * Description:
+ * When the pause button is selected during a active session this handles informing all other components
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::pauseSession()
 {
     if (sesPaused)
@@ -480,6 +596,19 @@ void NeuroDeviceController::pauseSession()
         elTimer->invalidate();
     }
 }
+
+/*
+ * Description:
+ * Handles resuming a paused session.
+ * Checks if a session can be resumed and handles resuming the session
+ * and allerting all components.
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 
 //Returns the NDC and all other components into their previous states
 void NeuroDeviceController::resumeSession()
@@ -519,7 +648,17 @@ void NeuroDeviceController::resumeSession()
 
 }
 
-//Resets internal device timer
+/*
+ * Description:
+ * Resets internal device timer
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
+
 void NeuroDeviceController::resetTimer()
 {
     if (timer->isActive()) {
@@ -530,6 +669,7 @@ void NeuroDeviceController::resetTimer()
     savedTime = 0;
     pausedTime = 0;
 }
+
 
 //Updates ui timer based on the timeout() signal from QTimer
 void NeuroDeviceController::updateUiTimer()
@@ -542,6 +682,16 @@ void NeuroDeviceController::setDateTime(QDateTime newDateTime) { this->deviceTim
 
 void NeuroDeviceController::nodeDisplayChanged(int index) { emit updateGraph(&(*headset)[index]); }
 
+/*
+ * Description:
+ * Sets the treatment light to a given state
+ *
+ * Input:
+ * Bool representing light status
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::toggleTreatmentLight(bool on)
 {
     if (on && sesActive && !sesPaused)
@@ -553,7 +703,16 @@ void NeuroDeviceController::toggleTreatmentLight(bool on)
         treatmentLightIndicator->updateState(LightIndicatorState::Off);
     }
 }
-
+/*
+ * Description:
+ * Sets the contact light to a given state
+ *
+ * Input:
+ * Bool representing light status
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::toggleContactLostLight(bool on)
 {
     if (on)
@@ -567,6 +726,17 @@ void NeuroDeviceController::toggleContactLostLight(bool on)
     }
 }
 
+/*
+ * Description:
+ * Handles when connection is lost between the EEG headset and the LENSE device
+ * Pauses a session if one is active.
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::terminateConnection()
 {
     if (connection == true && deviceOn)
@@ -585,6 +755,17 @@ void NeuroDeviceController::terminateConnection()
     }
 }
 
+/*
+ * Description:
+ * Handles when connection is re-established between the EEG headset and the LENSE device
+ * Updates all the components of a session if one is paused.
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::establishConnection()
 {
     if (connection == false && deviceOn)
@@ -598,6 +779,16 @@ void NeuroDeviceController::establishConnection()
     }
 }
 
+/*
+ * Description:
+ * Handles when a session expires. This happens from test button in controll panel.
+ *
+ * Input:
+ * None
+ *
+ * Output:
+ * None
+*/
 void NeuroDeviceController::sessionExpired()
 {
     qDebug() << "\n\nINFO: Session Expired, device turned off.\n\n";

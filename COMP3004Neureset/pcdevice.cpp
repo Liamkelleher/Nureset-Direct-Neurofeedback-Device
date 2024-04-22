@@ -18,6 +18,18 @@ void PCDevice::initializeComponents()
     m_DFTable->setRowCount(NUM_NODES);
 }
 
+/*
+ *
+ * Discription:
+ * Updates the PC to turn the display on or off.
+ *
+ * Given:
+ * Bool for PC visiblity
+ *
+ * Returns:
+ * None
+ *
+*/
 void PCDevice::toggleComponents(bool isVisible)
 {
     // Hide all children of the parent widget except the noDataLabel
@@ -29,6 +41,18 @@ void PCDevice::toggleComponents(bool isVisible)
     m_pcNoDataLabel->setVisible(!isVisible);
 }
 
+/*
+ *
+ * Discription:
+ * Takes parsed and displays it adding simple context for user.
+ *
+ * Given:
+ * QMap vector with QString's to dispaly
+ *
+ * Returns:
+ * None
+ *
+*/
 void PCDevice::inputDataIntoLabels(QMap<QString, QString> parsedData)
 {
     m_pcDateValue->setText(parsedData["Date"] + " at " + parsedData["Time"]);
@@ -49,6 +73,18 @@ void PCDevice::uploadToPC(Session* session)
     toggleComponents(true);
 }
 
+/*
+ *
+ * Discription:
+ * Turns the Session info into a string and displays it
+ *
+ * Given:
+ * Session with info to display
+ *
+ * Returns:
+ * None
+ *
+*/
 QMap<QString, QString> PCDevice::parseDataToString(Session * session)
 {
     QMap<QString, QString> dataMap;
@@ -60,6 +96,19 @@ QMap<QString, QString> PCDevice::parseDataToString(Session * session)
     return dataMap;
 }
 
+/*
+ *
+ * Discription:
+ * Handles filling the display table with data from a session
+ *
+ * Given:
+ * QVector with data from the initial baseline
+ * QVector with the post baseline
+ *
+ * Returns:
+ * None
+ *
+*/
 void PCDevice::inputDataIntoTable(QVector<double> beforeDFs, QVector<double> afterDFs)
 {
     m_DFTable->clearContents();
@@ -67,6 +116,19 @@ void PCDevice::inputDataIntoTable(QVector<double> beforeDFs, QVector<double> aft
     fillTableColumn(1, afterDFs);
 }
 
+/*
+ *
+ * Discription:
+ * Filles a table Column with data from a treatment
+ *
+ * Given:
+ * intager representing the Column
+ * QVector repesenting the values for the Column
+ *
+ * Returns:
+ * None
+ *
+*/
 void PCDevice::fillTableColumn(int column, QVector<double> domFreq)
 {
     int numRows = domFreq.size();
@@ -75,6 +137,19 @@ void PCDevice::fillTableColumn(int column, QVector<double> domFreq)
         m_DFTable->setItem(row, column, new QTableWidgetItem(QString::number(domFreq[row])));
     }
 }
+
+/*
+ *
+ * Discription:
+ * Updates the Graph with the new treatment from a session
+ *
+ * Given:
+ * Session which is applying a treatment
+ *
+ * Returns:
+ * None
+ *
+*/
 
 void PCDevice::updateGraph(Session *session)
 {
@@ -96,6 +171,19 @@ void PCDevice::updateGraph(Session *session)
         m_pcgraph->replot();
     }
 }
+
+/*
+ *
+ * Discription:
+ * Clears the Display of the PC Divice
+ *
+ * Given:
+ * None
+ *
+ * Returns:
+ * None
+ *
+*/
 
 void PCDevice::clear()
 {

@@ -9,7 +9,18 @@ SessionLog::~SessionLog() {
         delete session;
     }
 }
-
+/*
+ *
+ * Discription:
+ * This adds a session to the current sessions and calls the Write function to save it persistantly
+ *
+ * Given:
+ * Session - pointer to a session to record
+ *
+ * Returns:
+ * None
+ *
+*/
 void SessionLog::addSession(Session* session) {
     sessions.append(session);
     writeToFile(session);
@@ -23,6 +34,18 @@ int SessionLog::count() const {
     return sessions.size();
 }
 
+/*
+ *
+ * Discription:
+ * This saves session to a log for persistance
+ *
+ * Given:
+ * Session - pointer to a session to record
+ *
+ * Returns:
+ * None
+ *
+*/
 void SessionLog::writeToFile(Session *session)
 {
     QFile file(LOGS_FILE);
@@ -36,6 +59,18 @@ void SessionLog::writeToFile(Session *session)
     file.close();
 }
 
+/*
+ *
+ * Discription:
+ * On startup this loads past session from a log and saves them to current history
+ *
+ * Given:
+ * None
+ *
+ * Returns:
+ * None
+ *
+*/
 void SessionLog::readFromFile()
 {
     QFile file(LOGS_FILE);
