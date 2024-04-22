@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+//---------
+//Main Window initialization
+//This Initializes all the buttons and sets up the threads for Neuro Device Controller.
+//---------
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -17,11 +21,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     pcdevice->toggleComponents(false);
 
+    //Graph Initialization
     initializeGraph(ui->EEGGraph);
     ui->EEGGraph->yAxis->setRange(-500, 500);
     initializeGraph(ui->baselineGraph);
     ui->baselineGraph->yAxis->setRange(-150, 150);
 
+    //Button Initialization for Device
     connect(this, &MainWindow::upArrowButtonPressed, nDC, &NeuroDeviceController::upArrowButtonPressed);
     connect(this, &MainWindow::downArrowButtonPressed, nDC, &NeuroDeviceController::downArrowButtonPressed);
 
@@ -32,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::menuButtonPressed, nDC, &NeuroDeviceController::menuButtonPressed);
     connect(this, &MainWindow::powerButtonPressed, nDC, &NeuroDeviceController::powerButtonPressed);
 
+    //Button Initialization for test window
     connect(this, &MainWindow::nodeDisplayChanged, nDC, &NeuroDeviceController::nodeDisplayChanged);
 
     connect(this, &MainWindow::terminateConnection, nDC, &NeuroDeviceController::terminateConnection);
@@ -79,7 +86,20 @@ void MainWindow::on_pcClearData_clicked() { pcdevice->clear(); }
 //Communication between the NDC and the PCDevice
 void MainWindow::uploadSession(Session* session) { pcdevice->uploadToPC(session); }
 
-//Communication between the NDC and the EEGGraph
+/*
+ *
+ * Discription:
+ * This Function takes in a EEG node and sends a array of new data points to plot to the display Graph
+ * Also handles Communication between the NDC and the EEGGraph
+ *
+ * Given:
+ * Takes a EEGNode which will be graphed.
+ *
+ * Returns:
+ * None
+ *
+*/
+
 void MainWindow::updateGraph(EEGNode* node)
 {
     //Sets graph to an empty state
@@ -89,13 +109,14 @@ void MainWindow::updateGraph(EEGNode* node)
         ui->EEGGraph->replot();
         return;
     }
-
+    //Creates a array for the X vale in the new graph based on separation STEP for GRAPH_STEPS
     QVector<double> x(GRAPH_STEPS + 1);
     for (int i = 0; i < GRAPH_STEPS + 1; ++i)
     {
         x[i] = STEP * i;
     }
 
+    //Gets the Y values for the new wave from a node
     QVector<double> wave = node->getWaveSignal()->getWaveSignal();
     if (!wave.isEmpty())
     {
@@ -104,12 +125,25 @@ void MainWindow::updateGraph(EEGNode* node)
             updateGraph(node);
             return;
         }
+        //Sends X and Y values to the graph
         ui->EEGGraph->graph()->setData(x, wave);
         ui->EEGGraph->replot();
     }
 }
 
-//Default Settings for EEGGraph
+/*
+ *
+ * Discription:
+ * Initializes all the Default Settings for EEGGraph
+ *
+ * Given:
+ * QCostomPlot - which is the graph to be displayed.
+ *
+ * Returns:
+ * None
+ *
+*/
+
 void MainWindow::initializeGraph(QCustomPlot *graph)
 {
     graph->addGraph();
